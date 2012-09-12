@@ -4,9 +4,9 @@ A simple little app that pulls a JSON file from a url of your choice and lets yo
 
 # Usage
 -----
-*To configure this application, check the [Config](https://github.com/Bencodes/Wallpaper-Manager/blob/master/res/values/config.xml) and customize it. Be sure to change the folder and the manifest URL to represent your unique information.
+* To configure this application, check the [Config](https://github.com/Bencodes/Wallpaper-Manager/blob/master/res/values/config.xml) and customize it. Be sure to change the folder and the manifest URL to represent your unique information.
 
-*An example of the JSON file can be found in the folder. [Assets](https://raw.github.com/Bencodes/Wallpaper-Manager/master/assets/demo-manifest.json)
+* An example of the JSON file can be found in the folder. [Assets](https://raw.github.com/Bencodes/Wallpaper-Manager/master/assets/demo-manifest.json)
 
 
 # Libraries Used
