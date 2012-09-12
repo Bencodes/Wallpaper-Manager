@@ -1,0 +1,6 @@
+<resources>
+
+    <item name="column_count" format="integer" type="integer">@integer/column_count_large_land</item>
+    <item name="is_tablet" format="boolean" type="bool">true</item>
+
+</resources>
