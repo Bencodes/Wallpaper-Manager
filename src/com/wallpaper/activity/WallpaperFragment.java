@@ -7,12 +7,18 @@ import java.io.OutputStream;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,19 +28,20 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.wallpaper.activity.R;
 import com.wallpaper.core.NodeWallpaper;
-import com.wallpaper.core.PendingImageView;
-import com.wallpaper.core.PendingImageView.OnDisplayImage;
+import com.wallpaper.core.com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.wallpaper.core.com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.wallpaper.core.uk.co.senab.photoview.PhotoView;
 
-public class WallpaperFragment extends SherlockFragment implements
-		OnDisplayImage {
+public class WallpaperFragment extends SherlockFragment {
+
+	private final String TAG = "WallpaperFragment";
+	public static final String FRAGMENT_TAG = "WallpaperFragment";
 
 	public static final String BUNDLE_TAG = "wallpaper_fragment_data";
 	private NodeWallpaper mNode;
 	private ProgressBar mPending;
-	private PendingImageView mImageView;
+	private PhotoView mImageView;
 	private View mView;
 
 	private boolean mImageDrawableSet = false;
@@ -46,7 +53,7 @@ public class WallpaperFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		super.setHasOptionsMenu(true);
-		super.setRetainInstance(true);
+		super.setRetainInstance(false);
 
 		this.mView = inflater.inflate(R.layout.fragment_full_wallpaper,
 				container, false);
@@ -66,40 +73,67 @@ public class WallpaperFragment extends SherlockFragment implements
 			ab.setDisplayHomeAsUpEnabled(true);
 			ab.setDisplayShowHomeEnabled(false);
 			ab.setDisplayShowTitleEnabled(true);
-			ab.setTitle(mNode.name);
+
+			final String title = super.getResources().getString(
+					R.string.config_full_screen_wallpaper_title);
+			if (title == null || title.length() <= 0) {
+				ab.setTitle(mNode.name);
+			} else {
+				ab.setTitle(title);
+			}
 		}
 
 		this.mPending = (ProgressBar) super.getView()
 				.findViewById(R.id.pending);
-		this.mImageView = (PendingImageView) mView.findViewById(R.id.wp_image);
-		this.mImageView.setOnImageDisplayListener(this);
+		this.mImageView = (PhotoView) mView.findViewById(R.id.wp_image);
 
-		UrlImageViewHelper.setUrlDrawable(this.mImageView, this.mNode.url);
-	}
+		UrlImageViewHelper.setUrlDrawable(this.mImageView, this.mNode.url,
+				new UrlImageViewCallback() {
 
-	@Override
-	public void onImageDisplayImage(boolean success) {
-		if (success) {
-			this.mImageDrawableSet = true;
-			this.mPending.setVisibility(View.GONE);
-			this.mImageView.setZoomable(true);
+					@Override
+					public void onLoaded(ImageView imageView,
+							Drawable loadedDrawable, String url,
+							boolean loadedFromCache) {
 
-			if (this.mApplyImageOnDisplay)
-				this.applyImage();
-			if (this.mSaveImageOnDisplay)
-				this.exportImage();
-		}
+						if (url == mNode.url && loadedDrawable != null) {
+							imageView.setImageDrawable(loadedDrawable);
+
+							mImageDrawableSet = true;
+							mPending.setVisibility(View.GONE);
+							mImageView.setZoomable(true);
+
+							if (mApplyImageOnDisplay)
+								applyImage();
+
+							if (mSaveImageOnDisplay)
+								exportImage();
+						} else {
+							if (loadedDrawable == null) {
+								mImageDrawableSet = false;
+								Toast.makeText(getActivity(),
+										"Image Failed To Load!",
+										Toast.LENGTH_SHORT).show();
+							}
+						}
+					}
+
+				});
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
 		menu.add(1, 1, 1, "Save").setIcon(android.R.drawable.ic_menu_save)
 				.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(2, 2, 2, "Apply").setIcon(android.R.drawable.ic_menu_set_as)
 				.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		super.onCreateOptionsMenu(menu, inflater);
+		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -116,21 +150,25 @@ public class WallpaperFragment extends SherlockFragment implements
 	}
 
 	public void exportImage() {
-		if (!this.mImageDrawableSet) {
-			this.mApplyImageOnDisplay = true;
+		if (this.mImageDrawableSet == false) {
+			this.mSaveImageOnDisplay = true;
 			return;
 		}
 
 		try {
-			final Bitmap bitmap = this.mImageView.getBitmap();
+			final Bitmap bitmap = getImageBitmap();
 			if (bitmap == null) {
-				throw new Exception("Bitmap returned null");
+				Toast.makeText(getActivity(),
+						"Something Went Wrong, Please Try Again!",
+						Toast.LENGTH_SHORT).show();
+				return;
 			}
 
 			final File dir = new File(
 					Environment.getExternalStorageDirectory(), super
 							.getResources().getString(
 									R.string.config_external_storage_folder));
+
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
@@ -152,6 +190,7 @@ public class WallpaperFragment extends SherlockFragment implements
 					"Wallpaper Saved To, " + img.toString() + "!",
 					Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
+			Log.e(TAG, "", e);
 			Toast.makeText(getActivity(),
 					"Something Went Wrong, Please Try Again!",
 					Toast.LENGTH_SHORT).show();
@@ -159,26 +198,56 @@ public class WallpaperFragment extends SherlockFragment implements
 	}
 
 	public void applyImage() {
-		if (!this.mImageDrawableSet) {
+		if (this.mImageDrawableSet == false) {
 			this.mApplyImageOnDisplay = true;
 			return;
 		}
 
 		try {
-			final Bitmap bitmap = this.mImageView.getBitmap();
+			final Bitmap bitmap = getImageBitmap();
 			if (bitmap == null) {
-				throw new Exception("Bitmap returned null");
+				Toast.makeText(getActivity(),
+						"Something Went Wrong, Please Try Again!",
+						Toast.LENGTH_SHORT).show();
+				return;
 			}
 
 			final WallpaperManager wpManager = WallpaperManager
-					.getInstance(super.getActivity());
+					.getInstance(getActivity());
+			if (wpManager == null) {
+				Toast.makeText(getActivity(),
+						"Something Went Wrong, Please Try Again!",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+
 			wpManager.setBitmap(bitmap);
 			Toast.makeText(getActivity(), "Wallpaper Set!", Toast.LENGTH_SHORT)
 					.show();
 		} catch (Exception e) {
+			Log.e(TAG, "", e);
 			Toast.makeText(getActivity(),
 					"Something Went Wrong, Please Try Again!",
 					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	public Bitmap getImageBitmap() {
+		try {
+			final Drawable drawable = this.mImageView.getDrawable();
+			if (drawable instanceof BitmapDrawable) {
+				return ((BitmapDrawable) drawable).getBitmap();
+			}
+
+			Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+					drawable.getIntrinsicHeight(), Config.ARGB_8888);
+			Canvas canvas = new Canvas(bitmap);
+			drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+			drawable.draw(canvas);
+			return bitmap;
+		} catch (Exception e) {
+			Log.e(TAG, "", e);
+			return null;
 		}
 	}
 

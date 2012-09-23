@@ -180,6 +180,6 @@ class SimpleMultipartEntity implements HttpEntity {
     @Override
     public InputStream getContent() throws IOException,
     UnsupportedOperationException {
-		return new ByteArrayInputStream(out.toByteArray());
-	}
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 }

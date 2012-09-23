@@ -13,5 +13,5 @@ public class LauncherActivity extends SherlockFragmentActivity {
 		final Intent intent = new Intent(this, HomeActivity.class);
 		super.startActivity(intent);
 	}
-	
+
 }

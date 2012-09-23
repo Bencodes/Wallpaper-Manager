@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.wallpaper.core.PendingImageView
+    <com.wallpaper.core.uk.co.senab.photoview.PhotoView
         android:id="@+id/wp_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

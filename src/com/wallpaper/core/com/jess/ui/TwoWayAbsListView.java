@@ -1648,11 +1648,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	boolean touchModeDrawsInPressedState() {
 		// FIXME use isPressed for this
 		switch (mTouchMode) {
-		case TOUCH_MODE_TAP:
-		case TOUCH_MODE_DONE_WAITING:
-			return true;
-		default:
-			return false;
+			case TOUCH_MODE_TAP:
+			case TOUCH_MODE_DONE_WAITING:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -2033,24 +2033,26 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {
-		case KeyEvent.KEYCODE_DPAD_CENTER:
-		case KeyEvent.KEYCODE_ENTER:
-			if (!isEnabled()) {
-				return true;
-			}
-			if (isClickable() && isPressed() && mSelectedPosition >= 0
-					&& mAdapter != null
-					&& mSelectedPosition < mAdapter.getCount()) {
-
-				final View view = getChildAt(mSelectedPosition - mFirstPosition);
-				if (view != null) {
-					performItemClick(view, mSelectedPosition, mSelectedRowId);
-					view.setPressed(false);
+			case KeyEvent.KEYCODE_DPAD_CENTER:
+			case KeyEvent.KEYCODE_ENTER:
+				if (!isEnabled()) {
+					return true;
 				}
-				setPressed(false);
-				return true;
-			}
-			break;
+				if (isClickable() && isPressed() && mSelectedPosition >= 0
+						&& mAdapter != null
+						&& mSelectedPosition < mAdapter.getCount()) {
+
+					final View view = getChildAt(mSelectedPosition
+							- mFirstPosition);
+					if (view != null) {
+						performItemClick(view, mSelectedPosition,
+								mSelectedRowId);
+						view.setPressed(false);
+					}
+					setPressed(false);
+					return true;
+				}
+				break;
 		}
 		return super.onKeyUp(keyCode, event);
 	}
@@ -2441,63 +2443,71 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				}
 
 				switch (mSyncMode) {
-				case SYNC_SELECTED_POSITION:
-					if (isInTouchMode()) {
-						// We saved our state when not in touch mode. (We know
-						// this because
-						// mSyncMode is SYNC_SELECTED_POSITION.) Now we are
-						// trying to
-						// restore in touch mode. Just leave mSyncPosition as it
-						// is (possibly
-						// adjusting if the available range changed) and return.
+					case SYNC_SELECTED_POSITION:
+						if (isInTouchMode()) {
+							// We saved our state when not in touch mode. (We
+							// know
+							// this because
+							// mSyncMode is SYNC_SELECTED_POSITION.) Now we are
+							// trying to
+							// restore in touch mode. Just leave mSyncPosition
+							// as it
+							// is (possibly
+							// adjusting if the available range changed) and
+							// return.
+							mLayoutMode = LAYOUT_SYNC;
+							mSyncPosition = Math.min(
+									Math.max(0, mSyncPosition), count - 1);
+
+							return;
+						} else {
+							// See if we can find a position in the new data
+							// with
+							// the same
+							// id as the old selection. This will change
+							// mSyncPosition.
+							newPos = findSyncPosition();
+							if (newPos >= 0) {
+								// Found it. Now verify that new selection is
+								// still
+								// selectable
+								selectablePos = lookForSelectablePosition(
+										newPos, true);
+								if (selectablePos == newPos) {
+									// Same row id is selected
+									mSyncPosition = newPos;
+									int size = mIsVertical ? getHeight()
+											: getWidth();
+									if (mSyncSize == size) {
+										// If we are at the same height as when
+										// we
+										// saved state, try
+										// to restore the scroll position too.
+										mLayoutMode = LAYOUT_SYNC;
+									} else {
+										// We are not the same height as when
+										// the
+										// selection was saved, so
+										// don't try to restore the exact
+										// position
+										mLayoutMode = LAYOUT_SET_SELECTION;
+									}
+
+									// Restore selection
+									setNextSelectedPositionInt(newPos);
+									return;
+								}
+							}
+						}
+						break;
+					case SYNC_FIRST_POSITION:
+						// Leave mSyncPosition as it is -- just pin to available
+						// range
 						mLayoutMode = LAYOUT_SYNC;
 						mSyncPosition = Math.min(Math.max(0, mSyncPosition),
 								count - 1);
 
 						return;
-					} else {
-						// See if we can find a position in the new data with
-						// the same
-						// id as the old selection. This will change
-						// mSyncPosition.
-						newPos = findSyncPosition();
-						if (newPos >= 0) {
-							// Found it. Now verify that new selection is still
-							// selectable
-							selectablePos = lookForSelectablePosition(newPos,
-									true);
-							if (selectablePos == newPos) {
-								// Same row id is selected
-								mSyncPosition = newPos;
-								int size = mIsVertical ? getHeight()
-										: getWidth();
-								if (mSyncSize == size) {
-									// If we are at the same height as when we
-									// saved state, try
-									// to restore the scroll position too.
-									mLayoutMode = LAYOUT_SYNC;
-								} else {
-									// We are not the same height as when the
-									// selection was saved, so
-									// don't try to restore the exact position
-									mLayoutMode = LAYOUT_SET_SELECTION;
-								}
-
-								// Restore selection
-								setNextSelectedPositionInt(newPos);
-								return;
-							}
-						}
-					}
-					break;
-				case SYNC_FIRST_POSITION:
-					// Leave mSyncPosition as it is -- just pin to available
-					// range
-					mLayoutMode = LAYOUT_SYNC;
-					mSyncPosition = Math.min(Math.max(0, mSyncPosition),
-							count - 1);
-
-					return;
 				}
 			}
 
@@ -2622,41 +2632,41 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		int sX, sY; // source x, y
 		int dX, dY; // dest x, y
 		switch (direction) {
-		case View.FOCUS_RIGHT:
-			sX = source.right;
-			sY = source.top + source.height() / 2;
-			dX = dest.left;
-			dY = dest.top + dest.height() / 2;
-			break;
-		case View.FOCUS_DOWN:
-			sX = source.left + source.width() / 2;
-			sY = source.bottom;
-			dX = dest.left + dest.width() / 2;
-			dY = dest.top;
-			break;
-		case View.FOCUS_LEFT:
-			sX = source.left;
-			sY = source.top + source.height() / 2;
-			dX = dest.right;
-			dY = dest.top + dest.height() / 2;
-			break;
-		case View.FOCUS_UP:
-			sX = source.left + source.width() / 2;
-			sY = source.top;
-			dX = dest.left + dest.width() / 2;
-			dY = dest.bottom;
-			break;
-		case View.FOCUS_FORWARD:
-		case View.FOCUS_BACKWARD:
-			sX = source.right + source.width() / 2;
-			sY = source.top + source.height() / 2;
-			dX = dest.left + dest.width() / 2;
-			dY = dest.top + dest.height() / 2;
-			break;
-		default:
-			throw new IllegalArgumentException("direction must be one of "
-					+ "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
-					+ "FOCUS_FORWARD, FOCUS_BACKWARD}.");
+			case View.FOCUS_RIGHT:
+				sX = source.right;
+				sY = source.top + source.height() / 2;
+				dX = dest.left;
+				dY = dest.top + dest.height() / 2;
+				break;
+			case View.FOCUS_DOWN:
+				sX = source.left + source.width() / 2;
+				sY = source.bottom;
+				dX = dest.left + dest.width() / 2;
+				dY = dest.top;
+				break;
+			case View.FOCUS_LEFT:
+				sX = source.left;
+				sY = source.top + source.height() / 2;
+				dX = dest.right;
+				dY = dest.top + dest.height() / 2;
+				break;
+			case View.FOCUS_UP:
+				sX = source.left + source.width() / 2;
+				sY = source.top;
+				dX = dest.left + dest.width() / 2;
+				dY = dest.bottom;
+				break;
+			case View.FOCUS_FORWARD:
+			case View.FOCUS_BACKWARD:
+				sX = source.right + source.width() / 2;
+				sY = source.top + source.height() / 2;
+				dX = dest.left + dest.width() / 2;
+				dY = dest.top + dest.height() / 2;
+				break;
+			default:
+				throw new IllegalArgumentException("direction must be one of "
+						+ "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
+						+ "FOCUS_FORWARD, FOCUS_BACKWARD}.");
 		}
 		int deltaX = dX - sX;
 		int deltaY = dY - sY;
@@ -3712,9 +3722,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Fires an "on scroll state changed" event to the registered
-		 * {@link com.wallpaper.core.com.jess.ui.TwoWayAbsListView.OnScrollListener}, if any. The
-		 * state change is fired only if the specified state is different from
-		 * the previously known state.
+		 * {@link com.wallpaper.core.com.jess.ui.TwoWayAbsListView.OnScrollListener}
+		 * , if any. The state change is fired only if the specified state is
+		 * different from the previously known state.
 		 * 
 		 * @param newState
 		 *            The new scroll state.
@@ -4040,273 +4050,291 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			mVelocityTracker.addMovement(ev);
 
 			switch (action) {
-			case MotionEvent.ACTION_DOWN: {
-				final int x = (int) ev.getX();
-				final int y = (int) ev.getY();
-				int motionPosition = pointToPosition(x, y);
-				if (!mDataChanged) {
-					if ((mTouchMode != TOUCH_MODE_FLING)
-							&& (motionPosition >= 0)
-							&& (getAdapter().isEnabled(motionPosition))) {
-						// User clicked on an actual view (and was not stopping
-						// a fling). It might be a
-						// click or a scroll. Assume it is a click until proven
-						// otherwise
-						mTouchMode = TOUCH_MODE_DOWN;
-						// FIXME Debounce
-						if (mPendingCheckForTap == null) {
-							mPendingCheckForTap = new CheckForTap();
-						}
-						postDelayed(mPendingCheckForTap,
-								ViewConfiguration.getTapTimeout());
-					} else {
-						if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
-							// If we couldn't find a view to click on, but the
-							// down event was touching
-							// the edge, we will bail out and try again. This
-							// allows the edge correcting
-							// code in ViewRoot to try to find a nearby view to
-							// select
-							return false;
-						}
-
-						if (mTouchMode == TOUCH_MODE_FLING) {
-							// Stopped a fling. It is a scroll.
-							createScrollingCache();
-							mTouchMode = TOUCH_MODE_SCROLL;
-							mMotionCorrection = 0;
-							motionPosition = findMotionRowY(y);
-							reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
-						}
-					}
-				}
-
-				if (motionPosition >= 0) {
-					// Remember where the motion event started
-					v = getChildAt(motionPosition - mFirstPosition);
-					mMotionViewOriginalTop = v.getTop();
-				}
-				mMotionX = x;
-				mMotionY = y;
-				mMotionPosition = motionPosition;
-				mLastY = Integer.MIN_VALUE;
-				break;
-			}
-
-			case MotionEvent.ACTION_MOVE: {
-				final int y = (int) ev.getY();
-				deltaY = y - mMotionY;
-				switch (mTouchMode) {
-				case TOUCH_MODE_DOWN:
-				case TOUCH_MODE_TAP:
-				case TOUCH_MODE_DONE_WAITING:
-					// Check if we have moved far enough that it looks more like
-					// a
-					// scroll than a tap
-					startScrollIfNeeded(deltaY);
-					break;
-				case TOUCH_MODE_SCROLL:
-					if (PROFILE_SCROLLING) {
-						if (!mScrollProfilingStarted) {
-							Debug.startMethodTracing("JessAbsListViewScroll");
-							mScrollProfilingStarted = true;
-						}
-					}
-
-					if (y != mLastY) {
-						deltaY -= mMotionCorrection;
-						int incrementalDeltaY = mLastY != Integer.MIN_VALUE ? y
-								- mLastY : deltaY;
-
-						// No need to do all this work if we're not going to
-						// move anyway
-						boolean atEdge = false;
-						if (incrementalDeltaY != 0) {
-							atEdge = trackMotionScroll(deltaY,
-									incrementalDeltaY);
-						}
-
-						// Check to see if we have bumped into the scroll limit
-						if (atEdge && getChildCount() > 0) {
-							// Treat this like we're starting a new scroll from
-							// the current
-							// position. This will let the user start scrolling
-							// back into
-							// content immediately rather than needing to scroll
-							// back to the
-							// point where they hit the limit first.
-							int motionPosition = findMotionRowY(y);
-							if (motionPosition >= 0) {
-								final View motionView = getChildAt(motionPosition
-										- mFirstPosition);
-								mMotionViewOriginalTop = motionView.getTop();
+				case MotionEvent.ACTION_DOWN: {
+					final int x = (int) ev.getX();
+					final int y = (int) ev.getY();
+					int motionPosition = pointToPosition(x, y);
+					if (!mDataChanged) {
+						if ((mTouchMode != TOUCH_MODE_FLING)
+								&& (motionPosition >= 0)
+								&& (getAdapter().isEnabled(motionPosition))) {
+							// User clicked on an actual view (and was not
+							// stopping
+							// a fling). It might be a
+							// click or a scroll. Assume it is a click until
+							// proven
+							// otherwise
+							mTouchMode = TOUCH_MODE_DOWN;
+							// FIXME Debounce
+							if (mPendingCheckForTap == null) {
+								mPendingCheckForTap = new CheckForTap();
 							}
-							mMotionY = y;
-							mMotionPosition = motionPosition;
-							invalidate();
+							postDelayed(mPendingCheckForTap,
+									ViewConfiguration.getTapTimeout());
+						} else {
+							if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
+								// If we couldn't find a view to click on, but
+								// the
+								// down event was touching
+								// the edge, we will bail out and try again.
+								// This
+								// allows the edge correcting
+								// code in ViewRoot to try to find a nearby view
+								// to
+								// select
+								return false;
+							}
+
+							if (mTouchMode == TOUCH_MODE_FLING) {
+								// Stopped a fling. It is a scroll.
+								createScrollingCache();
+								mTouchMode = TOUCH_MODE_SCROLL;
+								mMotionCorrection = 0;
+								motionPosition = findMotionRowY(y);
+								reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+							}
 						}
-						mLastY = y;
 					}
+
+					if (motionPosition >= 0) {
+						// Remember where the motion event started
+						v = getChildAt(motionPosition - mFirstPosition);
+						mMotionViewOriginalTop = v.getTop();
+					}
+					mMotionX = x;
+					mMotionY = y;
+					mMotionPosition = motionPosition;
+					mLastY = Integer.MIN_VALUE;
 					break;
 				}
 
-				break;
-			}
-
-			case MotionEvent.ACTION_UP: {
-				switch (mTouchMode) {
-				case TOUCH_MODE_DOWN:
-				case TOUCH_MODE_TAP:
-				case TOUCH_MODE_DONE_WAITING:
-					final int motionPosition = mMotionPosition;
-					final View child = getChildAt(motionPosition
-							- mFirstPosition);
-					if (child != null && !child.hasFocusable()) {
-						if (mTouchMode != TOUCH_MODE_DOWN) {
-							child.setPressed(false);
-						}
-
-						if (mPerformClick == null) {
-							mPerformClick = new PerformClick();
-						}
-
-						final TwoWayAbsListView.PerformClick performClick = mPerformClick;
-						performClick.mChild = child;
-						performClick.mClickMotionPosition = motionPosition;
-						performClick.rememberWindowAttachCount();
-
-						mResurrectToPosition = motionPosition;
-
-						if (mTouchMode == TOUCH_MODE_DOWN
-								|| mTouchMode == TOUCH_MODE_TAP) {
-							final Handler handler = getHandler();
-							if (handler != null) {
-								handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
-										: mPendingCheckForLongPress);
-							}
-							mLayoutMode = LAYOUT_NORMAL;
-							if (!mDataChanged
-									&& mAdapter.isEnabled(motionPosition)) {
-								mTouchMode = TOUCH_MODE_TAP;
-								setSelectedPositionInt(mMotionPosition);
-								layoutChildren();
-								child.setPressed(true);
-								positionSelector(child);
-								setPressed(true);
-								if (mSelector != null) {
-									Drawable d = mSelector.getCurrent();
-									if (d != null
-											&& d instanceof TransitionDrawable) {
-										((TransitionDrawable) d)
-												.resetTransition();
-									}
+				case MotionEvent.ACTION_MOVE: {
+					final int y = (int) ev.getY();
+					deltaY = y - mMotionY;
+					switch (mTouchMode) {
+						case TOUCH_MODE_DOWN:
+						case TOUCH_MODE_TAP:
+						case TOUCH_MODE_DONE_WAITING:
+							// Check if we have moved far enough that it looks
+							// more like
+							// a
+							// scroll than a tap
+							startScrollIfNeeded(deltaY);
+							break;
+						case TOUCH_MODE_SCROLL:
+							if (PROFILE_SCROLLING) {
+								if (!mScrollProfilingStarted) {
+									Debug.startMethodTracing("JessAbsListViewScroll");
+									mScrollProfilingStarted = true;
 								}
-								postDelayed(new Runnable() {
-									public void run() {
-										child.setPressed(false);
-										setPressed(false);
-										if (!mDataChanged) {
-											post(performClick);
+							}
+
+							if (y != mLastY) {
+								deltaY -= mMotionCorrection;
+								int incrementalDeltaY = mLastY != Integer.MIN_VALUE ? y
+										- mLastY
+										: deltaY;
+
+								// No need to do all this work if we're not
+								// going to
+								// move anyway
+								boolean atEdge = false;
+								if (incrementalDeltaY != 0) {
+									atEdge = trackMotionScroll(deltaY,
+											incrementalDeltaY);
+								}
+
+								// Check to see if we have bumped into the
+								// scroll limit
+								if (atEdge && getChildCount() > 0) {
+									// Treat this like we're starting a new
+									// scroll from
+									// the current
+									// position. This will let the user start
+									// scrolling
+									// back into
+									// content immediately rather than needing
+									// to scroll
+									// back to the
+									// point where they hit the limit first.
+									int motionPosition = findMotionRowY(y);
+									if (motionPosition >= 0) {
+										final View motionView = getChildAt(motionPosition
+												- mFirstPosition);
+										mMotionViewOriginalTop = motionView
+												.getTop();
+									}
+									mMotionY = y;
+									mMotionPosition = motionPosition;
+									invalidate();
+								}
+								mLastY = y;
+							}
+							break;
+					}
+
+					break;
+				}
+
+				case MotionEvent.ACTION_UP: {
+					switch (mTouchMode) {
+						case TOUCH_MODE_DOWN:
+						case TOUCH_MODE_TAP:
+						case TOUCH_MODE_DONE_WAITING:
+							final int motionPosition = mMotionPosition;
+							final View child = getChildAt(motionPosition
+									- mFirstPosition);
+							if (child != null && !child.hasFocusable()) {
+								if (mTouchMode != TOUCH_MODE_DOWN) {
+									child.setPressed(false);
+								}
+
+								if (mPerformClick == null) {
+									mPerformClick = new PerformClick();
+								}
+
+								final TwoWayAbsListView.PerformClick performClick = mPerformClick;
+								performClick.mChild = child;
+								performClick.mClickMotionPosition = motionPosition;
+								performClick.rememberWindowAttachCount();
+
+								mResurrectToPosition = motionPosition;
+
+								if (mTouchMode == TOUCH_MODE_DOWN
+										|| mTouchMode == TOUCH_MODE_TAP) {
+									final Handler handler = getHandler();
+									if (handler != null) {
+										handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
+												: mPendingCheckForLongPress);
+									}
+									mLayoutMode = LAYOUT_NORMAL;
+									if (!mDataChanged
+											&& mAdapter
+													.isEnabled(motionPosition)) {
+										mTouchMode = TOUCH_MODE_TAP;
+										setSelectedPositionInt(mMotionPosition);
+										layoutChildren();
+										child.setPressed(true);
+										positionSelector(child);
+										setPressed(true);
+										if (mSelector != null) {
+											Drawable d = mSelector.getCurrent();
+											if (d != null
+													&& d instanceof TransitionDrawable) {
+												((TransitionDrawable) d)
+														.resetTransition();
+											}
 										}
+										postDelayed(new Runnable() {
+											public void run() {
+												child.setPressed(false);
+												setPressed(false);
+												if (!mDataChanged) {
+													post(performClick);
+												}
+												mTouchMode = TOUCH_MODE_REST;
+											}
+										}, ViewConfiguration
+												.getPressedStateDuration());
+									} else {
 										mTouchMode = TOUCH_MODE_REST;
 									}
-								}, ViewConfiguration.getPressedStateDuration());
-							} else {
-								mTouchMode = TOUCH_MODE_REST;
-							}
-							return true;
-						} else if (!mDataChanged
-								&& mAdapter.isEnabled(motionPosition)) {
-							post(performClick);
-						}
-					}
-					mTouchMode = TOUCH_MODE_REST;
-					break;
-				case TOUCH_MODE_SCROLL:
-					final int childCount = getChildCount();
-					if (childCount > 0) {
-						if (mFirstPosition == 0
-								&& getChildAt(0).getTop() >= mListPadding.top
-								&& mFirstPosition + childCount < mItemCount
-								&& getChildAt(childCount - 1).getBottom() <= getHeight()
-										- mListPadding.bottom) {
-							mTouchMode = TOUCH_MODE_REST;
-							reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-						} else {
-							final VelocityTracker velocityTracker = mVelocityTracker;
-							velocityTracker.computeCurrentVelocity(1000);
-							final int initialVelocity = (int) velocityTracker
-									.getYVelocity();
-
-							if (Math.abs(initialVelocity) > mMinimumVelocity) {
-								if (mFlingRunnable == null) {
-									mFlingRunnable = new VerticalFlingRunnable();
+									return true;
+								} else if (!mDataChanged
+										&& mAdapter.isEnabled(motionPosition)) {
+									post(performClick);
 								}
-								reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+							}
+							mTouchMode = TOUCH_MODE_REST;
+							break;
+						case TOUCH_MODE_SCROLL:
+							final int childCount = getChildCount();
+							if (childCount > 0) {
+								if (mFirstPosition == 0
+										&& getChildAt(0).getTop() >= mListPadding.top
+										&& mFirstPosition + childCount < mItemCount
+										&& getChildAt(childCount - 1)
+												.getBottom() <= getHeight()
+												- mListPadding.bottom) {
+									mTouchMode = TOUCH_MODE_REST;
+									reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+								} else {
+									final VelocityTracker velocityTracker = mVelocityTracker;
+									velocityTracker
+											.computeCurrentVelocity(1000);
+									final int initialVelocity = (int) velocityTracker
+											.getYVelocity();
 
-								mFlingRunnable.start(-initialVelocity);
+									if (Math.abs(initialVelocity) > mMinimumVelocity) {
+										if (mFlingRunnable == null) {
+											mFlingRunnable = new VerticalFlingRunnable();
+										}
+										reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+
+										mFlingRunnable.start(-initialVelocity);
+									} else {
+										mTouchMode = TOUCH_MODE_REST;
+										reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+									}
+								}
 							} else {
 								mTouchMode = TOUCH_MODE_REST;
 								reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 							}
+							break;
+					}
+
+					setPressed(false);
+
+					// Need to redraw since we probably aren't drawing the
+					// selector
+					// anymore
+					invalidate();
+
+					final Handler handler = getHandler();
+					if (handler != null) {
+						handler.removeCallbacks(mPendingCheckForLongPress);
+					}
+
+					if (mVelocityTracker != null) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
+
+					mActivePointerId = INVALID_POINTER;
+
+					if (PROFILE_SCROLLING) {
+						if (mScrollProfilingStarted) {
+							Debug.stopMethodTracing();
+							mScrollProfilingStarted = false;
 						}
-					} else {
-						mTouchMode = TOUCH_MODE_REST;
-						reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 					}
 					break;
 				}
 
-				setPressed(false);
-
-				// Need to redraw since we probably aren't drawing the selector
-				// anymore
-				invalidate();
-
-				final Handler handler = getHandler();
-				if (handler != null) {
-					handler.removeCallbacks(mPendingCheckForLongPress);
-				}
-
-				if (mVelocityTracker != null) {
-					mVelocityTracker.recycle();
-					mVelocityTracker = null;
-				}
-
-				mActivePointerId = INVALID_POINTER;
-
-				if (PROFILE_SCROLLING) {
-					if (mScrollProfilingStarted) {
-						Debug.stopMethodTracing();
-						mScrollProfilingStarted = false;
+				case MotionEvent.ACTION_CANCEL: {
+					mTouchMode = TOUCH_MODE_REST;
+					setPressed(false);
+					View motionView = TwoWayAbsListView.this
+							.getChildAt(mMotionPosition - mFirstPosition);
+					if (motionView != null) {
+						motionView.setPressed(false);
 					}
-				}
-				break;
-			}
+					clearScrollingCache();
 
-			case MotionEvent.ACTION_CANCEL: {
-				mTouchMode = TOUCH_MODE_REST;
-				setPressed(false);
-				View motionView = TwoWayAbsListView.this
-						.getChildAt(mMotionPosition - mFirstPosition);
-				if (motionView != null) {
-					motionView.setPressed(false);
-				}
-				clearScrollingCache();
+					final Handler handler = getHandler();
+					if (handler != null) {
+						handler.removeCallbacks(mPendingCheckForLongPress);
+					}
 
-				final Handler handler = getHandler();
-				if (handler != null) {
-					handler.removeCallbacks(mPendingCheckForLongPress);
-				}
+					if (mVelocityTracker != null) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
 
-				if (mVelocityTracker != null) {
-					mVelocityTracker.recycle();
-					mVelocityTracker = null;
+					mActivePointerId = INVALID_POINTER;
+					break;
 				}
-
-				mActivePointerId = INVALID_POINTER;
-				break;
-			}
 
 			}
 
@@ -4325,50 +4353,51 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			 */
 
 			switch (action) {
-			case MotionEvent.ACTION_DOWN: {
-				int touchMode = mTouchMode;
+				case MotionEvent.ACTION_DOWN: {
+					int touchMode = mTouchMode;
 
-				final int x = (int) ev.getX();
-				final int y = (int) ev.getY();
-
-				int motionPosition = findMotionRowY(y);
-				if (touchMode != TOUCH_MODE_FLING && motionPosition >= 0) {
-					// User clicked on an actual view (and was not stopping a
-					// fling).
-					// Remember where the motion event started
-					v = getChildAt(motionPosition - mFirstPosition);
-					mMotionViewOriginalTop = v.getTop();
-					mMotionX = x;
-					mMotionY = y;
-					mMotionPosition = motionPosition;
-					mTouchMode = TOUCH_MODE_DOWN;
-					clearScrollingCache();
-				}
-				mLastY = Integer.MIN_VALUE;
-				if (touchMode == TOUCH_MODE_FLING) {
-					return true;
-				}
-				break;
-			}
-
-			case MotionEvent.ACTION_MOVE: {
-				switch (mTouchMode) {
-				case TOUCH_MODE_DOWN:
+					final int x = (int) ev.getX();
 					final int y = (int) ev.getY();
-					if (startScrollIfNeeded(y - mMotionY)) {
+
+					int motionPosition = findMotionRowY(y);
+					if (touchMode != TOUCH_MODE_FLING && motionPosition >= 0) {
+						// User clicked on an actual view (and was not stopping
+						// a
+						// fling).
+						// Remember where the motion event started
+						v = getChildAt(motionPosition - mFirstPosition);
+						mMotionViewOriginalTop = v.getTop();
+						mMotionX = x;
+						mMotionY = y;
+						mMotionPosition = motionPosition;
+						mTouchMode = TOUCH_MODE_DOWN;
+						clearScrollingCache();
+					}
+					mLastY = Integer.MIN_VALUE;
+					if (touchMode == TOUCH_MODE_FLING) {
 						return true;
 					}
 					break;
 				}
-				break;
-			}
 
-			case MotionEvent.ACTION_UP: {
-				mTouchMode = TOUCH_MODE_REST;
-				mActivePointerId = INVALID_POINTER;
-				reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-				break;
-			}
+				case MotionEvent.ACTION_MOVE: {
+					switch (mTouchMode) {
+						case TOUCH_MODE_DOWN:
+							final int y = (int) ev.getY();
+							if (startScrollIfNeeded(y - mMotionY)) {
+								return true;
+							}
+							break;
+					}
+					break;
+				}
+
+				case MotionEvent.ACTION_UP: {
+					mTouchMode = TOUCH_MODE_REST;
+					mActivePointerId = INVALID_POINTER;
+					reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+					break;
+				}
 			}
 
 			return false;
@@ -4695,69 +4724,71 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			@Override
 			public void run() {
 				switch (mTouchMode) {
-				default:
-					return;
-
-				case TOUCH_MODE_FLING: {
-					if (mItemCount == 0 || getChildCount() == 0) {
-						endFling();
+					default:
 						return;
-					}
 
-					final Scroller scroller = mScroller;
-					boolean more = scroller.computeScrollOffset();
-					final int y = scroller.getCurrY();
+					case TOUCH_MODE_FLING: {
+						if (mItemCount == 0 || getChildCount() == 0) {
+							endFling();
+							return;
+						}
 
-					// Flip sign to convert finger direction to list items
-					// direction
-					// (e.g. finger moving down means list is moving towards the
-					// top)
-					int delta = mLastFlingY - y;
+						final Scroller scroller = mScroller;
+						boolean more = scroller.computeScrollOffset();
+						final int y = scroller.getCurrY();
 
-					// Pretend that each frame of a fling scroll is a touch
-					// scroll
-					if (delta > 0) {
-						// List is moving towards the top. Use first view as
-						// mMotionPosition
-						mMotionPosition = mFirstPosition;
-						final View firstView = getChildAt(0);
-						mMotionViewOriginalTop = firstView.getTop();
+						// Flip sign to convert finger direction to list items
+						// direction
+						// (e.g. finger moving down means list is moving towards
+						// the
+						// top)
+						int delta = mLastFlingY - y;
 
-						// Don't fling more than 1 screen
-						delta = Math.min(getHeight() - getPaddingBottom()
-								- getPaddingTop() - 1, delta);
-					} else {
-						// List is moving towards the bottom. Use last view as
-						// mMotionPosition
-						int offsetToLast = getChildCount() - 1;
-						mMotionPosition = mFirstPosition + offsetToLast;
+						// Pretend that each frame of a fling scroll is a touch
+						// scroll
+						if (delta > 0) {
+							// List is moving towards the top. Use first view as
+							// mMotionPosition
+							mMotionPosition = mFirstPosition;
+							final View firstView = getChildAt(0);
+							mMotionViewOriginalTop = firstView.getTop();
 
-						final View lastView = getChildAt(offsetToLast);
-						mMotionViewOriginalTop = lastView.getTop();
+							// Don't fling more than 1 screen
+							delta = Math.min(getHeight() - getPaddingBottom()
+									- getPaddingTop() - 1, delta);
+						} else {
+							// List is moving towards the bottom. Use last view
+							// as
+							// mMotionPosition
+							int offsetToLast = getChildCount() - 1;
+							mMotionPosition = mFirstPosition + offsetToLast;
 
-						// Don't fling more than 1 screen
-						delta = Math.max(-(getHeight() - getPaddingBottom()
-								- getPaddingTop() - 1), delta);
-					}
+							final View lastView = getChildAt(offsetToLast);
+							mMotionViewOriginalTop = lastView.getTop();
 
-					final boolean atEnd = trackMotionScroll(delta, delta);
+							// Don't fling more than 1 screen
+							delta = Math.max(-(getHeight() - getPaddingBottom()
+									- getPaddingTop() - 1), delta);
+						}
 
-					if (more && !atEnd) {
-						invalidate();
-						mLastFlingY = y;
-						post(this);
-					} else {
-						endFling();
+						final boolean atEnd = trackMotionScroll(delta, delta);
 
-						if (PROFILE_FLINGING) {
-							if (mFlingProfilingStarted) {
-								Debug.stopMethodTracing();
-								mFlingProfilingStarted = false;
+						if (more && !atEnd) {
+							invalidate();
+							mLastFlingY = y;
+							post(this);
+						} else {
+							endFling();
+
+							if (PROFILE_FLINGING) {
+								if (mFlingProfilingStarted) {
+									Debug.stopMethodTracing();
+									mFlingProfilingStarted = false;
+								}
 							}
 						}
+						break;
 					}
-					break;
-				}
 				}
 
 			}
@@ -4770,134 +4801,140 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				final int firstPos = mFirstPosition;
 
 				switch (mMode) {
-				case MOVE_DOWN_POS: {
-					final int lastViewIndex = getChildCount() - 1;
-					final int lastPos = firstPos + lastViewIndex;
+					case MOVE_DOWN_POS: {
+						final int lastViewIndex = getChildCount() - 1;
+						final int lastPos = firstPos + lastViewIndex;
 
-					if (lastViewIndex < 0) {
-						return;
-					}
-
-					if (lastPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
-					}
-
-					final View lastView = getChildAt(lastViewIndex);
-					final int lastViewHeight = lastView.getHeight();
-					final int lastViewTop = lastView.getTop();
-					final int lastViewPixelsShowing = listHeight - lastViewTop;
-					final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll
-							: mListPadding.bottom;
-
-					smoothScrollBy(lastViewHeight - lastViewPixelsShowing
-							+ extraScroll, mScrollDuration);
-
-					mLastSeenPos = lastPos;
-					if (lastPos < mTargetPos) {
-						post(this);
-					}
-					break;
-				}
-
-				case MOVE_DOWN_BOUND: {
-					final int nextViewIndex = 1;
-					final int childCount = getChildCount();
-
-					if (firstPos == mBoundPos || childCount <= nextViewIndex
-							|| firstPos + childCount >= mItemCount) {
-						return;
-					}
-					final int nextPos = firstPos + nextViewIndex;
-
-					if (nextPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
-					}
-
-					final View nextView = getChildAt(nextViewIndex);
-					final int nextViewHeight = nextView.getHeight();
-					final int nextViewTop = nextView.getTop();
-					final int extraScroll = mExtraScroll;
-					if (nextPos < mBoundPos) {
-						smoothScrollBy(
-								Math.max(0, nextViewHeight + nextViewTop
-										- extraScroll), mScrollDuration);
-
-						mLastSeenPos = nextPos;
-
-						post(this);
-					} else {
-						if (nextViewTop > extraScroll) {
-							smoothScrollBy(nextViewTop - extraScroll,
-									mScrollDuration);
+						if (lastViewIndex < 0) {
+							return;
 						}
-					}
-					break;
-				}
 
-				case MOVE_UP_POS: {
-					if (firstPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
-					}
+						if (lastPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
 
-					final View firstView = getChildAt(0);
-					if (firstView == null) {
-						return;
-					}
-					final int firstViewTop = firstView.getTop();
-					final int extraScroll = firstPos > 0 ? mExtraScroll
-							: mListPadding.top;
+						final View lastView = getChildAt(lastViewIndex);
+						final int lastViewHeight = lastView.getHeight();
+						final int lastViewTop = lastView.getTop();
+						final int lastViewPixelsShowing = listHeight
+								- lastViewTop;
+						final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll
+								: mListPadding.bottom;
 
-					smoothScrollBy(firstViewTop - extraScroll, mScrollDuration);
+						smoothScrollBy(lastViewHeight - lastViewPixelsShowing
+								+ extraScroll, mScrollDuration);
 
-					mLastSeenPos = firstPos;
-
-					if (firstPos > mTargetPos) {
-						post(this);
-					}
-					break;
-				}
-
-				case MOVE_UP_BOUND: {
-					final int lastViewIndex = getChildCount() - 2;
-					if (lastViewIndex < 0) {
-						return;
-					}
-					final int lastPos = firstPos + lastViewIndex;
-
-					if (lastPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
+						mLastSeenPos = lastPos;
+						if (lastPos < mTargetPos) {
+							post(this);
+						}
+						break;
 					}
 
-					final View lastView = getChildAt(lastViewIndex);
-					final int lastViewHeight = lastView.getHeight();
-					final int lastViewTop = lastView.getTop();
-					final int lastViewPixelsShowing = listHeight - lastViewTop;
-					mLastSeenPos = lastPos;
-					if (lastPos > mBoundPos) {
-						smoothScrollBy(-(lastViewPixelsShowing - mExtraScroll),
+					case MOVE_DOWN_BOUND: {
+						final int nextViewIndex = 1;
+						final int childCount = getChildCount();
+
+						if (firstPos == mBoundPos
+								|| childCount <= nextViewIndex
+								|| firstPos + childCount >= mItemCount) {
+							return;
+						}
+						final int nextPos = firstPos + nextViewIndex;
+
+						if (nextPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
+
+						final View nextView = getChildAt(nextViewIndex);
+						final int nextViewHeight = nextView.getHeight();
+						final int nextViewTop = nextView.getTop();
+						final int extraScroll = mExtraScroll;
+						if (nextPos < mBoundPos) {
+							smoothScrollBy(
+									Math.max(0, nextViewHeight + nextViewTop
+											- extraScroll), mScrollDuration);
+
+							mLastSeenPos = nextPos;
+
+							post(this);
+						} else {
+							if (nextViewTop > extraScroll) {
+								smoothScrollBy(nextViewTop - extraScroll,
+										mScrollDuration);
+							}
+						}
+						break;
+					}
+
+					case MOVE_UP_POS: {
+						if (firstPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
+
+						final View firstView = getChildAt(0);
+						if (firstView == null) {
+							return;
+						}
+						final int firstViewTop = firstView.getTop();
+						final int extraScroll = firstPos > 0 ? mExtraScroll
+								: mListPadding.top;
+
+						smoothScrollBy(firstViewTop - extraScroll,
 								mScrollDuration);
-						post(this);
-					} else {
-						final int bottom = listHeight - mExtraScroll;
-						final int lastViewBottom = lastViewTop + lastViewHeight;
-						if (bottom > lastViewBottom) {
-							smoothScrollBy(-(bottom - lastViewBottom),
-									mScrollDuration);
-						}
-					}
-					break;
-				}
 
-				default:
-					break;
+						mLastSeenPos = firstPos;
+
+						if (firstPos > mTargetPos) {
+							post(this);
+						}
+						break;
+					}
+
+					case MOVE_UP_BOUND: {
+						final int lastViewIndex = getChildCount() - 2;
+						if (lastViewIndex < 0) {
+							return;
+						}
+						final int lastPos = firstPos + lastViewIndex;
+
+						if (lastPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
+
+						final View lastView = getChildAt(lastViewIndex);
+						final int lastViewHeight = lastView.getHeight();
+						final int lastViewTop = lastView.getTop();
+						final int lastViewPixelsShowing = listHeight
+								- lastViewTop;
+						mLastSeenPos = lastPos;
+						if (lastPos > mBoundPos) {
+							smoothScrollBy(
+									-(lastViewPixelsShowing - mExtraScroll),
+									mScrollDuration);
+							post(this);
+						} else {
+							final int bottom = listHeight - mExtraScroll;
+							final int lastViewBottom = lastViewTop
+									+ lastViewHeight;
+							if (bottom > lastViewBottom) {
+								smoothScrollBy(-(bottom - lastViewBottom),
+										mScrollDuration);
+							}
+						}
+						break;
+					}
+
+					default:
+						break;
 				}
 			}
 		}
@@ -4947,50 +4984,51 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			 */
 
 			switch (action) {
-			case MotionEvent.ACTION_DOWN: {
-				int touchMode = mTouchMode;
+				case MotionEvent.ACTION_DOWN: {
+					int touchMode = mTouchMode;
 
-				final int x = (int) ev.getX();
-				final int y = (int) ev.getY();
-
-				int motionPosition = findMotionRowX(x);
-				if (touchMode != TOUCH_MODE_FLING && motionPosition >= 0) {
-					// User clicked on an actual view (and was not stopping a
-					// fling).
-					// Remember where the motion event started
-					v = getChildAt(motionPosition - mFirstPosition);
-					mMotionViewOriginalLeft = v.getLeft();
-					mMotionX = x;
-					mMotionY = y;
-					mMotionPosition = motionPosition;
-					mTouchMode = TOUCH_MODE_DOWN;
-					clearScrollingCache();
-				}
-				mLastX = Integer.MIN_VALUE;
-				if (touchMode == TOUCH_MODE_FLING) {
-					return true;
-				}
-				break;
-			}
-
-			case MotionEvent.ACTION_MOVE: {
-				switch (mTouchMode) {
-				case TOUCH_MODE_DOWN:
 					final int x = (int) ev.getX();
-					if (startScrollIfNeeded(x - mMotionX)) {
+					final int y = (int) ev.getY();
+
+					int motionPosition = findMotionRowX(x);
+					if (touchMode != TOUCH_MODE_FLING && motionPosition >= 0) {
+						// User clicked on an actual view (and was not stopping
+						// a
+						// fling).
+						// Remember where the motion event started
+						v = getChildAt(motionPosition - mFirstPosition);
+						mMotionViewOriginalLeft = v.getLeft();
+						mMotionX = x;
+						mMotionY = y;
+						mMotionPosition = motionPosition;
+						mTouchMode = TOUCH_MODE_DOWN;
+						clearScrollingCache();
+					}
+					mLastX = Integer.MIN_VALUE;
+					if (touchMode == TOUCH_MODE_FLING) {
 						return true;
 					}
 					break;
 				}
-				break;
-			}
 
-			case MotionEvent.ACTION_UP: {
-				mTouchMode = TOUCH_MODE_REST;
-				mActivePointerId = INVALID_POINTER;
-				reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-				break;
-			}
+				case MotionEvent.ACTION_MOVE: {
+					switch (mTouchMode) {
+						case TOUCH_MODE_DOWN:
+							final int x = (int) ev.getX();
+							if (startScrollIfNeeded(x - mMotionX)) {
+								return true;
+							}
+							break;
+					}
+					break;
+				}
+
+				case MotionEvent.ACTION_UP: {
+					mTouchMode = TOUCH_MODE_REST;
+					mActivePointerId = INVALID_POINTER;
+					reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+					break;
+				}
 
 			}
 
@@ -5022,273 +5060,291 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			mVelocityTracker.addMovement(ev);
 
 			switch (action) {
-			case MotionEvent.ACTION_DOWN: {
-				final int x = (int) ev.getX();
-				final int y = (int) ev.getY();
-				int motionPosition = pointToPosition(x, y);
-				if (!mDataChanged) {
-					if ((mTouchMode != TOUCH_MODE_FLING)
-							&& (motionPosition >= 0)
-							&& (getAdapter().isEnabled(motionPosition))) {
-						// User clicked on an actual view (and was not stopping
-						// a fling). It might be a
-						// click or a scroll. Assume it is a click until proven
-						// otherwise
-						mTouchMode = TOUCH_MODE_DOWN;
-						// FIXME Debounce
-						if (mPendingCheckForTap == null) {
-							mPendingCheckForTap = new CheckForTap();
-						}
-						postDelayed(mPendingCheckForTap,
-								ViewConfiguration.getTapTimeout());
-					} else {
-						if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
-							// If we couldn't find a view to click on, but the
-							// down event was touching
-							// the edge, we will bail out and try again. This
-							// allows the edge correcting
-							// code in ViewRoot to try to find a nearby view to
-							// select
-							return false;
-						}
-
-						if (mTouchMode == TOUCH_MODE_FLING) {
-							// Stopped a fling. It is a scroll.
-							createScrollingCache();
-							mTouchMode = TOUCH_MODE_SCROLL;
-							mMotionCorrection = 0;
-							motionPosition = findMotionRowX(x);
-							reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
-						}
-					}
-				}
-
-				if (motionPosition >= 0) {
-					// Remember where the motion event started
-					v = getChildAt(motionPosition - mFirstPosition);
-					mMotionViewOriginalLeft = v.getLeft();
-				}
-				mMotionX = x;
-				mMotionY = y;
-				mMotionPosition = motionPosition;
-				mLastX = Integer.MIN_VALUE;
-				break;
-			}
-
-			case MotionEvent.ACTION_MOVE: {
-				final int x = (int) ev.getX();
-				deltaX = x - mMotionX;
-				switch (mTouchMode) {
-				case TOUCH_MODE_DOWN:
-				case TOUCH_MODE_TAP:
-				case TOUCH_MODE_DONE_WAITING:
-					// Check if we have moved far enough that it looks more like
-					// a
-					// scroll than a tap
-					startScrollIfNeeded(deltaX);
-					break;
-				case TOUCH_MODE_SCROLL:
-					if (PROFILE_SCROLLING) {
-						if (!mScrollProfilingStarted) {
-							Debug.startMethodTracing("JessAbsListViewScroll");
-							mScrollProfilingStarted = true;
-						}
-					}
-
-					if (x != mLastX) {
-						deltaX -= mMotionCorrection;
-						int incrementalDeltaX = mLastX != Integer.MIN_VALUE ? x
-								- mLastX : deltaX;
-
-						// No need to do all this work if we're not going to
-						// move anyway
-						boolean atEdge = false;
-						if (incrementalDeltaX != 0) {
-							atEdge = trackMotionScroll(deltaX,
-									incrementalDeltaX);
-						}
-
-						// Check to see if we have bumped into the scroll limit
-						if (atEdge && getChildCount() > 0) {
-							// Treat this like we're starting a new scroll from
-							// the current
-							// position. This will let the user start scrolling
-							// back into
-							// content immediately rather than needing to scroll
-							// back to the
-							// point where they hit the limit first.
-							int motionPosition = findMotionRowX(x);
-							if (motionPosition >= 0) {
-								final View motionView = getChildAt(motionPosition
-										- mFirstPosition);
-								mMotionViewOriginalLeft = motionView.getLeft();
+				case MotionEvent.ACTION_DOWN: {
+					final int x = (int) ev.getX();
+					final int y = (int) ev.getY();
+					int motionPosition = pointToPosition(x, y);
+					if (!mDataChanged) {
+						if ((mTouchMode != TOUCH_MODE_FLING)
+								&& (motionPosition >= 0)
+								&& (getAdapter().isEnabled(motionPosition))) {
+							// User clicked on an actual view (and was not
+							// stopping
+							// a fling). It might be a
+							// click or a scroll. Assume it is a click until
+							// proven
+							// otherwise
+							mTouchMode = TOUCH_MODE_DOWN;
+							// FIXME Debounce
+							if (mPendingCheckForTap == null) {
+								mPendingCheckForTap = new CheckForTap();
 							}
-							mMotionX = x;
-							mMotionPosition = motionPosition;
-							invalidate();
+							postDelayed(mPendingCheckForTap,
+									ViewConfiguration.getTapTimeout());
+						} else {
+							if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
+								// If we couldn't find a view to click on, but
+								// the
+								// down event was touching
+								// the edge, we will bail out and try again.
+								// This
+								// allows the edge correcting
+								// code in ViewRoot to try to find a nearby view
+								// to
+								// select
+								return false;
+							}
+
+							if (mTouchMode == TOUCH_MODE_FLING) {
+								// Stopped a fling. It is a scroll.
+								createScrollingCache();
+								mTouchMode = TOUCH_MODE_SCROLL;
+								mMotionCorrection = 0;
+								motionPosition = findMotionRowX(x);
+								reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+							}
 						}
-						mLastX = x;
 					}
+
+					if (motionPosition >= 0) {
+						// Remember where the motion event started
+						v = getChildAt(motionPosition - mFirstPosition);
+						mMotionViewOriginalLeft = v.getLeft();
+					}
+					mMotionX = x;
+					mMotionY = y;
+					mMotionPosition = motionPosition;
+					mLastX = Integer.MIN_VALUE;
 					break;
 				}
 
-				break;
-			}
-
-			case MotionEvent.ACTION_UP: {
-				switch (mTouchMode) {
-				case TOUCH_MODE_DOWN:
-				case TOUCH_MODE_TAP:
-				case TOUCH_MODE_DONE_WAITING:
-					final int motionPosition = mMotionPosition;
-					final View child = getChildAt(motionPosition
-							- mFirstPosition);
-					if (child != null && !child.hasFocusable()) {
-						if (mTouchMode != TOUCH_MODE_DOWN) {
-							child.setPressed(false);
-						}
-
-						if (mPerformClick == null) {
-							mPerformClick = new PerformClick();
-						}
-
-						final TwoWayAbsListView.PerformClick performClick = mPerformClick;
-						performClick.mChild = child;
-						performClick.mClickMotionPosition = motionPosition;
-						performClick.rememberWindowAttachCount();
-
-						mResurrectToPosition = motionPosition;
-
-						if (mTouchMode == TOUCH_MODE_DOWN
-								|| mTouchMode == TOUCH_MODE_TAP) {
-							final Handler handler = getHandler();
-							if (handler != null) {
-								handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
-										: mPendingCheckForLongPress);
-							}
-							mLayoutMode = LAYOUT_NORMAL;
-							if (!mDataChanged
-									&& mAdapter.isEnabled(motionPosition)) {
-								mTouchMode = TOUCH_MODE_TAP;
-								setSelectedPositionInt(mMotionPosition);
-								layoutChildren();
-								child.setPressed(true);
-								positionSelector(child);
-								setPressed(true);
-								if (mSelector != null) {
-									Drawable d = mSelector.getCurrent();
-									if (d != null
-											&& d instanceof TransitionDrawable) {
-										((TransitionDrawable) d)
-												.resetTransition();
-									}
+				case MotionEvent.ACTION_MOVE: {
+					final int x = (int) ev.getX();
+					deltaX = x - mMotionX;
+					switch (mTouchMode) {
+						case TOUCH_MODE_DOWN:
+						case TOUCH_MODE_TAP:
+						case TOUCH_MODE_DONE_WAITING:
+							// Check if we have moved far enough that it looks
+							// more like
+							// a
+							// scroll than a tap
+							startScrollIfNeeded(deltaX);
+							break;
+						case TOUCH_MODE_SCROLL:
+							if (PROFILE_SCROLLING) {
+								if (!mScrollProfilingStarted) {
+									Debug.startMethodTracing("JessAbsListViewScroll");
+									mScrollProfilingStarted = true;
 								}
-								postDelayed(new Runnable() {
-									public void run() {
-										child.setPressed(false);
-										setPressed(false);
-										if (!mDataChanged) {
-											post(performClick);
+							}
+
+							if (x != mLastX) {
+								deltaX -= mMotionCorrection;
+								int incrementalDeltaX = mLastX != Integer.MIN_VALUE ? x
+										- mLastX
+										: deltaX;
+
+								// No need to do all this work if we're not
+								// going to
+								// move anyway
+								boolean atEdge = false;
+								if (incrementalDeltaX != 0) {
+									atEdge = trackMotionScroll(deltaX,
+											incrementalDeltaX);
+								}
+
+								// Check to see if we have bumped into the
+								// scroll limit
+								if (atEdge && getChildCount() > 0) {
+									// Treat this like we're starting a new
+									// scroll from
+									// the current
+									// position. This will let the user start
+									// scrolling
+									// back into
+									// content immediately rather than needing
+									// to scroll
+									// back to the
+									// point where they hit the limit first.
+									int motionPosition = findMotionRowX(x);
+									if (motionPosition >= 0) {
+										final View motionView = getChildAt(motionPosition
+												- mFirstPosition);
+										mMotionViewOriginalLeft = motionView
+												.getLeft();
+									}
+									mMotionX = x;
+									mMotionPosition = motionPosition;
+									invalidate();
+								}
+								mLastX = x;
+							}
+							break;
+					}
+
+					break;
+				}
+
+				case MotionEvent.ACTION_UP: {
+					switch (mTouchMode) {
+						case TOUCH_MODE_DOWN:
+						case TOUCH_MODE_TAP:
+						case TOUCH_MODE_DONE_WAITING:
+							final int motionPosition = mMotionPosition;
+							final View child = getChildAt(motionPosition
+									- mFirstPosition);
+							if (child != null && !child.hasFocusable()) {
+								if (mTouchMode != TOUCH_MODE_DOWN) {
+									child.setPressed(false);
+								}
+
+								if (mPerformClick == null) {
+									mPerformClick = new PerformClick();
+								}
+
+								final TwoWayAbsListView.PerformClick performClick = mPerformClick;
+								performClick.mChild = child;
+								performClick.mClickMotionPosition = motionPosition;
+								performClick.rememberWindowAttachCount();
+
+								mResurrectToPosition = motionPosition;
+
+								if (mTouchMode == TOUCH_MODE_DOWN
+										|| mTouchMode == TOUCH_MODE_TAP) {
+									final Handler handler = getHandler();
+									if (handler != null) {
+										handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
+												: mPendingCheckForLongPress);
+									}
+									mLayoutMode = LAYOUT_NORMAL;
+									if (!mDataChanged
+											&& mAdapter
+													.isEnabled(motionPosition)) {
+										mTouchMode = TOUCH_MODE_TAP;
+										setSelectedPositionInt(mMotionPosition);
+										layoutChildren();
+										child.setPressed(true);
+										positionSelector(child);
+										setPressed(true);
+										if (mSelector != null) {
+											Drawable d = mSelector.getCurrent();
+											if (d != null
+													&& d instanceof TransitionDrawable) {
+												((TransitionDrawable) d)
+														.resetTransition();
+											}
 										}
+										postDelayed(new Runnable() {
+											public void run() {
+												child.setPressed(false);
+												setPressed(false);
+												if (!mDataChanged) {
+													post(performClick);
+												}
+												mTouchMode = TOUCH_MODE_REST;
+											}
+										}, ViewConfiguration
+												.getPressedStateDuration());
+									} else {
 										mTouchMode = TOUCH_MODE_REST;
 									}
-								}, ViewConfiguration.getPressedStateDuration());
-							} else {
-								mTouchMode = TOUCH_MODE_REST;
-							}
-							return true;
-						} else if (!mDataChanged
-								&& mAdapter.isEnabled(motionPosition)) {
-							post(performClick);
-						}
-					}
-					mTouchMode = TOUCH_MODE_REST;
-					break;
-				case TOUCH_MODE_SCROLL:
-					final int childCount = getChildCount();
-					if (childCount > 0) {
-						if (mFirstPosition == 0
-								&& getChildAt(0).getLeft() >= mListPadding.left
-								&& mFirstPosition + childCount < mItemCount
-								&& getChildAt(childCount - 1).getRight() <= getWidth()
-										- mListPadding.right) {
-							mTouchMode = TOUCH_MODE_REST;
-							reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-						} else {
-							final VelocityTracker velocityTracker = mVelocityTracker;
-							velocityTracker.computeCurrentVelocity(1000);
-							final int initialVelocity = (int) velocityTracker
-									.getXVelocity();
-
-							if (Math.abs(initialVelocity) > mMinimumVelocity) {
-								if (mFlingRunnable == null) {
-									mFlingRunnable = new HorizontalFlingRunnable();
+									return true;
+								} else if (!mDataChanged
+										&& mAdapter.isEnabled(motionPosition)) {
+									post(performClick);
 								}
-								reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+							}
+							mTouchMode = TOUCH_MODE_REST;
+							break;
+						case TOUCH_MODE_SCROLL:
+							final int childCount = getChildCount();
+							if (childCount > 0) {
+								if (mFirstPosition == 0
+										&& getChildAt(0).getLeft() >= mListPadding.left
+										&& mFirstPosition + childCount < mItemCount
+										&& getChildAt(childCount - 1)
+												.getRight() <= getWidth()
+												- mListPadding.right) {
+									mTouchMode = TOUCH_MODE_REST;
+									reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+								} else {
+									final VelocityTracker velocityTracker = mVelocityTracker;
+									velocityTracker
+											.computeCurrentVelocity(1000);
+									final int initialVelocity = (int) velocityTracker
+											.getXVelocity();
 
-								mFlingRunnable.start(-initialVelocity);
+									if (Math.abs(initialVelocity) > mMinimumVelocity) {
+										if (mFlingRunnable == null) {
+											mFlingRunnable = new HorizontalFlingRunnable();
+										}
+										reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+
+										mFlingRunnable.start(-initialVelocity);
+									} else {
+										mTouchMode = TOUCH_MODE_REST;
+										reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+									}
+								}
 							} else {
 								mTouchMode = TOUCH_MODE_REST;
 								reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 							}
+							break;
+					}
+
+					setPressed(false);
+
+					// Need to redraw since we probably aren't drawing the
+					// selector
+					// anymore
+					invalidate();
+
+					final Handler handler = getHandler();
+					if (handler != null) {
+						handler.removeCallbacks(mPendingCheckForLongPress);
+					}
+
+					if (mVelocityTracker != null) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
+
+					mActivePointerId = INVALID_POINTER;
+
+					if (PROFILE_SCROLLING) {
+						if (mScrollProfilingStarted) {
+							Debug.stopMethodTracing();
+							mScrollProfilingStarted = false;
 						}
-					} else {
-						mTouchMode = TOUCH_MODE_REST;
-						reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 					}
 					break;
 				}
 
-				setPressed(false);
-
-				// Need to redraw since we probably aren't drawing the selector
-				// anymore
-				invalidate();
-
-				final Handler handler = getHandler();
-				if (handler != null) {
-					handler.removeCallbacks(mPendingCheckForLongPress);
-				}
-
-				if (mVelocityTracker != null) {
-					mVelocityTracker.recycle();
-					mVelocityTracker = null;
-				}
-
-				mActivePointerId = INVALID_POINTER;
-
-				if (PROFILE_SCROLLING) {
-					if (mScrollProfilingStarted) {
-						Debug.stopMethodTracing();
-						mScrollProfilingStarted = false;
+				case MotionEvent.ACTION_CANCEL: {
+					mTouchMode = TOUCH_MODE_REST;
+					setPressed(false);
+					View motionView = TwoWayAbsListView.this
+							.getChildAt(mMotionPosition - mFirstPosition);
+					if (motionView != null) {
+						motionView.setPressed(false);
 					}
-				}
-				break;
-			}
+					clearScrollingCache();
 
-			case MotionEvent.ACTION_CANCEL: {
-				mTouchMode = TOUCH_MODE_REST;
-				setPressed(false);
-				View motionView = TwoWayAbsListView.this
-						.getChildAt(mMotionPosition - mFirstPosition);
-				if (motionView != null) {
-					motionView.setPressed(false);
-				}
-				clearScrollingCache();
+					final Handler handler = getHandler();
+					if (handler != null) {
+						handler.removeCallbacks(mPendingCheckForLongPress);
+					}
 
-				final Handler handler = getHandler();
-				if (handler != null) {
-					handler.removeCallbacks(mPendingCheckForLongPress);
-				}
+					if (mVelocityTracker != null) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
 
-				if (mVelocityTracker != null) {
-					mVelocityTracker.recycle();
-					mVelocityTracker = null;
+					mActivePointerId = INVALID_POINTER;
+					break;
 				}
-
-				mActivePointerId = INVALID_POINTER;
-				break;
-			}
 			}
 
 			return true;
@@ -5594,69 +5650,71 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			@Override
 			public void run() {
 				switch (mTouchMode) {
-				default:
-					return;
-
-				case TOUCH_MODE_FLING: {
-					if (mItemCount == 0 || getChildCount() == 0) {
-						endFling();
+					default:
 						return;
-					}
 
-					final Scroller scroller = mScroller;
-					boolean more = scroller.computeScrollOffset();
-					final int x = scroller.getCurrX();
+					case TOUCH_MODE_FLING: {
+						if (mItemCount == 0 || getChildCount() == 0) {
+							endFling();
+							return;
+						}
 
-					// Flip sign to convert finger direction to list items
-					// direction
-					// (e.g. finger moving down means list is moving towards the
-					// top)
-					int delta = mLastFlingX - x;
+						final Scroller scroller = mScroller;
+						boolean more = scroller.computeScrollOffset();
+						final int x = scroller.getCurrX();
 
-					// Pretend that each frame of a fling scroll is a touch
-					// scroll
-					if (delta > 0) {
-						// List is moving towards the top. Use first view as
-						// mMotionPosition
-						mMotionPosition = mFirstPosition;
-						final View firstView = getChildAt(0);
-						mMotionViewOriginalLeft = firstView.getLeft();
+						// Flip sign to convert finger direction to list items
+						// direction
+						// (e.g. finger moving down means list is moving towards
+						// the
+						// top)
+						int delta = mLastFlingX - x;
 
-						// Don't fling more than 1 screen
-						delta = Math.min(getWidth() - getPaddingRight()
-								- getPaddingLeft() - 1, delta);
-					} else {
-						// List is moving towards the bottom. Use last view as
-						// mMotionPosition
-						int offsetToLast = getChildCount() - 1;
-						mMotionPosition = mFirstPosition + offsetToLast;
+						// Pretend that each frame of a fling scroll is a touch
+						// scroll
+						if (delta > 0) {
+							// List is moving towards the top. Use first view as
+							// mMotionPosition
+							mMotionPosition = mFirstPosition;
+							final View firstView = getChildAt(0);
+							mMotionViewOriginalLeft = firstView.getLeft();
 
-						final View lastView = getChildAt(offsetToLast);
-						mMotionViewOriginalLeft = lastView.getLeft();
+							// Don't fling more than 1 screen
+							delta = Math.min(getWidth() - getPaddingRight()
+									- getPaddingLeft() - 1, delta);
+						} else {
+							// List is moving towards the bottom. Use last view
+							// as
+							// mMotionPosition
+							int offsetToLast = getChildCount() - 1;
+							mMotionPosition = mFirstPosition + offsetToLast;
 
-						// Don't fling more than 1 screen
-						delta = Math.max(-(getWidth() - getPaddingRight()
-								- getPaddingLeft() - 1), delta);
-					}
+							final View lastView = getChildAt(offsetToLast);
+							mMotionViewOriginalLeft = lastView.getLeft();
 
-					final boolean atEnd = trackMotionScroll(delta, delta);
+							// Don't fling more than 1 screen
+							delta = Math.max(-(getWidth() - getPaddingRight()
+									- getPaddingLeft() - 1), delta);
+						}
 
-					if (more && !atEnd) {
-						invalidate();
-						mLastFlingX = x;
-						post(this);
-					} else {
-						endFling();
+						final boolean atEnd = trackMotionScroll(delta, delta);
 
-						if (PROFILE_FLINGING) {
-							if (mFlingProfilingStarted) {
-								Debug.stopMethodTracing();
-								mFlingProfilingStarted = false;
+						if (more && !atEnd) {
+							invalidate();
+							mLastFlingX = x;
+							post(this);
+						} else {
+							endFling();
+
+							if (PROFILE_FLINGING) {
+								if (mFlingProfilingStarted) {
+									Debug.stopMethodTracing();
+									mFlingProfilingStarted = false;
+								}
 							}
 						}
+						break;
 					}
-					break;
-				}
 				}
 
 			}
@@ -5669,134 +5727,140 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				final int firstPos = mFirstPosition;
 
 				switch (mMode) {
-				case MOVE_DOWN_POS: {
-					final int lastViewIndex = getChildCount() - 1;
-					final int lastPos = firstPos + lastViewIndex;
+					case MOVE_DOWN_POS: {
+						final int lastViewIndex = getChildCount() - 1;
+						final int lastPos = firstPos + lastViewIndex;
 
-					if (lastViewIndex < 0) {
-						return;
-					}
-
-					if (lastPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
-					}
-
-					final View lastView = getChildAt(lastViewIndex);
-					final int lastViewWidth = lastView.getWidth();
-					final int lastViewLeft = lastView.getLeft();
-					final int lastViewPixelsShowing = listWidth - lastViewLeft;
-					final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll
-							: mListPadding.right;
-
-					smoothScrollBy(lastViewWidth - lastViewPixelsShowing
-							+ extraScroll, mScrollDuration);
-
-					mLastSeenPos = lastPos;
-					if (lastPos < mTargetPos) {
-						post(this);
-					}
-					break;
-				}
-
-				case MOVE_DOWN_BOUND: {
-					final int nextViewIndex = 1;
-					final int childCount = getChildCount();
-
-					if (firstPos == mBoundPos || childCount <= nextViewIndex
-							|| firstPos + childCount >= mItemCount) {
-						return;
-					}
-					final int nextPos = firstPos + nextViewIndex;
-
-					if (nextPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
-					}
-
-					final View nextView = getChildAt(nextViewIndex);
-					final int nextViewWidth = nextView.getWidth();
-					final int nextViewLeft = nextView.getLeft();
-					final int extraScroll = mExtraScroll;
-					if (nextPos < mBoundPos) {
-						smoothScrollBy(
-								Math.max(0, nextViewWidth + nextViewLeft
-										- extraScroll), mScrollDuration);
-
-						mLastSeenPos = nextPos;
-
-						post(this);
-					} else {
-						if (nextViewLeft > extraScroll) {
-							smoothScrollBy(nextViewLeft - extraScroll,
-									mScrollDuration);
+						if (lastViewIndex < 0) {
+							return;
 						}
-					}
-					break;
-				}
 
-				case MOVE_UP_POS: {
-					if (firstPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
-					}
+						if (lastPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
 
-					final View firstView = getChildAt(0);
-					if (firstView == null) {
-						return;
-					}
-					final int firstViewLeft = firstView.getLeft();
-					final int extraScroll = firstPos > 0 ? mExtraScroll
-							: mListPadding.left;
+						final View lastView = getChildAt(lastViewIndex);
+						final int lastViewWidth = lastView.getWidth();
+						final int lastViewLeft = lastView.getLeft();
+						final int lastViewPixelsShowing = listWidth
+								- lastViewLeft;
+						final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll
+								: mListPadding.right;
 
-					smoothScrollBy(firstViewLeft - extraScroll, mScrollDuration);
+						smoothScrollBy(lastViewWidth - lastViewPixelsShowing
+								+ extraScroll, mScrollDuration);
 
-					mLastSeenPos = firstPos;
-
-					if (firstPos > mTargetPos) {
-						post(this);
-					}
-					break;
-				}
-
-				case MOVE_UP_BOUND: {
-					final int lastViewIndex = getChildCount() - 2;
-					if (lastViewIndex < 0) {
-						return;
-					}
-					final int lastPos = firstPos + lastViewIndex;
-
-					if (lastPos == mLastSeenPos) {
-						// No new views, let things keep going.
-						post(this);
-						return;
+						mLastSeenPos = lastPos;
+						if (lastPos < mTargetPos) {
+							post(this);
+						}
+						break;
 					}
 
-					final View lastView = getChildAt(lastViewIndex);
-					final int lastViewWidth = lastView.getWidth();
-					final int lastViewLeft = lastView.getLeft();
-					final int lastViewPixelsShowing = listWidth - lastViewLeft;
-					mLastSeenPos = lastPos;
-					if (lastPos > mBoundPos) {
-						smoothScrollBy(-(lastViewPixelsShowing - mExtraScroll),
+					case MOVE_DOWN_BOUND: {
+						final int nextViewIndex = 1;
+						final int childCount = getChildCount();
+
+						if (firstPos == mBoundPos
+								|| childCount <= nextViewIndex
+								|| firstPos + childCount >= mItemCount) {
+							return;
+						}
+						final int nextPos = firstPos + nextViewIndex;
+
+						if (nextPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
+
+						final View nextView = getChildAt(nextViewIndex);
+						final int nextViewWidth = nextView.getWidth();
+						final int nextViewLeft = nextView.getLeft();
+						final int extraScroll = mExtraScroll;
+						if (nextPos < mBoundPos) {
+							smoothScrollBy(
+									Math.max(0, nextViewWidth + nextViewLeft
+											- extraScroll), mScrollDuration);
+
+							mLastSeenPos = nextPos;
+
+							post(this);
+						} else {
+							if (nextViewLeft > extraScroll) {
+								smoothScrollBy(nextViewLeft - extraScroll,
+										mScrollDuration);
+							}
+						}
+						break;
+					}
+
+					case MOVE_UP_POS: {
+						if (firstPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
+
+						final View firstView = getChildAt(0);
+						if (firstView == null) {
+							return;
+						}
+						final int firstViewLeft = firstView.getLeft();
+						final int extraScroll = firstPos > 0 ? mExtraScroll
+								: mListPadding.left;
+
+						smoothScrollBy(firstViewLeft - extraScroll,
 								mScrollDuration);
-						post(this);
-					} else {
-						final int right = listWidth - mExtraScroll;
-						final int lastViewRight = lastViewLeft + lastViewWidth;
-						if (right > lastViewRight) {
-							smoothScrollBy(-(right - lastViewRight),
-									mScrollDuration);
-						}
-					}
-					break;
-				}
 
-				default:
-					break;
+						mLastSeenPos = firstPos;
+
+						if (firstPos > mTargetPos) {
+							post(this);
+						}
+						break;
+					}
+
+					case MOVE_UP_BOUND: {
+						final int lastViewIndex = getChildCount() - 2;
+						if (lastViewIndex < 0) {
+							return;
+						}
+						final int lastPos = firstPos + lastViewIndex;
+
+						if (lastPos == mLastSeenPos) {
+							// No new views, let things keep going.
+							post(this);
+							return;
+						}
+
+						final View lastView = getChildAt(lastViewIndex);
+						final int lastViewWidth = lastView.getWidth();
+						final int lastViewLeft = lastView.getLeft();
+						final int lastViewPixelsShowing = listWidth
+								- lastViewLeft;
+						mLastSeenPos = lastPos;
+						if (lastPos > mBoundPos) {
+							smoothScrollBy(
+									-(lastViewPixelsShowing - mExtraScroll),
+									mScrollDuration);
+							post(this);
+						} else {
+							final int right = listWidth - mExtraScroll;
+							final int lastViewRight = lastViewLeft
+									+ lastViewWidth;
+							if (right > lastViewRight) {
+								smoothScrollBy(-(right - lastViewRight),
+										mScrollDuration);
+							}
+						}
+						break;
+					}
+
+					default:
+						break;
 				}
 			}
 		}

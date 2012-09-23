@@ -8,6 +8,13 @@
     <string name="config_external_storage_folder">FolderName/Wallpapers</string>
 	
     
+    <!-- Enable The Image Tags (i.e. Each Image Has A Name) -->
+    <item format="boolean" type="bool" name="config_enable_image_names">false</item>
+    
+    
+    <!-- Set A Title For The Wallpaper Preview Title Bar (Leave Empty For It To Use The Image Title) -->
+    <string name="config_full_screen_wallpaper_title">Back</string>
+    
     
     <!-- Tablet Column Count (Land/Port) -->
     <item name="column_count_large_land" format="integer" type="integer">2</item>
