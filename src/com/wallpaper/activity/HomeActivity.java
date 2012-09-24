@@ -162,9 +162,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onCategorySelected(NodeCategory node) {
-		Log.i(TAG, "onCategorySelected ");
-		if (super.getSupportFragmentManager().findFragmentByTag(
-				CategoryFragment.FRAGMENT_TAG) != null) {
+		if (super.getSupportFragmentManager().findFragmentByTag(WallpaperFragment.FRAGMENT_TAG) != null) {
 			return;
 		}
 
