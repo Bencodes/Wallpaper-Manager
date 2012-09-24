@@ -13,6 +13,11 @@ A simple little app that pulls a JSON file from a url of your choice and lets yo
 
 
 # Change Log
+-----
+__Version 1.0.6__
+
+- Fixed small bug that prevented categories from changing.
+
 
 -----
 __Version 1.0.5__
