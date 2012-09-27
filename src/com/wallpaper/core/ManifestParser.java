@@ -15,10 +15,9 @@ public class ManifestParser {
 	public ArrayList<NodeCategory> getResults(JSONObject object) {
 		try {
 			ArrayList<NodeCategory> nodeList = new ArrayList<NodeCategory>();
-			JSONArray catList = object.getJSONObject("wallpapers")
-					.getJSONArray("category");
+			JSONArray catList = getJSONArray(getJSONObject(object, "wallpapers"), "category");
 			for (int x = 0; x < catList.length(); x++) {
-				JSONObject catObject = catList.getJSONObject(x);
+				JSONObject catObject = getJSONObject(catList, x);
 				NodeCategory node = parseCategory(catObject);
 				nodeList.add(node);
 			}
@@ -48,9 +47,13 @@ public class ManifestParser {
 			catNode.wallpaperList = new ArrayList<NodeWallpaper>();
 			catNode.name = getString(category, "name");
 
-			JSONArray array = category.getJSONArray("wallpaper");
+			JSONArray array = getJSONArray(category, "wallpaper");
+			if (array == null) {
+				return catNode;
+			}
+
 			for (int x = 0; x < array.length(); x++) {
-				JSONObject obj = array.getJSONObject(x);
+				JSONObject obj = this.getJSONObject(array, x);
 
 				NodeWallpaper node = new NodeWallpaper();
 				node.name = getString(obj, "name");
@@ -67,13 +70,30 @@ public class ManifestParser {
 		}
 	}
 
-	private String getString(JSONObject obj, String tag) throws JSONException {
-		if (obj != null && tag != null) {
-			if (obj.has(tag) && !obj.isNull(tag)) {
-				return obj.getString(tag);
-			}
-		}
+	public String getString(JSONObject obj, String tag) throws JSONException {
+		return (obj != null && !obj.isNull(tag)) ? obj.getString(tag) : null;
+	}
 
-		return null;
+	public int getInt(JSONObject obj, String tag) throws JSONException {
+		return (obj != null && !obj.isNull(tag)) ? obj.getInt(tag) : -1;
+	}
+
+	public boolean getBoolean(JSONObject obj, String tag) throws JSONException {
+		return (obj != null && !obj.isNull(tag)) ? obj.getBoolean(tag) : false;
+	}
+
+	public JSONObject getJSONObject(JSONObject obj, String tag)
+			throws JSONException {
+		return (obj != null && !obj.isNull(tag)) ? obj.getJSONObject(tag)
+				: null;
+	}
+
+	public JSONObject getJSONObject(JSONArray obj, int x) throws JSONException {
+		return (obj != null && !obj.isNull(x)) ? obj.getJSONObject(x) : null;
+	}
+
+	public JSONArray getJSONArray(JSONObject obj, String tag)
+			throws JSONException {
+		return (obj != null && !obj.isNull(tag)) ? obj.getJSONArray(tag) : null;
 	}
 }
