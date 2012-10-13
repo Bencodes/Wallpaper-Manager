@@ -1025,8 +1025,8 @@ containing a value of this type.
         public static final int ic_wallpaper_item_image=0x7f020059;
     }
     public static final class id {
-        public static final int FrameLayout1=0x7f040041;
-        public static final int SquareGridItem1=0x7f040040;
+        public static final int FrameLayout1=0x7f040044;
+        public static final int SquareGridItem1=0x7f040043;
         public static final int abs__action_bar=0x7f040037;
         public static final int abs__action_bar_container=0x7f040036;
         public static final int abs__action_bar_subtitle=0x7f040026;
@@ -1059,6 +1059,7 @@ containing a value of this type.
         public static final int alwaysScroll=0x7f04001d;
         public static final int auto_fit=0x7f040024;
         public static final int bottom=0x7f040011;
+        public static final int button_retry=0x7f040042;
         public static final int center=0x7f040018;
         public static final int center_horizontal=0x7f040016;
         public static final int center_vertical=0x7f040014;
@@ -1079,6 +1080,7 @@ containing a value of this type.
         public static final int none=0x7f040020;
         public static final int normal=0x7f040001;
         public static final int pending=0x7f04003e;
+        public static final int progressBar1=0x7f040040;
         public static final int right=0x7f040013;
         public static final int showCustom=0x7f040008;
         public static final int showHome=0x7f040005;
@@ -1086,13 +1088,14 @@ containing a value of this type.
         public static final int spacingWidth=0x7f040021;
         public static final int spacingWidthUniform=0x7f040023;
         public static final int tabMode=0x7f040003;
+        public static final int text_retry=0x7f040041;
         public static final int top=0x7f040010;
         public static final int useLogo=0x7f040004;
         public static final int vertical=0x7f04001e;
         public static final int wp_image=0x7f04003d;
-        public static final int wp_thumb=0x7f040042;
-        public static final int wp_title=0x7f040044;
-        public static final int wp_title_bg=0x7f040043;
+        public static final int wp_thumb=0x7f040045;
+        public static final int wp_title=0x7f040047;
+        public static final int wp_title_bg=0x7f040046;
         public static final int wrap_content=0x7f040000;
     }
     public static final class integer {
@@ -1131,9 +1134,11 @@ containing a value of this type.
         public static final int activity_home=0x7f030014;
         public static final int fragment_full_wallpaper=0x7f030015;
         public static final int fragment_grid=0x7f030016;
-        public static final int row_wallpaper_item=0x7f030017;
-        public static final int sherlock_spinner_dropdown_item=0x7f030018;
-        public static final int sherlock_spinner_item=0x7f030019;
+        public static final int fragment_loading=0x7f030017;
+        public static final int fragment_retry=0x7f030018;
+        public static final int row_wallpaper_item=0x7f030019;
+        public static final int sherlock_spinner_dropdown_item=0x7f03001a;
+        public static final int sherlock_spinner_item=0x7f03001b;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
