@@ -33,14 +33,17 @@ public class CategoryFragment extends GridFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		super.setRetainInstance(false);
-		
+
 		this.mUseImageTitle = super.getResources().getBoolean(
 				R.bool.config_enable_image_names);
 
 		this.mData = (ArrayList<NodeWallpaper>) super.getArguments()
 				.getSerializable(BUNDLE_TAG);
-		if (this.mData != null) {
+		if (this.mData != null && !this.mData.isEmpty()) {
 			super.setData(this.mData);
+		}
+		else {
+			
 		}
 	}
 
@@ -51,8 +54,6 @@ public class CategoryFragment extends GridFragment {
 			mListener = (OnFragmentClickListener) a;
 		}
 	}
-
-	
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -84,6 +85,5 @@ public class CategoryFragment extends GridFragment {
 			int position, long id) {
 		mListener.onWallpaperSelected(this.mData.get(position));
 	}
-
 
 }
