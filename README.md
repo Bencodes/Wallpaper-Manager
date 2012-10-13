@@ -12,9 +12,6 @@ A simple little app that pulls a JSON file from a url of your choice and lets yo
 - Note, this application is based on ActionBarSherlock so you will need to add that into your workspace.
 
 
-
-
-
 # Libraries Used
 -----
 
