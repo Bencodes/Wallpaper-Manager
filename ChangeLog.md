@@ -1,6 +1,15 @@
 # Change Log
 -----
 
+__Version 1.2.0__
+
+- Replaced some of the classes with their jars.
+- Optional ligt/dark theme.
+- New image loader.
+- Added an optional fade in animation for images.
+- Added a customizable fade in animation time for the above feature.
+- Removed ForceOverflow style (deprecated in ActionBar Sherlock).
+
 
 
 __Version 1.0.6__
