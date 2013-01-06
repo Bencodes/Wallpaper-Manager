@@ -1,9 +1,5 @@
 package com.wallpaper.activity;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,20 +14,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.wallpaper.core.NodeWallpaper;
-import com.wallpaper.core.com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
-import com.wallpaper.core.com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.wallpaper.core.uk.co.senab.photoview.PhotoView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class WallpaperFragment extends SherlockFragment {
 
@@ -49,33 +48,28 @@ public class WallpaperFragment extends SherlockFragment {
 	private boolean mSaveImageOnDisplay = false;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		super.setHasOptionsMenu(true);
 		super.setRetainInstance(false);
 
-		this.mView = inflater.inflate(R.layout.fragment_full_wallpaper,
-				container, false);
+		this.mView = inflater.inflate(R.layout.fragment_full_wallpaper, container, false);
 		return this.mView;
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
+	public void onActivityCreated (Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.mNode = (NodeWallpaper) super.getArguments().getSerializable(
-				BUNDLE_TAG);
+		this.mNode = (NodeWallpaper) super.getArguments().getSerializable(BUNDLE_TAG);
 
-		final ActionBar ab = ((SherlockFragmentActivity) super.getActivity())
-				.getSupportActionBar();
+		final ActionBar ab = ((SherlockFragmentActivity) super.getActivity()).getSupportActionBar();
 		if (ab != null) {
 			ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			ab.setDisplayHomeAsUpEnabled(true);
 			ab.setDisplayShowHomeEnabled(false);
 			ab.setDisplayShowTitleEnabled(true);
 
-			final String title = super.getResources().getString(
-					R.string.config_full_screen_wallpaper_title);
+			final String title = super.getResources().getString(R.string.config_full_screen_wallpaper_title);
 			if (title == null || title.length() <= 0) {
 				ab.setTitle(mNode.name);
 			} else {
@@ -83,61 +77,58 @@ public class WallpaperFragment extends SherlockFragment {
 			}
 		}
 
-		this.mPending = (ProgressBar) super.getView()
-				.findViewById(R.id.pending);
+		this.mPending = (ProgressBar) super.getView().findViewById(R.id.pending);
 		this.mImageView = (PhotoView) mView.findViewById(R.id.wp_image);
 
-		UrlImageViewHelper.setUrlDrawable(this.mImageView, this.mNode.url,
-				new UrlImageViewCallback() {
+		ImageLoader.getInstance().displayImage(mNode.url, mImageView, new ImageLoadingListener() {
+			@Override
+			public void onLoadingStarted () {
+				mImageDrawableSet = false;
+				mImageView.setVisibility(View.GONE);
+				mPending.setVisibility(View.VISIBLE);
+			}
 
-					@Override
-					public void onLoaded(ImageView imageView,
-							Drawable loadedDrawable, String url,
-							boolean loadedFromCache) {
+			@Override
+			public void onLoadingFailed (FailReason failReason) {
+				mImageDrawableSet = false;
+				Toast.makeText(getActivity(), "Image Failed To Load!", Toast.LENGTH_SHORT).show();
+			}
 
-						if (url == mNode.url && loadedDrawable != null) {
-							imageView.setImageDrawable(loadedDrawable);
+			@Override
+			public void onLoadingComplete (Bitmap bitmap) {
+				mImageDrawableSet = true;
+				mImageView.setVisibility(View.VISIBLE);
+				mImageView.setImageBitmap(bitmap);
+				mImageView.setZoomable(true);
+				mPending.setVisibility(View.GONE);
 
-							mImageDrawableSet = true;
-							mPending.setVisibility(View.GONE);
-							mImageView.setZoomable(true);
+				if (mApplyImageOnDisplay)
+					applyImage();
 
-							if (mApplyImageOnDisplay)
-								applyImage();
+				if (mSaveImageOnDisplay)
+					exportImage();
+			}
 
-							if (mSaveImageOnDisplay)
-								exportImage();
-						} else {
-							if (loadedDrawable == null) {
-								mImageDrawableSet = false;
-								Toast.makeText(getActivity(),
-										"Image Failed To Load!",
-										Toast.LENGTH_SHORT).show();
-							}
-						}
-					}
-
-				});
+			@Override
+			public void onLoadingCancelled () {
+			}
+		});
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		menu.add(1, 1, 1, "Save").setIcon(android.R.drawable.ic_menu_save)
-				.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		menu.add(2, 2, 2, "Apply").setIcon(android.R.drawable.ic_menu_set_as)
-				.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+	public void onPrepareOptionsMenu (Menu menu) {
+		menu.add(1, 1, 1, "Save").setIcon(android.R.drawable.ic_menu_save).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(2, 2, 2, "Apply").setIcon(android.R.drawable.ic_menu_set_as).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected (MenuItem item) {
 		if (item.getTitle().equals("Save")) {
 			this.exportImage();
 			return true;
@@ -149,7 +140,7 @@ public class WallpaperFragment extends SherlockFragment {
 		}
 	}
 
-	public void exportImage() {
+	public void exportImage () {
 		if (this.mImageDrawableSet == false) {
 			this.mSaveImageOnDisplay = true;
 			return;
@@ -158,16 +149,11 @@ public class WallpaperFragment extends SherlockFragment {
 		try {
 			final Bitmap bitmap = getImageBitmap();
 			if (bitmap == null) {
-				Toast.makeText(getActivity(),
-						"Something Went Wrong, Please Try Again!",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Something Went Wrong, Please Try Again!", Toast.LENGTH_SHORT).show();
 				return;
 			}
 
-			final File dir = new File(
-					Environment.getExternalStorageDirectory(), super
-							.getResources().getString(
-									R.string.config_external_storage_folder));
+			final File dir = new File(Environment.getExternalStorageDirectory(), super.getResources().getString(R.string.config_external_storage_folder));
 
 			if (!dir.exists()) {
 				dir.mkdirs();
@@ -183,21 +169,15 @@ public class WallpaperFragment extends SherlockFragment {
 			outStream.flush();
 			outStream.close();
 
-			super.getActivity().sendBroadcast(
-					new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-							+ dir.toString())));
-			Toast.makeText(getActivity(),
-					"Wallpaper Saved To, " + img.toString() + "!",
-					Toast.LENGTH_LONG).show();
+			super.getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + dir.toString())));
+			Toast.makeText(getActivity(), "Wallpaper Saved To, " + img.toString() + "!", Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
 			Log.e(TAG, "", e);
-			Toast.makeText(getActivity(),
-					"Something Went Wrong, Please Try Again!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Something Went Wrong, Please Try Again!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	public void applyImage() {
+	public void applyImage () {
 		if (this.mImageDrawableSet == false) {
 			this.mApplyImageOnDisplay = true;
 			return;
@@ -206,41 +186,32 @@ public class WallpaperFragment extends SherlockFragment {
 		try {
 			final Bitmap bitmap = getImageBitmap();
 			if (bitmap == null) {
-				Toast.makeText(getActivity(),
-						"Something Went Wrong, Please Try Again!",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Something Went Wrong, Please Try Again!", Toast.LENGTH_SHORT).show();
 				return;
 			}
 
-			final WallpaperManager wpManager = WallpaperManager
-					.getInstance(getActivity());
+			final WallpaperManager wpManager = WallpaperManager.getInstance(getActivity());
 			if (wpManager == null) {
-				Toast.makeText(getActivity(),
-						"Something Went Wrong, Please Try Again!",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "Something Went Wrong, Please Try Again!", Toast.LENGTH_SHORT).show();
 				return;
 			}
 
 			wpManager.setBitmap(bitmap);
-			Toast.makeText(getActivity(), "Wallpaper Set!", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getActivity(), "Wallpaper Set!", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			Log.e(TAG, "", e);
-			Toast.makeText(getActivity(),
-					"Something Went Wrong, Please Try Again!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Something Went Wrong, Please Try Again!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	public Bitmap getImageBitmap() {
+	public Bitmap getImageBitmap () {
 		try {
 			final Drawable drawable = this.mImageView.getDrawable();
 			if (drawable instanceof BitmapDrawable) {
 				return ((BitmapDrawable) drawable).getBitmap();
 			}
 
-			Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-					drawable.getIntrinsicHeight(), Config.ARGB_8888);
+			Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Config.ARGB_8888);
 			Canvas canvas = new Canvas(bitmap);
 			drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
 			drawable.draw(canvas);
