@@ -14,7 +14,7 @@
     <item format="boolean" type="bool" name="config_enable_image_names">false</item>
 
 
-    <!-- Enable The Image Tags (i.e. Each Image Has A Name) -->
+    <!-- Enable Image Fade (Note: I would not use anything higher than 500) -->
     <item format="boolean" type="bool" name="config_enable_image_fade_in">false</item>
     <item format="integer" type="integer" name="config_fade_in_time">300</item>
 
