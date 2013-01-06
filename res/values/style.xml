@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <style name="WPTheme.ActionBarStyle" parent="Widget.Sherlock.ActionBar">
-	    <item name="background">@drawable/ic_bar_top</item>
-	    <item name="android:background">@drawable/ic_bar_top</item>
-	    <item name="backgroundSplit">@drawable/ic_bar_bottom</item>
-	    <item name="android:backgroundSplit">@drawable/ic_bar_bottom</item>
-	    <item name="android:displayOptions"></item>
+        <item name="background">@drawable/ic_bar_top</item>
+        <item name="android:background">@drawable/ic_bar_top</item>
+
+        <item name="backgroundSplit">@drawable/ic_bar_bottom</item>
+        <item name="android:backgroundSplit">@drawable/ic_bar_bottom</item>
+
+        <item name="android:displayOptions"></item>
+        <item name="displayOptions"></item>
     </style>
-    
-    
-	<style name="WPTheme" parent="Theme.Sherlock.ForceOverflow">
-	    <item name="actionBarStyle">@style/WPTheme.ActionBarStyle</item>
-	    <item name="android:actionBarStyle">@style/WPTheme.ActionBarStyle</item>
+
+
+    <style name="WPTheme" parent="Theme.Sherlock">
+        <item name="actionBarStyle">@style/WPTheme.ActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/WPTheme.ActionBarStyle</item>
     </style>
-	
+
+
+
+    <style name="WPTheme.ActionBarStyle.Light" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="android:displayOptions"></item>
+        <item name="displayOptions"></item>
+    </style>
+
+
+    <style name="WPTheme.Light" parent="Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/WPTheme.ActionBarStyle.Light</item>
+        <item name="android:actionBarStyle">@style/WPTheme.ActionBarStyle.Light</item>
+    </style>
+
 </resources>
