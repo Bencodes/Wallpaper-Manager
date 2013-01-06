@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.wallpaper.core.SquareGridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/SquareGridItem1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+                                     android:id="@+id/SquareGridItem1"
+                                     android:layout_width="fill_parent"
+                                     android:layout_height="fill_parent">
 
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/FrameLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/FrameLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
         <ImageView
-            android:id="@+id/wp_thumb"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#2a2a2a"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_wallpaper_item_image" />
+                android:id="@+id/wp_thumb"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#2a2a2a"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_wallpaper_item_image"/>
 
         <FrameLayout
-            android:id="@+id/wp_title_bg"
-            android:layout_width="fill_parent"
-            android:layout_height="40dip"
-            android:layout_gravity="bottom"
-            android:background="#7F000000" >
+                android:id="@+id/wp_title_bg"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_gravity="bottom"
+                android:background="#7F000000">
 
             <TextView
-                android:id="@+id/wp_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|center"
-                android:layout_marginLeft="2dip"
-                android:layout_marginRight="2dip"
-                android:singleLine="true"
-                android:text="Title Goes Here" />
+                    android:id="@+id/wp_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:layout_marginLeft="2dip"
+                    android:layout_marginRight="2dip"
+                    android:singleLine="true"
+                    android:text="Title Goes Here"/>
         </FrameLayout>
     </FrameLayout>
 
