@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
+
     <!-- Customize The URL for the JSON Manifest -->
-    <string name="config_wallpaper_manifest_url">https://raw.github.com/Bencodes/Wallpaper-Manager/master/assets/demo-manifest.json</string>
-	
+    <string name="config_wallpaper_manifest_url">
+        http://designrifts.com/wallpapers/pro_wallpaper_manifest.json
+    </string>
+
     <!-- Configure The External Storage Directory. Don't include sdcard in the path -->
     <string name="config_external_storage_folder">FolderName/Wallpapers</string>
-	
-    
+
+
     <!-- Enable The Image Tags (i.e. Each Image Has A Name) -->
     <item format="boolean" type="bool" name="config_enable_image_names">false</item>
-    
-    
+
+
+    <!-- Enable The Image Tags (i.e. Each Image Has A Name) -->
+    <item format="boolean" type="bool" name="config_enable_image_fade_in">false</item>
+    <item format="integer" type="integer" name="config_fade_in_time">300</item>
+
+
+    <!-- Choose Theme (i.e. Use @style/theme_dark or @style/theme_light)-->
+    <item format="reference" type="style" name="config_theme">@style/theme_dark</item>
+
+
     <!-- Set A Title For The Wallpaper Preview Title Bar (Leave Empty For It To Use The Image Title) -->
     <string name="config_full_screen_wallpaper_title">Back</string>
-    
-    
+
+
     <!-- Tablet Column Count (Land/Port) -->
     <item name="column_count_large_land" format="integer" type="integer">2</item>
     <item name="column_count_large_port" format="integer" type="integer">3</item>
@@ -23,9 +34,8 @@
     <!-- Phone Column Count (Land/Port) -->
     <item name="column_count_small_land" format="integer" type="integer">2</item>
     <item name="column_count_small_port" format="integer" type="integer">2</item>
-    
-    
-    
+
+
     <!-- App Name -->
     <string name="app_name">Wallpaper Manager</string>
 

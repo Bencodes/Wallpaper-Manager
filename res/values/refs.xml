@@ -2,5 +2,7 @@
 
     <item name="column_count" format="integer" type="integer">@integer/column_count_small_port</item>
     <item name="is_tablet" format="boolean" type="bool">false</item>
-    
+
+    <item name="theme_dark" type="style" format="reference">@style/WPTheme</item>
+    <item name="theme_light" type="style" format="reference">@style/WPTheme.Light</item>
 </resources>
