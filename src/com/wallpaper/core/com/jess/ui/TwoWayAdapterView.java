@@ -41,19 +41,15 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.SparseArray;
-import android.view.ContextMenu;
-import android.view.SoundEffectConstants;
-import android.view.View;
-import android.view.ViewDebug;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Adapter;
 
 /**
  * A TwoWayAdapterView is a view whose children are determined by an
  * {@link Adapter}.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * See {@link TwoWayAbsListView} and {@link TwoWayGridView} for commonly used
  * subclasses of TwoWayAdapterView.
  */
@@ -233,7 +229,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * In addition to this, this view has other criteria for actually
 	 * determining the focusable state (such as whether its empty or the text
 	 * filter is shown).
-	 * 
+	 *
 	 * @see #setFocusable(boolean)
 	 * @see #checkFocus()
 	 */
@@ -248,17 +244,17 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 */
 	boolean mBlockLayoutRequests = false;
 
-	public TwoWayAdapterView(Context context) {
+	public TwoWayAdapterView (Context context) {
 		super(context);
 		mContext = context;
 	}
 
-	public TwoWayAdapterView(Context context, AttributeSet attrs) {
+	public TwoWayAdapterView (Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
 	}
 
-	public TwoWayAdapterView(Context context, AttributeSet attrs, int defStyle) {
+	public TwoWayAdapterView (Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		mContext = context;
 	}
@@ -272,32 +268,26 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		/**
 		 * Callback method to be invoked when an item in this AdapterView has
 		 * been clicked.
-		 * <p>
+		 * <p/>
 		 * Implementers can call getItemAtPosition(position) if they need to
 		 * access the data associated with the selected item.
-		 * 
-		 * @param parent
-		 *            The AdapterView where the click happened.
-		 * @param view
-		 *            The view within the AdapterView that was clicked (this
-		 *            will be a view provided by the adapter)
-		 * @param position
-		 *            The position of the view in the adapter.
-		 * @param id
-		 *            The row id of the item that was clicked.
+		 *
+		 * @param parent   The AdapterView where the click happened.
+		 * @param view     The view within the AdapterView that was clicked (this
+		 *                 will be a view provided by the adapter)
+		 * @param position The position of the view in the adapter.
+		 * @param id       The row id of the item that was clicked.
 		 */
-		void onItemClick(TwoWayAdapterView<?> parent, View view, int position,
-				long id);
+		void onItemClick (TwoWayAdapterView<?> parent, View view, int position, long id);
 	}
 
 	/**
 	 * Register a callback to be invoked when an item in this AdapterView has
 	 * been clicked.
-	 * 
-	 * @param listener
-	 *            The callback that will be invoked.
+	 *
+	 * @param listener The callback that will be invoked.
 	 */
-	public void setOnItemClickListener(OnItemClickListener listener) {
+	public void setOnItemClickListener (OnItemClickListener listener) {
 		mOnItemClickListener = listener;
 	}
 
@@ -305,23 +295,20 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * @return The callback to be invoked with an item in this AdapterView has
 	 *         been clicked, or null id no callback has been set.
 	 */
-	public final OnItemClickListener getOnItemClickListener() {
+	public final OnItemClickListener getOnItemClickListener () {
 		return mOnItemClickListener;
 	}
 
 	/**
 	 * Call the OnItemClickListener, if it is defined.
-	 * 
-	 * @param view
-	 *            The view within the AdapterView that was clicked.
-	 * @param position
-	 *            The position of the view in the adapter.
-	 * @param id
-	 *            The row id of the item that was clicked.
+	 *
+	 * @param view     The view within the AdapterView that was clicked.
+	 * @param position The position of the view in the adapter.
+	 * @param id       The row id of the item that was clicked.
 	 * @return True if there was an assigned OnItemClickListener that was
 	 *         called, false otherwise is returned.
 	 */
-	public boolean performItemClick(View view, int position, long id) {
+	public boolean performItemClick (View view, int position, long id) {
 		if (mOnItemClickListener != null) {
 			playSoundEffect(SoundEffectConstants.CLICK);
 			mOnItemClickListener.onItemClick(this, view, position, id);
@@ -339,33 +326,26 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		/**
 		 * Callback method to be invoked when an item in this view has been
 		 * clicked and held.
-		 * 
+		 * <p/>
 		 * Implementers can call getItemAtPosition(position) if they need to
 		 * access the data associated with the selected item.
-		 * 
-		 * @param parent
-		 *            The AbsListView where the click happened
-		 * @param view
-		 *            The view within the AbsListView that was clicked
-		 * @param position
-		 *            The position of the view in the list
-		 * @param id
-		 *            The row id of the item that was clicked
-		 * 
+		 *
+		 * @param parent   The AbsListView where the click happened
+		 * @param view     The view within the AbsListView that was clicked
+		 * @param position The position of the view in the list
+		 * @param id       The row id of the item that was clicked
 		 * @return true if the callback consumed the long click, false otherwise
 		 */
-		boolean onItemLongClick(TwoWayAdapterView<?> parent, View view,
-				int position, long id);
+		boolean onItemLongClick (TwoWayAdapterView<?> parent, View view, int position, long id);
 	}
 
 	/**
 	 * Register a callback to be invoked when an item in this AdapterView has
 	 * been clicked and held
-	 * 
-	 * @param listener
-	 *            The callback that will run
+	 *
+	 * @param listener The callback that will run
 	 */
-	public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+	public void setOnItemLongClickListener (OnItemLongClickListener listener) {
 		if (!isLongClickable()) {
 			setLongClickable(true);
 		}
@@ -376,7 +356,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * @return The callback to be invoked with an item in this AdapterView has
 	 *         been clicked and held, or null id no callback as been set.
 	 */
-	public final OnItemLongClickListener getOnItemLongClickListener() {
+	public final OnItemLongClickListener getOnItemLongClickListener () {
 		return mOnItemLongClickListener;
 	}
 
@@ -388,45 +368,38 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		/**
 		 * Callback method to be invoked when an item in this view has been
 		 * selected.
-		 * 
+		 * <p/>
 		 * Impelmenters can call getItemAtPosition(position) if they need to
 		 * access the data associated with the selected item.
-		 * 
-		 * @param parent
-		 *            The AdapterView where the selection happened
-		 * @param view
-		 *            The view within the AdapterView that was clicked
-		 * @param position
-		 *            The position of the view in the adapter
-		 * @param id
-		 *            The row id of the item that is selected
+		 *
+		 * @param parent   The AdapterView where the selection happened
+		 * @param view     The view within the AdapterView that was clicked
+		 * @param position The position of the view in the adapter
+		 * @param id       The row id of the item that is selected
 		 */
-		void onItemSelected(TwoWayAdapterView<?> parent, View view,
-				int position, long id);
+		void onItemSelected (TwoWayAdapterView<?> parent, View view, int position, long id);
 
 		/**
 		 * Callback method to be invoked when the selection disappears from this
 		 * view. The selection can disappear for instance when touch is
 		 * activated or when the adapter becomes empty.
-		 * 
-		 * @param parent
-		 *            The AdapterView that now contains no selected item.
+		 *
+		 * @param parent The AdapterView that now contains no selected item.
 		 */
-		void onNothingSelected(TwoWayAdapterView<?> parent);
+		void onNothingSelected (TwoWayAdapterView<?> parent);
 	}
 
 	/**
 	 * Register a callback to be invoked when an item in this AdapterView has
 	 * been selected.
-	 * 
-	 * @param listener
-	 *            The callback that will run
+	 *
+	 * @param listener The callback that will run
 	 */
-	public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+	public void setOnItemSelectedListener (OnItemSelectedListener listener) {
 		mOnItemSelectedListener = listener;
 	}
 
-	public final OnItemSelectedListener getOnItemSelectedListener() {
+	public final OnItemSelectedListener getOnItemSelectedListener () {
 		return mOnItemSelectedListener;
 	}
 
@@ -434,12 +407,10 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * Extra menu information provided to the
 	 * {@link android.view.View.OnCreateContextMenuListener#onCreateContextMenu(ContextMenu, View, ContextMenuInfo) }
 	 * callback when a context menu is brought up for this AdapterView.
-	 * 
 	 */
-	public static class AdapterContextMenuInfo implements
-			ContextMenu.ContextMenuInfo {
+	public static class AdapterContextMenuInfo implements ContextMenu.ContextMenuInfo {
 
-		public AdapterContextMenuInfo(View targetView, int position, long id) {
+		public AdapterContextMenuInfo (View targetView, int position, long id) {
 			this.targetView = targetView;
 			this.position = position;
 			this.id = id;
@@ -465,141 +436,108 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 
 	/**
 	 * Returns the adapter currently associated with this widget.
-	 * 
+	 *
 	 * @return The adapter used to provide this view's content.
 	 */
-	public abstract T getAdapter();
+	public abstract T getAdapter ();
 
 	/**
 	 * Sets the adapter that provides the data and the views to represent the
 	 * data in this widget.
-	 * 
-	 * @param adapter
-	 *            The adapter to use to create this view's content.
+	 *
+	 * @param adapter The adapter to use to create this view's content.
 	 */
-	public abstract void setAdapter(T adapter);
+	public abstract void setAdapter (T adapter);
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @param child
-	 *            Ignored.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @param child Ignored.
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void addView(View child) {
-		throw new UnsupportedOperationException(
-				"addView(View) is not supported in AdapterView");
+	public void addView (View child) {
+		throw new UnsupportedOperationException("addView(View) is not supported in AdapterView");
 	}
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @param child
-	 *            Ignored.
-	 * @param index
-	 *            Ignored.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @param child Ignored.
+	 * @param index Ignored.
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void addView(View child, int index) {
-		throw new UnsupportedOperationException(
-				"addView(View, int) is not supported in AdapterView");
+	public void addView (View child, int index) {
+		throw new UnsupportedOperationException("addView(View, int) is not supported in AdapterView");
 	}
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @param child
-	 *            Ignored.
-	 * @param params
-	 *            Ignored.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @param child  Ignored.
+	 * @param params Ignored.
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void addView(View child, LayoutParams params) {
-		throw new UnsupportedOperationException("addView(View, LayoutParams) "
-				+ "is not supported in AdapterView");
+	public void addView (View child, LayoutParams params) {
+		throw new UnsupportedOperationException("addView(View, LayoutParams) " + "is not supported in AdapterView");
 	}
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @param child
-	 *            Ignored.
-	 * @param index
-	 *            Ignored.
-	 * @param params
-	 *            Ignored.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @param child  Ignored.
+	 * @param index  Ignored.
+	 * @param params Ignored.
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void addView(View child, int index, LayoutParams params) {
-		throw new UnsupportedOperationException(
-				"addView(View, int, LayoutParams) "
-						+ "is not supported in AdapterView");
+	public void addView (View child, int index, LayoutParams params) {
+		throw new UnsupportedOperationException("addView(View, int, LayoutParams) " + "is not supported in AdapterView");
 	}
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @param child
-	 *            Ignored.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @param child Ignored.
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void removeView(View child) {
-		throw new UnsupportedOperationException(
-				"removeView(View) is not supported in AdapterView");
+	public void removeView (View child) {
+		throw new UnsupportedOperationException("removeView(View) is not supported in AdapterView");
 	}
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @param index
-	 *            Ignored.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @param index Ignored.
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void removeViewAt(int index) {
-		throw new UnsupportedOperationException(
-				"removeViewAt(int) is not supported in AdapterView");
+	public void removeViewAt (int index) {
+		throw new UnsupportedOperationException("removeViewAt(int) is not supported in AdapterView");
 	}
 
 	/**
 	 * This method is not supported and throws an UnsupportedOperationException
 	 * when called.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *             Every time this method is invoked.
+	 *
+	 * @throws UnsupportedOperationException Every time this method is invoked.
 	 */
 	@Override
-	public void removeAllViews() {
-		throw new UnsupportedOperationException(
-				"removeAllViews() is not supported in AdapterView");
+	public void removeAllViews () {
+		throw new UnsupportedOperationException("removeAllViews() is not supported in AdapterView");
 	}
 
 	@Override
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
+	protected void onLayout (boolean changed, int left, int top, int right, int bottom) {
 		mLayoutHeight = getHeight();
 		mLayoutWidth = getWidth();
 	}
@@ -607,12 +545,12 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	/**
 	 * Return the position of the currently selected item within the adapter's
 	 * data set
-	 * 
+	 *
 	 * @return int Position (starting at 0), or {@link #INVALID_POSITION} if
 	 *         there is nothing selected.
 	 */
 	@ViewDebug.CapturedViewProperty
-	public int getSelectedItemPosition() {
+	public int getSelectedItemPosition () {
 		return mNextSelectedPosition;
 	}
 
@@ -621,7 +559,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 *         {@link #INVALID_ROW_ID} if nothing is selected.
 	 */
 	@ViewDebug.CapturedViewProperty
-	public long getSelectedItemId() {
+	public long getSelectedItemId () {
 		return mNextSelectedRowId;
 	}
 
@@ -629,13 +567,13 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * @return The view corresponding to the currently selected item, or null if
 	 *         nothing is selected
 	 */
-	public abstract View getSelectedView();
+	public abstract View getSelectedView ();
 
 	/**
 	 * @return The data corresponding to the currently selected item, or null if
 	 *         there is nothing selected.
 	 */
-	public Object getSelectedItem() {
+	public Object getSelectedItem () {
 		T adapter = getAdapter();
 		int selection = getSelectedItemPosition();
 		if (adapter != null && adapter.getCount() > 0 && selection >= 0) {
@@ -651,22 +589,21 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 *         larger than the number of visible view.)
 	 */
 	@ViewDebug.CapturedViewProperty
-	public int getCount() {
+	public int getCount () {
 		return mItemCount;
 	}
 
 	/**
 	 * Get the position within the adapter's data set for the view, where view
 	 * is a an adapter item or a descendant of an adapter item.
-	 * 
-	 * @param view
-	 *            an adapter item, or a descendant of an adapter item. This must
-	 *            be visible in this AdapterView at the time of the call.
+	 *
+	 * @param view an adapter item, or a descendant of an adapter item. This must
+	 *             be visible in this AdapterView at the time of the call.
 	 * @return the position within the adapter's data set of the view, or
 	 *         {@link #INVALID_POSITION} if the view does not correspond to a
 	 *         list item (or it is not currently visible).
 	 */
-	public int getPositionForView(View view) {
+	public int getPositionForView (View view) {
 		View listItem = view;
 		try {
 			View v;
@@ -693,36 +630,35 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	/**
 	 * Returns the position within the adapter's data set for the first item
 	 * displayed on screen.
-	 * 
+	 *
 	 * @return The position within the adapter's data set
 	 */
-	public int getFirstVisiblePosition() {
+	public int getFirstVisiblePosition () {
 		return mFirstPosition;
 	}
 
 	/**
 	 * Returns the position within the adapter's data set for the last item
 	 * displayed on screen.
-	 * 
+	 *
 	 * @return The position within the adapter's data set
 	 */
-	public int getLastVisiblePosition() {
+	public int getLastVisiblePosition () {
 		return mFirstPosition + getChildCount() - 1;
 	}
 
 	/**
 	 * Sets the currently selected item. To support accessibility subclasses
 	 * that override this method must invoke the overriden super method first.
-	 * 
-	 * @param position
-	 *            Index (starting at 0) of the data item to be selected.
+	 *
+	 * @param position Index (starting at 0) of the data item to be selected.
 	 */
-	public abstract void setSelection(int position);
+	public abstract void setSelection (int position);
 
 	/**
 	 * Sets the view to show if the adapter is empty
 	 */
-	public void setEmptyView(View emptyView) {
+	public void setEmptyView (View emptyView) {
 		mEmptyView = emptyView;
 
 		final T adapter = getAdapter();
@@ -734,25 +670,25 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * When the current adapter is empty, the AdapterView can display a special
 	 * view call the empty view. The empty view is used to provide feedback to
 	 * the user that no data is available in this AdapterView.
-	 * 
+	 *
 	 * @return The view to show if the adapter is empty.
 	 */
-	public View getEmptyView() {
+	public View getEmptyView () {
 		return mEmptyView;
 	}
 
 	/**
 	 * Indicates whether this view is in filter mode. Filter mode can for
 	 * instance be enabled by a user when typing on the keyboard.
-	 * 
+	 *
 	 * @return True if the view is in filter mode, false otherwise.
 	 */
-	boolean isInFilterMode() {
+	boolean isInFilterMode () {
 		return false;
 	}
 
 	@Override
-	public void setFocusable(boolean focusable) {
+	public void setFocusable (boolean focusable) {
 		final T adapter = getAdapter();
 		final boolean empty = adapter == null || adapter.getCount() == 0;
 
@@ -765,7 +701,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	}
 
 	@Override
-	public void setFocusableInTouchMode(boolean focusable) {
+	public void setFocusableInTouchMode (boolean focusable) {
 		final T adapter = getAdapter();
 		final boolean empty = adapter == null || adapter.getCount() == 0;
 
@@ -777,7 +713,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		super.setFocusableInTouchMode(focusable && (!empty || isInFilterMode()));
 	}
 
-	void checkFocus() {
+	void checkFocus () {
 		final T adapter = getAdapter();
 		final boolean empty = adapter == null || adapter.getCount() == 0;
 		final boolean focusable = !empty || isInFilterMode();
@@ -785,8 +721,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		// matter
 		// for the client, see View.setFocusableInTouchMode() comments for more
 		// details
-		super.setFocusableInTouchMode(focusable
-				&& mDesiredFocusableInTouchModeState);
+		super.setFocusableInTouchMode(focusable && mDesiredFocusableInTouchModeState);
 		super.setFocusable(focusable && mDesiredFocusableState);
 		if (mEmptyView != null) {
 			updateEmptyStatus((adapter == null) || adapter.isEmpty());
@@ -799,7 +734,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * sure that the listview is VISIBLE and that the empty view is GONE (if
 	 * it's not null).
 	 */
-	private void updateEmptyStatus(boolean empty) {
+	private void updateEmptyStatus (boolean empty) {
 		if (isInFilterMode()) {
 			empty = false;
 		}
@@ -818,8 +753,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 			// Force one here to make sure that the state of the list matches
 			// the state of the adapter.
 			if (mDataChanged) {
-				this.onLayout(false, getLeft(), getTop(), getRight(),
-						getBottom());
+				this.onLayout(false, getLeft(), getTop(), getRight(), getBottom());
 			}
 		} else {
 			if (mEmptyView != null)
@@ -830,35 +764,30 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 
 	/**
 	 * Gets the data associated with the specified position in the list.
-	 * 
-	 * @param position
-	 *            Which data to get
+	 *
+	 * @param position Which data to get
 	 * @return The data associated with the specified position in the list
 	 */
-	public Object getItemAtPosition(int position) {
+	public Object getItemAtPosition (int position) {
 		T adapter = getAdapter();
-		return (adapter == null || position < 0) ? null : adapter
-				.getItem(position);
+		return (adapter == null || position < 0) ? null : adapter.getItem(position);
 	}
 
-	public long getItemIdAtPosition(int position) {
+	public long getItemIdAtPosition (int position) {
 		T adapter = getAdapter();
-		return (adapter == null || position < 0) ? INVALID_ROW_ID : adapter
-				.getItemId(position);
+		return (adapter == null || position < 0) ? INVALID_ROW_ID : adapter.getItemId(position);
 	}
 
 	@Override
-	public void setOnClickListener(OnClickListener l) {
-		throw new RuntimeException(
-				"Don't call setOnClickListener for an AdapterView. "
-						+ "You probably want setOnItemClickListener instead");
+	public void setOnClickListener (OnClickListener l) {
+		throw new RuntimeException("Don't call setOnClickListener for an AdapterView. " + "You probably want setOnItemClickListener instead");
 	}
 
 	/**
 	 * Override to prevent freezing of any views created by the adapter.
 	 */
 	@Override
-	protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
+	protected void dispatchSaveInstanceState (SparseArray<Parcelable> container) {
 		dispatchFreezeSelfOnly(container);
 	}
 
@@ -866,8 +795,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * Override to prevent thawing of any views created by the adapter.
 	 */
 	@Override
-	protected void dispatchRestoreInstanceState(
-			SparseArray<Parcelable> container) {
+	protected void dispatchRestoreInstanceState (SparseArray<Parcelable> container) {
 		dispatchThawSelfOnly(container);
 	}
 
@@ -876,7 +804,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		private Parcelable mInstanceState = null;
 
 		@Override
-		public void onChanged() {
+		public void onChanged () {
 			mDataChanged = true;
 			mOldItemCount = mItemCount;
 			mItemCount = getAdapter().getCount();
@@ -884,9 +812,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 			// Detect the case where a cursor that was previously invalidated
 			// has
 			// been repopulated with new data.
-			if (TwoWayAdapterView.this.getAdapter().hasStableIds()
-					&& mInstanceState != null && mOldItemCount == 0
-					&& mItemCount > 0) {
+			if (TwoWayAdapterView.this.getAdapter().hasStableIds() && mInstanceState != null && mOldItemCount == 0 && mItemCount > 0) {
 				TwoWayAdapterView.this.onRestoreInstanceState(mInstanceState);
 				mInstanceState = null;
 			} else {
@@ -897,7 +823,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		}
 
 		@Override
-		public void onInvalidated() {
+		public void onInvalidated () {
 			mDataChanged = true;
 
 			if (TwoWayAdapterView.this.getAdapter().hasStableIds()) {
@@ -921,13 +847,13 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 			requestLayout();
 		}
 
-		public void clearSavedState() {
+		public void clearSavedState () {
 			mInstanceState = null;
 		}
 	}
 
 	private class SelectionNotifier extends Handler implements Runnable {
-		public void run() {
+		public void run () {
 			if (mDataChanged) {
 				// Data has changed between when this SelectionNotifier
 				// was posted and now. We need to wait until the AdapterView
@@ -939,7 +865,7 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		}
 	}
 
-	void selectionChanged() {
+	void selectionChanged () {
 		if (mOnItemSelectedListener != null) {
 			if (mInLayout || mBlockLayoutRequests) {
 				// If we are in a layout traversal, defer notification
@@ -963,15 +889,14 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		 */
 	}
 
-	private void fireOnSelected() {
+	private void fireOnSelected () {
 		if (mOnItemSelectedListener == null)
 			return;
 
 		int selection = this.getSelectedItemPosition();
 		if (selection >= 0) {
 			View v = getSelectedView();
-			mOnItemSelectedListener.onItemSelected(this, v, selection,
-					getAdapter().getItemId(selection));
+			mOnItemSelectedListener.onItemSelected(this, v, selection, getAdapter().getItemId(selection));
 		} else {
 			mOnItemSelectedListener.onNothingSelected(this);
 		}
@@ -1003,11 +928,11 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 */
 
 	@Override
-	protected boolean canAnimate() {
+	protected boolean canAnimate () {
 		return super.canAnimate() && mItemCount > 0;
 	}
 
-	void handleDataChanged() {
+	void handleDataChanged () {
 		final int count = mItemCount;
 		boolean found = false;
 
@@ -1070,9 +995,8 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		}
 	}
 
-	void checkSelectionChanged() {
-		if ((mSelectedPosition != mOldSelectedPosition)
-				|| (mSelectedRowId != mOldSelectedRowId)) {
+	void checkSelectionChanged () {
+		if ((mSelectedPosition != mOldSelectedPosition) || (mSelectedRowId != mOldSelectedRowId)) {
 			selectionChanged();
 			mOldSelectedPosition = mSelectedPosition;
 			mOldSelectedRowId = mSelectedRowId;
@@ -1084,11 +1008,11 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	 * starts at mSyncPosition and then alternates between moving up and moving
 	 * down until 1) we find the right position, or 2) we run out of time, or 3)
 	 * we have looked at every position
-	 * 
+	 *
 	 * @return Position of the row that matches mSyncRowId, or
 	 *         {@link #INVALID_POSITION} if it can't be found
 	 */
-	int findSyncPosition() {
+	int findSyncPosition () {
 		int count = mItemCount;
 
 		if (count == 0) {
@@ -1169,38 +1093,34 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 
 	/**
 	 * Find a position that can be selected (i.e., is not a separator).
-	 * 
-	 * @param position
-	 *            The starting position to look at.
-	 * @param lookDown
-	 *            Whether to look down for other positions.
+	 *
+	 * @param position The starting position to look at.
+	 * @param lookDown Whether to look down for other positions.
 	 * @return The next selectable position starting at position and then
 	 *         searching either up or down. Returns {@link #INVALID_POSITION} if
 	 *         nothing can be found.
 	 */
-	int lookForSelectablePosition(int position, boolean lookDown) {
+	int lookForSelectablePosition (int position, boolean lookDown) {
 		return position;
 	}
 
 	/**
 	 * Utility to keep mSelectedPosition and mSelectedRowId in sync
-	 * 
-	 * @param position
-	 *            Our current position
+	 *
+	 * @param position Our current position
 	 */
-	void setSelectedPositionInt(int position) {
+	void setSelectedPositionInt (int position) {
 		mSelectedPosition = position;
 		mSelectedRowId = getItemIdAtPosition(position);
 	}
 
 	/**
 	 * Utility to keep mNextSelectedPosition and mNextSelectedRowId in sync
-	 * 
-	 * @param position
-	 *            Intended value for mSelectedPosition the next time we go
-	 *            through layout
+	 *
+	 * @param position Intended value for mSelectedPosition the next time we go
+	 *                 through layout
 	 */
-	void setNextSelectedPositionInt(int position) {
+	void setNextSelectedPositionInt (int position) {
 		mNextSelectedPosition = position;
 		mNextSelectedRowId = getItemIdAtPosition(position);
 		// If we are trying to sync to the selection, update that too
@@ -1213,9 +1133,8 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	/**
 	 * Remember enough information to restore the screen state when the data has
 	 * changed.
-	 * 
 	 */
-	void rememberSyncState() {
+	void rememberSyncState () {
 		if (getChildCount() > 0) {
 			mNeedSync = true;
 			if (mIsVertical) {
@@ -1261,12 +1180,10 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	/**
 	 * Offset the vertical location of all children of this view by the
 	 * specified number of pixels.
-	 * 
-	 * @param offset
-	 *            the number of pixels to offset
-	 * 
+	 *
+	 * @param offset the number of pixels to offset
 	 */
-	public void offsetChildrenTopAndBottom(int offset) {
+	public void offsetChildrenTopAndBottom (int offset) {
 		final int count = getChildCount();
 
 		for (int i = 0; i < count; i++) {
@@ -1278,12 +1195,10 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 	/**
 	 * Offset the horizontal location of all children of this view by the
 	 * specified number of pixels.
-	 * 
-	 * @param offset
-	 *            the number of pixels to offset
-	 * 
+	 *
+	 * @param offset the number of pixels to offset
 	 */
-	public void offsetChildrenLeftAndRight(int offset) {
+	public void offsetChildrenLeftAndRight (int offset) {
 		final int count = getChildCount();
 
 		for (int i = 0; i < count; i++) {
@@ -1292,11 +1207,11 @@ public abstract class TwoWayAdapterView<T extends Adapter> extends ViewGroup {
 		}
 	}
 
-	protected void setIsVertical(boolean vertical) {
+	protected void setIsVertical (boolean vertical) {
 		mIsVertical = vertical;
 	}
 
-	protected boolean isVertical() {
+	protected boolean isVertical () {
 		return mIsVertical;
 	}
 

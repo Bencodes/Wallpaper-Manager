@@ -15,8 +15,6 @@
  *******************************************************************************/
 package com.wallpaper.core.uk.co.senab.photoview;
 
-import com.wallpaper.activity.BuildConfig;
-
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -31,10 +29,9 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.Scroller;
+import com.wallpaper.activity.BuildConfig;
 
-public class PhotoView extends ImageView implements
-		VersionedGestureDetector.OnGestureListener,
-		GestureDetector.OnDoubleTapListener {
+public class PhotoView extends ImageView implements VersionedGestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
 	static final String LOG_TAG = "PhotoView";
 
@@ -43,11 +40,10 @@ public class PhotoView extends ImageView implements
 		 * Callback for when the Matrix displaying the Drawable has changed.
 		 * This could be because the View's bounds have changed, or the user has
 		 * zoomed.
-		 * 
-		 * @param rect
-		 *            - Rectangle displaying the Drawable's new bounds.
+		 *
+		 * @param rect - Rectangle displaying the Drawable's new bounds.
 		 */
-		void onMatrixChanged(RectF rect);
+		void onMatrixChanged (RectF rect);
 	}
 
 	static interface OnPhotoTapListener {
@@ -56,17 +52,14 @@ public class PhotoView extends ImageView implements
 		 * A callback to receive where the user taps on a photo. You will only
 		 * receive a callback if the user taps on the actual photo, tapping on
 		 * 'whitespace' will be ignored.
-		 * 
-		 * @param view
-		 *            - View the user tapped
-		 * @param x
-		 *            - where the user tapped from the left, as percentage of
-		 *            the Drawable width.
-		 * @param y
-		 *            - where the user tapped from the top, as percentage of the
-		 *            Drawable height.
+		 *
+		 * @param view - View the user tapped
+		 * @param x    - where the user tapped from the left, as percentage of
+		 *             the Drawable width.
+		 * @param y    - where the user tapped from the top, as percentage of the
+		 *             Drawable height.
 		 */
-		void onPhotoTap(View view, float x, float y);
+		void onPhotoTap (View view, float x, float y);
 	}
 
 	private class FlingRunnable implements Runnable {
@@ -74,11 +67,11 @@ public class PhotoView extends ImageView implements
 		private final Scroller mScroller;
 		private int mCurrentX, mCurrentY;
 
-		public FlingRunnable() {
+		public FlingRunnable () {
 			mScroller = new Scroller(getContext());
 		}
 
-		public void fling(int velocityX, int velocityY) {
+		public void fling (int velocityX, int velocityY) {
 			final int viewHeight = getHeight();
 			final int viewWidth = getWidth();
 			final RectF rect = getDisplayRect();
@@ -105,15 +98,13 @@ public class PhotoView extends ImageView implements
 			mCurrentY = startY;
 
 			if (BuildConfig.DEBUG) {
-				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY
-						+ " MaxX:" + maxX + " MaxY:" + maxY);
+				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
-			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX,
-					minY, maxY);
+			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
 		}
 
 		@Override
-		public void run() {
+		public void run () {
 			if (mScroller.computeScrollOffset()) {
 
 				final int newX = mScroller.getCurrX();
@@ -133,7 +124,7 @@ public class PhotoView extends ImageView implements
 			}
 		}
 
-		public void cancelFling() {
+		public void cancelFling () {
 			if (BuildConfig.DEBUG) {
 				Log.d(LOG_TAG, "Cancel Fling");
 			}
@@ -150,8 +141,7 @@ public class PhotoView extends ImageView implements
 		private final float mStartScale;
 		private final long mStartTime;
 
-		public AnimatedZoomRunnable(final float zoomLevel, final float focalX,
-				final float focalY) {
+		public AnimatedZoomRunnable (final float zoomLevel, final float focalX, final float focalY) {
 			mStartScale = getScale();
 			mStartTime = System.currentTimeMillis();
 			mIncrementPerMs = (zoomLevel - mStartScale) / ANIMATION_DURATION;
@@ -159,9 +149,8 @@ public class PhotoView extends ImageView implements
 			mFocalY = focalY;
 		}
 
-		public void run() {
-			float currentMs = Math.min(ANIMATION_DURATION,
-					System.currentTimeMillis() - mStartTime);
+		public void run () {
+			float currentMs = Math.min(ANIMATION_DURATION, System.currentTimeMillis() - mStartTime);
 			float target = mStartScale + (mIncrementPerMs * currentMs);
 
 			mSuppMatrix.setScale(target, target, mFocalX, mFocalY);
@@ -207,22 +196,22 @@ public class PhotoView extends ImageView implements
 	private float mMinimumVelocity;
 	private FlingRunnable mCurrentFlingRunnable;
 
-	public PhotoView(Context context) {
+	public PhotoView (Context context) {
 		super(context);
 		init(context);
 	}
 
-	public PhotoView(Context context, AttributeSet attr) {
+	public PhotoView (Context context, AttributeSet attr) {
 		super(context, attr);
 		init(context);
 	}
 
 	/**
 	 * Returns true if the PhotoView is set to allow zooming of Photos.
-	 * 
+	 *
 	 * @return true if the PhotoView allows zooming.
 	 */
-	public boolean canZoom() {
+	public boolean canZoom () {
 		return mZoomEnabled;
 	}
 
@@ -230,24 +219,24 @@ public class PhotoView extends ImageView implements
 	 * Gets the Display Rectangle of the currently displayed Drawable. The
 	 * Rectangle is relative to this View and includes all scaling and
 	 * translations.
-	 * 
+	 *
 	 * @return - RectF of Displayed Drawable
 	 */
-	public RectF getDisplayRect() {
+	public RectF getDisplayRect () {
 		checkMatrixBounds();
 		return getDisplayRect(getDisplayMatrix());
 	}
 
 	/**
 	 * Returns the current scale value
-	 * 
+	 *
 	 * @return float - current scale value
 	 */
-	public float getScale() {
+	public float getScale () {
 		return getValue(mSuppMatrix, Matrix.MSCALE_X);
 	}
 
-	public boolean onDoubleTap(MotionEvent ev) {
+	public boolean onDoubleTap (MotionEvent ev) {
 		try {
 			float scale = getScale();
 			float x = ev.getX();
@@ -267,24 +256,21 @@ public class PhotoView extends ImageView implements
 		return true;
 	}
 
-	public boolean onDoubleTapEvent(MotionEvent e) {
+	public boolean onDoubleTapEvent (MotionEvent e) {
 		// Wait for the confirmed onDoubleTap() instead
 		return false;
 	}
 
-	public void onDrag(float dx, float dy) {
+	public void onDrag (float dx, float dy) {
 		mSuppMatrix.postTranslate(dx, dy);
 		centerAndDisplayMatrix();
 	}
 
 	@Override
-	public void onFling(float startX, float startY, float velocityX,
-			float velocityY) {
-		if (Math.abs(velocityX) > mMinimumVelocity
-				|| Math.abs(velocityY) > mMinimumVelocity) {
+	public void onFling (float startX, float startY, float velocityX, float velocityY) {
+		if (Math.abs(velocityX) > mMinimumVelocity || Math.abs(velocityY) > mMinimumVelocity) {
 			if (BuildConfig.DEBUG) {
-				Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY
-						+ " Vx: " + velocityX + " Vy: " + velocityY);
+				Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
 			}
 
 			mCurrentFlingRunnable = new FlingRunnable();
@@ -293,14 +279,14 @@ public class PhotoView extends ImageView implements
 		}
 	}
 
-	public void onScale(float scaleFactor, float focusX, float focusY) {
+	public void onScale (float scaleFactor, float focusX, float focusY) {
 		if (getScale() < MAX_ZOOM || scaleFactor < 1f) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
 			centerAndDisplayMatrix();
 		}
 	}
 
-	public boolean onSingleTapConfirmed(MotionEvent e) {
+	public boolean onSingleTapConfirmed (MotionEvent e) {
 		if (null != mPhotoTapListener) {
 			final RectF displayRect = getDisplayRect();
 
@@ -310,10 +296,8 @@ public class PhotoView extends ImageView implements
 				// Check to see if the user tapped on the photo
 				if (displayRect.contains(x, y)) {
 
-					float xResult = (x - displayRect.left)
-							/ displayRect.width();
-					float yResult = (y - displayRect.top)
-							/ displayRect.height();
+					float xResult = (x - displayRect.left) / displayRect.width();
+					float yResult = (y - displayRect.top) / displayRect.height();
 
 					mPhotoTapListener.onPhotoTap(this, xResult, yResult);
 					return true;
@@ -325,15 +309,15 @@ public class PhotoView extends ImageView implements
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
+	public boolean onTouchEvent (MotionEvent ev) {
 		if (mZoomEnabled) {
 
 			getParent().requestDisallowInterceptTouchEvent(true);
 
 			switch (ev.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				cancelFling();
-				break;
+				case MotionEvent.ACTION_DOWN:
+					cancelFling();
+					break;
 			}
 
 			// Check to see if the user double tapped
@@ -350,14 +334,14 @@ public class PhotoView extends ImageView implements
 				}
 
 				switch (ev.getAction()) {
-				case MotionEvent.ACTION_CANCEL:
-				case MotionEvent.ACTION_UP:
-					// If the user has zoomed less than MIN_ZOOM, zoom back
-					// to 1.0f
-					if (getScale() < MIN_ZOOM) {
-						post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
-					}
-					break;
+					case MotionEvent.ACTION_CANCEL:
+					case MotionEvent.ACTION_UP:
+						// If the user has zoomed less than MIN_ZOOM, zoom back
+						// to 1.0f
+						if (getScale() < MIN_ZOOM) {
+							post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
+						}
+						break;
 				}
 
 				return true;
@@ -370,7 +354,7 @@ public class PhotoView extends ImageView implements
 	}
 
 	@Override
-	public void setImageDrawable(Drawable drawable) {
+	public void setImageDrawable (Drawable drawable) {
 		super.setImageDrawable(drawable);
 		if (mZoomEnabled) {
 			updateBaseMatrix(drawable);
@@ -378,7 +362,7 @@ public class PhotoView extends ImageView implements
 	}
 
 	@Override
-	public void setImageMatrix(Matrix matrix) {
+	public void setImageMatrix (Matrix matrix) {
 		super.setImageMatrix(matrix);
 
 		// Call MatrixChangedListener if needed
@@ -390,15 +374,15 @@ public class PhotoView extends ImageView implements
 		}
 	}
 
-	public void setMatrixChangeListener(OnMatrixChangedListener listener) {
+	public void setMatrixChangeListener (OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
 	}
 
-	public void setPhotoTapListener(OnPhotoTapListener listener) {
+	public void setPhotoTapListener (OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
-	public void setZoomable(boolean zoomable) {
+	public void setZoomable (boolean zoomable) {
 		mZoomEnabled = zoomable;
 		if (mZoomEnabled) {
 			// Make sure we using MATRIX Scale Type
@@ -411,26 +395,23 @@ public class PhotoView extends ImageView implements
 
 	/**
 	 * Zooms to the specified scale, around the focal point given.
-	 * 
-	 * @param scale
-	 *            - Scale to zoom to
-	 * @param focalX
-	 *            - X Focus Point
-	 * @param focalY
-	 *            - Y Focus Point
+	 *
+	 * @param scale  - Scale to zoom to
+	 * @param focalX - X Focus Point
+	 * @param focalY - Y Focus Point
 	 */
-	public void zoomTo(float scale, float focalX, float focalY) {
+	public void zoomTo (float scale, float focalX, float focalY) {
 		post(new AnimatedZoomRunnable(scale, focalX, focalY));
 	}
 
-	protected Matrix getDisplayMatrix() {
+	protected Matrix getDisplayMatrix () {
 		mDrawMatrix.set(mBaseMatrix);
 		mDrawMatrix.postConcat(mSuppMatrix);
 		return mDrawMatrix;
 	}
 
 	@Override
-	protected boolean setFrame(int l, int t, int r, int b) {
+	protected boolean setFrame (int l, int t, int r, int b) {
 		if (mZoomEnabled && super.setFrame(l, t, r, b)) {
 			updateBaseMatrix(getDrawable());
 			return true;
@@ -442,19 +423,18 @@ public class PhotoView extends ImageView implements
 	 * Helper method that simply centers the Matrix, and then displays the
 	 * result
 	 */
-	private void centerAndDisplayMatrix() {
+	private void centerAndDisplayMatrix () {
 		checkMatrixBounds();
 		setImageMatrix(getDisplayMatrix());
 	}
 
-	private void checkMatrixBounds() {
+	private void checkMatrixBounds () {
 		Drawable d = getDrawable();
 		if (null == d) {
 			return;
 		}
 
-		RectF rect = new RectF(0, 0, d.getIntrinsicWidth(),
-				d.getIntrinsicHeight());
+		RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 		getDisplayMatrix().mapRect(rect);
 
 		final float height = rect.height(), width = rect.width();
@@ -488,16 +468,14 @@ public class PhotoView extends ImageView implements
 
 	/**
 	 * Helper method that maps the supplied Matrix to the current Drawable
-	 * 
-	 * @param Matrix
-	 *            - Matrix to map Drawable against
+	 *
+	 * @param Matrix - Matrix to map Drawable against
 	 * @return RectF - Displayed Rectangle
 	 */
-	private RectF getDisplayRect(Matrix matrix) {
+	private RectF getDisplayRect (Matrix matrix) {
 		Drawable d = getDrawable();
 		if (null != d) {
-			RectF rect = new RectF(0, 0, d.getIntrinsicWidth(),
-					d.getIntrinsicHeight());
+			RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 			matrix.mapRect(rect);
 			return rect;
 		}
@@ -506,30 +484,27 @@ public class PhotoView extends ImageView implements
 
 	/**
 	 * Helper method that 'unpacks' a Matrix and returns the required value
-	 * 
-	 * @param matrix
-	 *            - Matrix to unpack
-	 * @param whichValue
-	 *            - Which value from Matrix.M* to return
+	 *
+	 * @param matrix     - Matrix to unpack
+	 * @param whichValue - Which value from Matrix.M* to return
 	 * @return float - returned value
 	 */
-	private float getValue(Matrix matrix, int whichValue) {
+	private float getValue (Matrix matrix, int whichValue) {
 		matrix.getValues(mMatrixValues);
 		return mMatrixValues[whichValue];
 	}
 
-	private void init(Context context) {
+	private void init (Context context) {
 		mScaleDetector = VersionedGestureDetector.newInstance(context, this);
 
-		mGestureDetector = new GestureDetector(context,
-				new GestureDetector.SimpleOnGestureListener());
+		mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener());
 		mGestureDetector.setOnDoubleTapListener(this);
 
 		final ViewConfiguration configuration = ViewConfiguration.get(context);
 		mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
 	}
 
-	private void cancelFling() {
+	private void cancelFling () {
 		if (null != mCurrentFlingRunnable) {
 			mCurrentFlingRunnable.cancelFling();
 			mCurrentFlingRunnable = null;
@@ -539,7 +514,7 @@ public class PhotoView extends ImageView implements
 	/**
 	 * Resets the Matrix back to FIT_CENTER, and then displays it.s
 	 */
-	private void resetMatrix() {
+	private void resetMatrix () {
 		mSuppMatrix.reset();
 		setImageMatrix(getDisplayMatrix());
 		mScrollEdge = EDGE_BOTH;
@@ -547,11 +522,10 @@ public class PhotoView extends ImageView implements
 
 	/**
 	 * Calculate Matrix for FIT_CENTER
-	 * 
-	 * @param d
-	 *            - Drawable being displayed
+	 *
+	 * @param d - Drawable being displayed
 	 */
-	private void updateBaseMatrix(Drawable d) {
+	private void updateBaseMatrix (Drawable d) {
 		if (null == d) {
 			return;
 		}
@@ -568,8 +542,7 @@ public class PhotoView extends ImageView implements
 		float scale = Math.min(widthScale, heightScale);
 
 		mBaseMatrix.postScale(scale, scale);
-		mBaseMatrix.postTranslate((viewWidth - dWidth * scale) / 2F,
-				(viewHeight - dHeight * scale) / 2F);
+		mBaseMatrix.postTranslate((viewWidth - dWidth * scale) / 2F, (viewHeight - dHeight * scale) / 2F);
 
 		resetMatrix();
 	}

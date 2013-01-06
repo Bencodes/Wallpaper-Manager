@@ -11,16 +11,16 @@ public class SquareGridLayout extends ViewGroup {
 
 	private int mSquareDimensions;
 
-	public SquareGridLayout(Context context) {
+	public SquareGridLayout (Context context) {
 		super(context);
 	}
 
-	public SquareGridLayout(Context context, AttributeSet attrs) {
+	public SquareGridLayout (Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec) {
 
 		// breakdown specs
 		final int mw = MeasureSpec.getMode(widthMeasureSpec);
@@ -36,8 +36,7 @@ public class SquareGridLayout extends ViewGroup {
 		final int s;
 		final int sp;
 		if (mw == MeasureSpec.UNSPECIFIED && mh == MeasureSpec.UNSPECIFIED) {
-			throw new IllegalArgumentException(
-					"Layout must be constrained on at least one axis");
+			throw new IllegalArgumentException("Layout must be constrained on at least one axis");
 		} else if (mw == MeasureSpec.UNSPECIFIED) {
 			s = sh;
 			sp = s - ph;
@@ -67,39 +66,34 @@ public class SquareGridLayout extends ViewGroup {
 					continue;
 				// measure each child
 				// we could try to accommodate oversized children, but we don't
-				measureChildWithMargins(child, MeasureSpec.makeMeasureSpec(
-						(spp + x) / size, MeasureSpec.EXACTLY), 0,
-						MeasureSpec.makeMeasureSpec((spp + y) / size,
-								MeasureSpec.EXACTLY), 0);
+				measureChildWithMargins(child, MeasureSpec.makeMeasureSpec((spp + x) / size, MeasureSpec.EXACTLY), 0, MeasureSpec.makeMeasureSpec((spp + y) / size, MeasureSpec.EXACTLY), 0);
 			}
 		}
 
 		// record our dimensions
-		setMeasuredDimension(mw == MeasureSpec.EXACTLY ? sw : sp + pw,
-				mh == MeasureSpec.EXACTLY ? sh : sp + ph);
+		setMeasuredDimension(mw == MeasureSpec.EXACTLY ? sw : sp + pw, mh == MeasureSpec.EXACTLY ? sh : sp + ph);
 		mSquareDimensions = sp;
 	}
 
 	// ViewGroup methods
 
 	@Override
-	protected LayoutParams generateDefaultLayoutParams() {
-		return new MarginLayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+	protected LayoutParams generateDefaultLayoutParams () {
+		return new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 	}
 
 	@Override
-	protected LayoutParams generateLayoutParams(LayoutParams p) {
+	protected LayoutParams generateLayoutParams (LayoutParams p) {
 		return new MarginLayoutParams(p);
 	}
 
 	@Override
-	public LayoutParams generateLayoutParams(AttributeSet attrs) {
+	public LayoutParams generateLayoutParams (AttributeSet attrs) {
 		return new MarginLayoutParams(getContext(), attrs);
 	}
 
 	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+	protected void onLayout (boolean changed, int l, int t, int r, int b) {
 
 		// recover the previously computed square dimensions for efficiency
 		final int s = mSquareDimensions;
@@ -127,13 +121,9 @@ public class SquareGridLayout extends ViewGroup {
 					return;
 				// get the child's layout parameters so that we can honour their
 				// margins
-				MarginLayoutParams lps = (MarginLayoutParams) child
-						.getLayoutParams();
+				MarginLayoutParams lps = (MarginLayoutParams) child.getLayoutParams();
 				// we don't support gravity, so the arithmetic is simplified
-				child.layout(l + (s * x) / size + lps.leftMargin, t + (s * y)
-						/ size + lps.topMargin, l + (s * (x + 1)) / size
-						- lps.rightMargin, t + (s * (y + 1)) / size
-						- lps.bottomMargin);
+				child.layout(l + (s * x) / size + lps.leftMargin, t + (s * y) / size + lps.topMargin, l + (s * (x + 1)) / size - lps.rightMargin, t + (s * (y + 1)) / size - lps.bottomMargin);
 			}
 		}
 	}

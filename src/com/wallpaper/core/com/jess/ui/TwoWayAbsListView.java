@@ -34,11 +34,6 @@
 
 package com.wallpaper.core.com.jess.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.wallpaper.activity.R;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -52,27 +47,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.HapticFeedbackConstants;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewDebug;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.*;
 import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
+import com.wallpaper.activity.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class that can be used to implement virtualized lists of items. A list
  * does not have a spatial definition here. For instance, subclases of this
  * class can display the content of the list in a grid, in a carousel, as stack,
  * etc.
- * 
+ *
  * @attr ref android.R.styleable#JessAbsListView_listSelector
  * @attr ref android.R.styleable#JessAbsListView_drawSelectorOnTop
  * @attr ref android.R.styleable#JessAbsListView_stackFromBottom
@@ -82,14 +73,13 @@ import android.widget.Scroller;
  * @attr ref android.R.styleable#JessAbsListView_cacheColorHint
  * @attr ref android.R.styleable#JessAbsListView_smoothScrollbar
  */
-public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
-		implements ViewTreeObserver.OnTouchModeChangeListener {
+public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> implements ViewTreeObserver.OnTouchModeChangeListener {
 	private static final String TAG = "TwoWayAbsListView";
 	private static final boolean DEBUG = false;
 
 	/**
 	 * Disables the transcript mode.
-	 * 
+	 *
 	 * @see #setTranscriptMode(int)
 	 */
 	public static final int TRANSCRIPT_MODE_DISABLED = 0;
@@ -97,14 +87,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * The list will automatically scroll to the bottom when a data set change
 	 * notification is received and only if the last item is already visible on
 	 * screen.
-	 * 
+	 *
 	 * @see #setTranscriptMode(int)
 	 */
 	public static final int TRANSCRIPT_MODE_NORMAL = 1;
 	/**
 	 * The list will automatically scroll to the bottom, no matter what items
 	 * are currently visible.
-	 * 
+	 *
 	 * @see #setTranscriptMode(int)
 	 */
 	public static final int TRANSCRIPT_MODE_ALWAYS_SCROLL = 2;
@@ -181,7 +171,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Sets the View to Scroll Vertically.
-	 * 
+	 *
 	 * @see #setScrollDirectionPortrait(int)
 	 * @see #setScrollDirectionLandscape(int)
 	 */
@@ -189,7 +179,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Sets the View to Scroll Horizontally.
-	 * 
+	 *
 	 * @see #setScrollDirectionPortrait(int)
 	 * @see #setScrollDirectionLandscape(int)
 	 */
@@ -513,37 +503,29 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * called before the next frame of the scroll is rendered. In
 		 * particular, it will be called before any calls to
 		 * {@link Adapter#getView(int, View, ViewGroup)}.
-		 * 
-		 * @param view
-		 *            The view whose scroll state is being reported
-		 * 
-		 * @param scrollState
-		 *            The current scroll state. One of
-		 *            {@link #SCROLL_STATE_IDLE},
-		 *            {@link #SCROLL_STATE_TOUCH_SCROLL} or
-		 *            {@link #SCROLL_STATE_IDLE}.
+		 *
+		 * @param view        The view whose scroll state is being reported
+		 * @param scrollState The current scroll state. One of
+		 *                    {@link #SCROLL_STATE_IDLE},
+		 *                    {@link #SCROLL_STATE_TOUCH_SCROLL} or
+		 *                    {@link #SCROLL_STATE_IDLE}.
 		 */
-		public void onScrollStateChanged(TwoWayAbsListView view, int scrollState);
+		public void onScrollStateChanged (TwoWayAbsListView view, int scrollState);
 
 		/**
 		 * Callback method to be invoked when the list or grid has been
 		 * scrolled. This will be called after the scroll has completed
-		 * 
-		 * @param view
-		 *            The view whose scroll state is being reported
-		 * @param firstVisibleItem
-		 *            the index of the first visible cell (ignore if
-		 *            visibleItemCount == 0)
-		 * @param visibleItemCount
-		 *            the number of visible cells
-		 * @param totalItemCount
-		 *            the number of items in the list adaptor
+		 *
+		 * @param view             The view whose scroll state is being reported
+		 * @param firstVisibleItem the index of the first visible cell (ignore if
+		 *                         visibleItemCount == 0)
+		 * @param visibleItemCount the number of visible cells
+		 * @param totalItemCount   the number of items in the list adaptor
 		 */
-		public void onScroll(TwoWayAbsListView view, int firstVisibleItem,
-				int visibleItemCount, int totalItemCount);
+		public void onScroll (TwoWayAbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount);
 	}
 
-	public TwoWayAbsListView(Context context) {
+	public TwoWayAbsListView (Context context) {
 		super(context);
 		initAbsListView();
 		setupScrollInfo();
@@ -553,40 +535,34 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		// a.recycle();
 	}
 
-	public TwoWayAbsListView(Context context, AttributeSet attrs) {
+	public TwoWayAbsListView (Context context, AttributeSet attrs) {
 		this(context, attrs, android.R.attr.absListViewStyle);
 	}
 
-	public TwoWayAbsListView(Context context, AttributeSet attrs, int defStyle) {
+	public TwoWayAbsListView (Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		initAbsListView();
 
-		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.TwoWayAbsListView, defStyle, 0);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TwoWayAbsListView, defStyle, 0);
 
 		Drawable d = a.getDrawable(R.styleable.TwoWayAbsListView_listSelector);
 		if (d != null) {
 			setSelector(d);
 		}
 
-		mDrawSelectorOnTop = a.getBoolean(
-				R.styleable.TwoWayAbsListView_drawSelectorOnTop, false);
+		mDrawSelectorOnTop = a.getBoolean(R.styleable.TwoWayAbsListView_drawSelectorOnTop, false);
 
-		boolean stackFromBottom = a.getBoolean(
-				R.styleable.TwoWayAbsListView_stackFromBottom, false);
+		boolean stackFromBottom = a.getBoolean(R.styleable.TwoWayAbsListView_stackFromBottom, false);
 		setStackFromBottom(stackFromBottom);
 
-		boolean scrollingCacheEnabled = a.getBoolean(
-				R.styleable.TwoWayAbsListView_scrollingCache, true);
+		boolean scrollingCacheEnabled = a.getBoolean(R.styleable.TwoWayAbsListView_scrollingCache, true);
 		setScrollingCacheEnabled(scrollingCacheEnabled);
 
 		// boolean useTextFilter =
 		// a.getBoolean(R.styleable.JessAbsListView_textFilterEnabled, false);
 		// setTextFilterEnabled(useTextFilter);
 
-		int transcriptMode = a.getInt(
-				R.styleable.TwoWayAbsListView_transcriptMode,
-				TRANSCRIPT_MODE_DISABLED);
+		int transcriptMode = a.getInt(R.styleable.TwoWayAbsListView_transcriptMode, TRANSCRIPT_MODE_DISABLED);
 		setTranscriptMode(transcriptMode);
 
 		int color = a.getColor(R.styleable.TwoWayAbsListView_cacheColorHint, 0);
@@ -596,25 +572,20 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		// a.getBoolean(R.styleable.JessAbsListView_fastScrollEnabled, false);
 		// setFastScrollEnabled(enableFastScroll);
 
-		boolean smoothScrollbar = a.getBoolean(
-				R.styleable.TwoWayAbsListView_smoothScrollbar, true);
+		boolean smoothScrollbar = a.getBoolean(R.styleable.TwoWayAbsListView_smoothScrollbar, true);
 		setSmoothScrollbarEnabled(smoothScrollbar);
 
-		int scrollDirection = a.getInt(
-				R.styleable.TwoWayAbsListView_scrollDirectionPortrait,
-				SCROLL_VERTICAL);
+		int scrollDirection = a.getInt(R.styleable.TwoWayAbsListView_scrollDirectionPortrait, SCROLL_VERTICAL);
 		mScrollVerticallyPortrait = (scrollDirection == SCROLL_VERTICAL);
 
-		scrollDirection = a.getInt(
-				R.styleable.TwoWayAbsListView_scrollDirectionLandscape,
-				SCROLL_VERTICAL);
+		scrollDirection = a.getInt(R.styleable.TwoWayAbsListView_scrollDirectionLandscape, SCROLL_VERTICAL);
 		mScrollVerticallyLandscape = (scrollDirection == SCROLL_VERTICAL);
 
 		a.recycle();
 		setupScrollInfo();
 	}
 
-	private void initAbsListView() {
+	private void initAbsListView () {
 		// Setting focusable in touch mode will set the focusable property to
 		// true
 		setClickable(true);
@@ -632,9 +603,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	}
 
-	private void setupScrollInfo() {
-		mScrollVertically = mPortraitOrientation ? mScrollVerticallyPortrait
-				: mScrollVerticallyLandscape;
+	private void setupScrollInfo () {
+		mScrollVertically = mPortraitOrientation ? mScrollVerticallyPortrait : mScrollVerticallyLandscape;
 		if (mScrollVertically) {
 			mTouchHandler = new VerticalTouchHandler();
 			setVerticalScrollBarEnabled(true);
@@ -647,7 +617,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	}
 
-	private boolean orientationChanged() {
+	private boolean orientationChanged () {
 		boolean temp = mPortraitOrientation;
 		mPortraitOrientation = (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE);
 
@@ -665,7 +635,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * by dragging the fast scroll thumb. The adapter attached to the list may
 	 * want to implement {@link SectionIndexer} if it wishes to display alphabet
 	 * preview and jump between sections of the list.
-	 * 
+	 *
 	 * @see SectionIndexer
 	 * @see #isFastScrollEnabled()
 	 * @param enabled
@@ -680,7 +650,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Returns the current state of the fast scroll feature.
-	 * 
+	 *
 	 * @see #setFastScrollEnabled(boolean)
 	 * @return true if fast scroll is enabled, false otherwise
 	 */
@@ -699,43 +669,39 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * you use a list in which items have different heights, the scrollbar will
 	 * change appearance as the user scrolls through the list. To avoid this
 	 * issue, you need to disable this property.
-	 * 
+	 * <p/>
 	 * When smooth scrollbar is disabled, the position and size of the scrollbar
 	 * thumb is based solely on the number of items in the adapter and the
 	 * position of the visible items inside the adapter. This provides a stable
 	 * scrollbar as the user navigates through a list of items with varying
 	 * heights.
-	 * 
-	 * @param enabled
-	 *            Whether or not to enable smooth scrollbar.
-	 * 
-	 * @see #setSmoothScrollbarEnabled(boolean)
+	 *
+	 * @param enabled Whether or not to enable smooth scrollbar.
 	 * @attr ref android.R.styleable#JessAbsListView_smoothScrollbar
+	 * @see #setSmoothScrollbarEnabled(boolean)
 	 */
-	public void setSmoothScrollbarEnabled(boolean enabled) {
+	public void setSmoothScrollbarEnabled (boolean enabled) {
 		mSmoothScrollbarEnabled = enabled;
 	}
 
 	/**
 	 * Returns the current state of the fast scroll feature.
-	 * 
+	 *
 	 * @return True if smooth scrollbar is enabled is enabled, false otherwise.
-	 * 
 	 * @see #setSmoothScrollbarEnabled(boolean)
 	 */
 	@ViewDebug.ExportedProperty
-	public boolean isSmoothScrollbarEnabled() {
+	public boolean isSmoothScrollbarEnabled () {
 		return mSmoothScrollbarEnabled;
 	}
 
 	/**
 	 * Set the listener that will receive notifications every time the list
 	 * scrolls.
-	 * 
-	 * @param l
-	 *            the scroll listener
+	 *
+	 * @param l the scroll listener
 	 */
-	public void setOnScrollListener(OnScrollListener l) {
+	public void setOnScrollListener (OnScrollListener l) {
 		mOnScrollListener = l;
 		invokeOnItemScrollListener();
 	}
@@ -743,14 +709,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * Notify our scroll listener (if there is one) of a change in scroll state
 	 */
-	void invokeOnItemScrollListener() {
+	void invokeOnItemScrollListener () {
 		// if (mFastScroller != null) {
 		// mFastScroller.onScroll(this, mFirstPosition, getChildCount(),
 		// mItemCount);
 		// }
 		if (mOnScrollListener != null) {
-			mOnScrollListener.onScroll(this, mFirstPosition, getChildCount(),
-					mItemCount);
+			mOnScrollListener.onScroll(this, mFirstPosition, getChildCount(), mItemCount);
 		}
 	}
 
@@ -758,32 +723,29 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Indicates whether the children's drawing cache is used during a scroll.
 	 * By default, the drawing cache is enabled but this will consume more
 	 * memory.
-	 * 
+	 *
 	 * @return true if the scrolling cache is enabled, false otherwise
-	 * 
 	 * @see #setScrollingCacheEnabled(boolean)
 	 * @see View#setDrawingCacheEnabled(boolean)
 	 */
 	@ViewDebug.ExportedProperty
-	public boolean isScrollingCacheEnabled() {
+	public boolean isScrollingCacheEnabled () {
 		return mScrollingCacheEnabled;
 	}
 
 	/**
 	 * Enables or disables the children's drawing cache during a scroll. By
 	 * default, the drawing cache is enabled but this will use more memory.
-	 * 
+	 * <p/>
 	 * When the scrolling cache is enabled, the caches are kept after the first
 	 * scrolling. You can manually clear the cache by calling
 	 * {@link android.view.ViewGroup#setChildrenDrawingCacheEnabled(boolean)}.
-	 * 
-	 * @param enabled
-	 *            true to enable the scroll cache, false otherwise
-	 * 
+	 *
+	 * @param enabled true to enable the scroll cache, false otherwise
 	 * @see #isScrollingCacheEnabled()
 	 * @see View#setDrawingCacheEnabled(boolean)
 	 */
-	public void setScrollingCacheEnabled(boolean enabled) {
+	public void setScrollingCacheEnabled (boolean enabled) {
 		if (mScrollingCacheEnabled && !enabled) {
 			mTouchHandler.clearScrollingCache();
 		}
@@ -818,7 +780,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	// //}
 
 	@Override
-	public void getFocusedRect(Rect r) {
+	public void getFocusedRect (Rect r) {
 		View view = getSelectedView();
 		if (view != null && view.getParent() == this) {
 			// the focused rectangle of the selected view offset into the
@@ -831,39 +793,37 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 	}
 
-	private void useDefaultSelector() {
-		setSelector(getResources().getDrawable(
-				android.R.drawable.list_selector_background));
+	private void useDefaultSelector () {
+		setSelector(getResources().getDrawable(android.R.drawable.list_selector_background));
 	}
 
 	/**
 	 * Indicates whether the content of this view is pinned to, or stacked from,
 	 * the bottom edge.
-	 * 
+	 *
 	 * @return true if the content is stacked from the bottom edge, false
 	 *         otherwise
 	 */
 	@ViewDebug.ExportedProperty
-	public boolean isStackFromBottom() {
+	public boolean isStackFromBottom () {
 		return mStackFromBottom;
 	}
 
 	/**
 	 * When stack from bottom is set to true, the list fills its content
 	 * starting from the bottom of the view.
-	 * 
-	 * @param stackFromBottom
-	 *            true to pin the view's content to the bottom edge, false to
-	 *            pin the view's content to the top edge
+	 *
+	 * @param stackFromBottom true to pin the view's content to the bottom edge, false to
+	 *                        pin the view's content to the top edge
 	 */
-	public void setStackFromBottom(boolean stackFromBottom) {
+	public void setStackFromBottom (boolean stackFromBottom) {
 		if (mStackFromBottom != stackFromBottom) {
 			mStackFromBottom = stackFromBottom;
 			requestLayoutIfNecessary();
 		}
 	}
 
-	void requestLayoutIfNecessary() {
+	void requestLayoutIfNecessary () {
 		if (getChildCount() > 0) {
 			resetList();
 			requestLayout();
@@ -884,14 +844,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * Constructor called from
 		 * {@link TwoWayAbsListView#onSaveInstanceState()}
 		 */
-		SavedState(Parcelable superState) {
+		SavedState (Parcelable superState) {
 			super(superState);
 		}
 
 		/**
 		 * Constructor called from {@link #CREATOR}
 		 */
-		private SavedState(Parcel in) {
+		private SavedState (Parcel in) {
 			super(in);
 			selectedId = in.readLong();
 			firstId = in.readLong();
@@ -902,7 +862,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		public void writeToParcel(Parcel out, int flags) {
+		public void writeToParcel (Parcel out, int flags) {
 			super.writeToParcel(out, flags);
 			out.writeLong(selectedId);
 			out.writeLong(firstId);
@@ -913,28 +873,24 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		public String toString() {
-			return "TwoWayAbsListView.SavedState{"
-					+ Integer.toHexString(System.identityHashCode(this))
-					+ " selectedId=" + selectedId + " firstId=" + firstId
-					+ " viewTop=" + viewTop + " position=" + position
-					+ " height=" + height + "}";
+		public String toString () {
+			return "TwoWayAbsListView.SavedState{" + Integer.toHexString(System.identityHashCode(this)) + " selectedId=" + selectedId + " firstId=" + firstId + " viewTop=" + viewTop + " position=" + position + " height=" + height + "}";
 			// + " filter=" + filter + "}";
 		}
 
 		public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
-			public SavedState createFromParcel(Parcel in) {
+			public SavedState createFromParcel (Parcel in) {
 				return new SavedState(in);
 			}
 
-			public SavedState[] newArray(int size) {
+			public SavedState[] newArray (int size) {
 				return new SavedState[size];
 			}
 		};
 	}
 
 	@Override
-	public Parcelable onSaveInstanceState() {
+	public Parcelable onSaveInstanceState () {
 		/*
 		 * This doesn't really make sense as the place to dismiss the popups,
 		 * but there don't seem to be any other useful hooks that happen early
@@ -985,7 +941,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	public void onRestoreInstanceState(Parcelable state) {
+	public void onRestoreInstanceState (Parcelable state) {
 		SavedState ss = (SavedState) state;
 
 		super.onRestoreInstanceState(ss.getSuperState());
@@ -1062,8 +1018,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	// }
 
 	@Override
-	protected void onFocusChanged(boolean gainFocus, int direction,
-			Rect previouslyFocusedRect) {
+	protected void onFocusChanged (boolean gainFocus, int direction, Rect previouslyFocusedRect) {
 		super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
 		if (gainFocus && mSelectedPosition < 0 && !isInTouchMode()) {
 			resurrectSelection();
@@ -1071,7 +1026,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	public void requestLayout() {
+	public void requestLayout () {
 		if (!mBlockLayoutRequests && !mInLayout) {
 			super.requestLayout();
 		}
@@ -1080,7 +1035,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * The list is empty. Clear everything out.
 	 */
-	void resetList() {
+	void resetList () {
 		removeAllViewsInLayout();
 		mFirstPosition = 0;
 		mDataChanged = false;
@@ -1095,7 +1050,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected int computeVerticalScrollExtent() {
+	protected int computeVerticalScrollExtent () {
 		final int count = getChildCount();
 		if (count > 0 && mScrollVertically) {
 			if (mSmoothScrollbarEnabled) {
@@ -1124,7 +1079,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected int computeVerticalScrollOffset() {
+	protected int computeVerticalScrollOffset () {
 		final int firstPosition = mFirstPosition;
 		final int childCount = getChildCount();
 		if (firstPosition >= 0 && childCount > 0 && mScrollVertically) {
@@ -1133,12 +1088,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				final int top = view.getTop();
 				int height = view.getHeight();
 				if (height > 0) {
-					return Math.max(firstPosition
-							* 100
-							- (top * 100)
-							/ height
-							+ (int) ((float) getScrollY() / getHeight()
-									* mItemCount * 100), 0);
+					return Math.max(firstPosition * 100 - (top * 100) / height + (int) ((float) getScrollY() / getHeight() * mItemCount * 100), 0);
 				}
 			} else {
 				int index;
@@ -1150,15 +1100,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				} else {
 					index = firstPosition + childCount / 2;
 				}
-				return (int) (firstPosition + childCount
-						* (index / (float) count));
+				return (int) (firstPosition + childCount * (index / (float) count));
 			}
 		}
 		return 0;
 	}
 
 	@Override
-	protected int computeVerticalScrollRange() {
+	protected int computeVerticalScrollRange () {
 		int result;
 		if (!mScrollVertically) {
 			result = 0;
@@ -1171,7 +1120,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected int computeHorizontalScrollExtent() {
+	protected int computeHorizontalScrollExtent () {
 		final int count = getChildCount();
 		if (count > 0 && !mScrollVertically) {
 			if (mSmoothScrollbarEnabled) {
@@ -1200,7 +1149,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected int computeHorizontalScrollOffset() {
+	protected int computeHorizontalScrollOffset () {
 		final int firstPosition = mFirstPosition;
 		final int childCount = getChildCount();
 		if (firstPosition >= 0 && childCount > 0 && !mScrollVertically) {
@@ -1209,12 +1158,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				final int left = view.getLeft();
 				int width = view.getWidth();
 				if (width > 0) {
-					return Math.max(firstPosition
-							* 100
-							- (left * 100)
-							/ width
-							+ (int) ((float) getScrollX() / getWidth()
-									* mItemCount * 100), 0);
+					return Math.max(firstPosition * 100 - (left * 100) / width + (int) ((float) getScrollX() / getWidth() * mItemCount * 100), 0);
 				}
 			} else {
 				int index;
@@ -1226,15 +1170,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				} else {
 					index = firstPosition + childCount / 2;
 				}
-				return (int) (firstPosition + childCount
-						* (index / (float) count));
+				return (int) (firstPosition + childCount * (index / (float) count));
 			}
 		}
 		return 0;
 	}
 
 	@Override
-	protected int computeHorizontalScrollRange() {
+	protected int computeHorizontalScrollRange () {
 		int result;
 		if (mScrollVertically) {
 			result = 0;
@@ -1247,7 +1190,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected float getTopFadingEdgeStrength() {
+	protected float getTopFadingEdgeStrength () {
 		final int count = getChildCount();
 		final float fadeEdge = super.getTopFadingEdgeStrength();
 		if (count == 0 || !mScrollVertically) {
@@ -1260,13 +1203,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int top = getChildAt(0).getTop();
 			final float fadeLength = getVerticalFadingEdgeLength();
 			int paddintTop = getPaddingTop();
-			return top < paddintTop ? -(top - paddintTop) / fadeLength
-					: fadeEdge;
+			return top < paddintTop ? -(top - paddintTop) / fadeLength : fadeEdge;
 		}
 	}
 
 	@Override
-	protected float getBottomFadingEdgeStrength() {
+	protected float getBottomFadingEdgeStrength () {
 		final int count = getChildCount();
 		final float fadeEdge = super.getBottomFadingEdgeStrength();
 		if (count == 0 || !mScrollVertically) {
@@ -1280,14 +1222,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int height = getHeight();
 			final float fadeLength = getVerticalFadingEdgeLength();
 			int paddingBottom = getPaddingBottom();
-			return bottom > height - paddingBottom ? (bottom - height + paddingBottom)
-					/ fadeLength
-					: fadeEdge;
+			return bottom > height - paddingBottom ? (bottom - height + paddingBottom) / fadeLength : fadeEdge;
 		}
 	}
 
 	@Override
-	protected float getLeftFadingEdgeStrength() {
+	protected float getLeftFadingEdgeStrength () {
 		final int count = getChildCount();
 		final float fadeEdge = super.getLeftFadingEdgeStrength();
 		if (count == 0 || mScrollVertically) {
@@ -1300,13 +1240,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int left = getChildAt(0).getLeft();
 			final float fadeLength = getHorizontalFadingEdgeLength();
 			int paddingLeft = getPaddingLeft();
-			return left < paddingLeft ? -(left - paddingLeft) / fadeLength
-					: fadeEdge;
+			return left < paddingLeft ? -(left - paddingLeft) / fadeLength : fadeEdge;
 		}
 	}
 
 	@Override
-	protected float getRightFadingEdgeStrength() {
+	protected float getRightFadingEdgeStrength () {
 		final int count = getChildCount();
 		final float fadeEdge = super.getRightFadingEdgeStrength();
 		if (count == 0 || mScrollVertically) {
@@ -1320,14 +1259,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int width = getWidth();
 			final float fadeLength = getHorizontalFadingEdgeLength();
 			int paddingRight = getPaddingRight();
-			return right > width - paddingRight ? (right - width + paddingRight)
-					/ fadeLength
-					: fadeEdge;
+			return right > width - paddingRight ? (right - width + paddingRight) / fadeLength : fadeEdge;
 		}
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec) {
 		orientationChanged();
 
 		if (mSelector == null) {
@@ -1345,7 +1282,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * instead.
 	 */
 	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+	protected void onLayout (boolean changed, int l, int t, int r, int b) {
 		if (orientationChanged()) {
 			setupScrollInfo();
 		}
@@ -1379,10 +1316,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * Subclasses must override this method to layout their children.
 	 */
-	protected void layoutChildren() {
+	protected void layoutChildren () {
 	}
 
-	void updateScrollIndicators() {
+	void updateScrollIndicators () {
 		if (mScrollUp != null && mScrollVertically) {
 			boolean canScrollUp;
 			// 0th element is not visible
@@ -1396,8 +1333,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				}
 			}
 
-			mScrollUp
-					.setVisibility(canScrollUp ? View.VISIBLE : View.INVISIBLE);
+			mScrollUp.setVisibility(canScrollUp ? View.VISIBLE : View.INVISIBLE);
 		}
 
 		if (mScrollDown != null && mScrollVertically) {
@@ -1410,12 +1346,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			// ... Or bottom of the last element is not visible
 			if (!canScrollDown && count > 0) {
 				View child = getChildAt(count - 1);
-				canScrollDown = child.getBottom() > getBottom()
-						- mListPadding.bottom;
+				canScrollDown = child.getBottom() > getBottom() - mListPadding.bottom;
 			}
 
-			mScrollDown.setVisibility(canScrollDown ? View.VISIBLE
-					: View.INVISIBLE);
+			mScrollDown.setVisibility(canScrollDown ? View.VISIBLE : View.INVISIBLE);
 		}
 
 		if (mScrollLeft != null && !mScrollVertically) {
@@ -1431,8 +1365,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				}
 			}
 
-			mScrollLeft.setVisibility(canScrollLeft ? View.VISIBLE
-					: View.INVISIBLE);
+			mScrollLeft.setVisibility(canScrollLeft ? View.VISIBLE : View.INVISIBLE);
 		}
 
 		if (mScrollRight != null && !mScrollVertically) {
@@ -1445,18 +1378,16 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			// ... Or bottom of the last element is not visible
 			if (!canScrollRight && count > 0) {
 				View child = getChildAt(count - 1);
-				canScrollRight = child.getRight() > getRight()
-						- mListPadding.right;
+				canScrollRight = child.getRight() > getRight() - mListPadding.right;
 			}
 
-			mScrollRight.setVisibility(canScrollRight ? View.VISIBLE
-					: View.INVISIBLE);
+			mScrollRight.setVisibility(canScrollRight ? View.VISIBLE : View.INVISIBLE);
 		}
 	}
 
 	@Override
 	@ViewDebug.ExportedProperty
-	public View getSelectedView() {
+	public View getSelectedView () {
 		if (mItemCount > 0 && mSelectedPosition >= 0) {
 			return getChildAt(mSelectedPosition - mFirstPosition);
 		} else {
@@ -1467,52 +1398,48 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * List padding is the maximum of the normal view's padding and the padding
 	 * of the selector.
-	 * 
+	 *
+	 * @return The top list padding.
 	 * @see android.view.View#getPaddingTop()
 	 * @see #getSelector()
-	 * 
-	 * @return The top list padding.
 	 */
-	public int getListPaddingTop() {
+	public int getListPaddingTop () {
 		return mListPadding.top;
 	}
 
 	/**
 	 * List padding is the maximum of the normal view's padding and the padding
 	 * of the selector.
-	 * 
+	 *
+	 * @return The bottom list padding.
 	 * @see android.view.View#getPaddingBottom()
 	 * @see #getSelector()
-	 * 
-	 * @return The bottom list padding.
 	 */
-	public int getListPaddingBottom() {
+	public int getListPaddingBottom () {
 		return mListPadding.bottom;
 	}
 
 	/**
 	 * List padding is the maximum of the normal view's padding and the padding
 	 * of the selector.
-	 * 
+	 *
+	 * @return The left list padding.
 	 * @see android.view.View#getPaddingLeft()
 	 * @see #getSelector()
-	 * 
-	 * @return The left list padding.
 	 */
-	public int getListPaddingLeft() {
+	public int getListPaddingLeft () {
 		return mListPadding.left;
 	}
 
 	/**
 	 * List padding is the maximum of the normal view's padding and the padding
 	 * of the selector.
-	 * 
+	 *
+	 * @return The right list padding.
 	 * @see android.view.View#getPaddingRight()
 	 * @see #getSelector()
-	 * 
-	 * @return The right list padding.
 	 */
-	public int getListPaddingRight() {
+	public int getListPaddingRight () {
 		return mListPadding.right;
 	}
 
@@ -1521,17 +1448,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * position. This is called when we have already discovered that the view is
 	 * not available for reuse in the recycle bin. The only choices left are
 	 * converting an old view or making a new one.
-	 * 
-	 * @param position
-	 *            The position to display
-	 * @param isScrap
-	 *            Array of at least 1 boolean, the first entry will become true
-	 *            if the returned view was taken from the scrap heap, false if
-	 *            otherwise.
-	 * 
+	 *
+	 * @param position The position to display
+	 * @param isScrap  Array of at least 1 boolean, the first entry will become true
+	 *                 if the returned view was taken from the scrap heap, false if
+	 *                 otherwise.
 	 * @return A view displaying the data associated with the specified position
 	 */
-	View obtainView(int position, boolean[] isScrap) {
+	View obtainView (int position, boolean[] isScrap) {
 		isScrap[0] = false;
 		View scrapView;
 
@@ -1540,16 +1464,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		View child;
 		if (scrapView != null) {
 			if (ViewDebug.TRACE_RECYCLER) {
-				ViewDebug.trace(scrapView,
-						ViewDebug.RecyclerTraceType.RECYCLE_FROM_SCRAP_HEAP,
-						position, -1);
+				ViewDebug.trace(scrapView, ViewDebug.RecyclerTraceType.RECYCLE_FROM_SCRAP_HEAP, position, -1);
 			}
 
 			child = mAdapter.getView(position, scrapView, this);
 
 			if (ViewDebug.TRACE_RECYCLER) {
-				ViewDebug.trace(child, ViewDebug.RecyclerTraceType.BIND_VIEW,
-						position, getChildCount());
+				ViewDebug.trace(child, ViewDebug.RecyclerTraceType.BIND_VIEW, position, getChildCount());
 			}
 
 			if (child != scrapView) {
@@ -1558,9 +1479,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					child.setDrawingCacheBackgroundColor(mCacheColorHint);
 				}
 				if (ViewDebug.TRACE_RECYCLER) {
-					ViewDebug.trace(scrapView,
-							ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP,
-							position, -1);
+					ViewDebug.trace(scrapView, ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP, position, -1);
 				}
 			} else {
 				isScrap[0] = true;
@@ -1572,20 +1491,17 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				child.setDrawingCacheBackgroundColor(mCacheColorHint);
 			}
 			if (ViewDebug.TRACE_RECYCLER) {
-				ViewDebug.trace(child, ViewDebug.RecyclerTraceType.NEW_VIEW,
-						position, getChildCount());
+				ViewDebug.trace(child, ViewDebug.RecyclerTraceType.NEW_VIEW, position, getChildCount());
 			}
 		}
 
 		return child;
 	}
 
-	void positionSelector(View sel) {
+	void positionSelector (View sel) {
 		final Rect selectorRect = mSelectorRect;
-		selectorRect.set(sel.getLeft(), sel.getTop(), sel.getRight(),
-				sel.getBottom());
-		positionSelector(selectorRect.left, selectorRect.top,
-				selectorRect.right, selectorRect.bottom);
+		selectorRect.set(sel.getLeft(), sel.getTop(), sel.getRight(), sel.getBottom());
+		positionSelector(selectorRect.left, selectorRect.top, selectorRect.right, selectorRect.bottom);
 
 		final boolean isChildViewEnabled = mIsChildViewEnabled;
 		if (sel.isEnabled() != isChildViewEnabled) {
@@ -1594,13 +1510,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 	}
 
-	private void positionSelector(int l, int t, int r, int b) {
-		mSelectorRect.set(l - mSelectionLeftPadding, t - mSelectionTopPadding,
-				r + mSelectionRightPadding, b + mSelectionBottomPadding);
+	private void positionSelector (int l, int t, int r, int b) {
+		mSelectorRect.set(l - mSelectionLeftPadding, t - mSelectionTopPadding, r + mSelectionRightPadding, b + mSelectionBottomPadding);
 	}
 
 	@Override
-	protected void dispatchDraw(Canvas canvas) {
+	protected void dispatchDraw (Canvas canvas) {
 		int saveCount = 0;
 		// TODO????
 		/*
@@ -1630,7 +1545,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+	protected void onSizeChanged (int w, int h, int oldw, int oldh) {
 		if (getChildCount() > 0) {
 			mDataChanged = true;
 			rememberSyncState();
@@ -1645,7 +1560,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * @return True if the current touch mode requires that we draw the selector
 	 *         in the pressed state.
 	 */
-	boolean touchModeDrawsInPressedState() {
+	boolean touchModeDrawsInPressedState () {
 		// FIXME use isPressed for this
 		switch (mTouchMode) {
 			case TOUCH_MODE_TAP:
@@ -1660,17 +1575,15 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Indicates whether this view is in a state where the selector should be
 	 * drawn. This will happen if we have focus but are not in touch mode, or we
 	 * are in the middle of displaying the pressed state for an item.
-	 * 
+	 *
 	 * @return True if the selector should be shown
 	 */
-	boolean shouldShowSelector() {
-		return (hasFocus() && !isInTouchMode())
-				|| touchModeDrawsInPressedState();
+	boolean shouldShowSelector () {
+		return (hasFocus() && !isInTouchMode()) || touchModeDrawsInPressedState();
 	}
 
-	private void drawSelector(Canvas canvas) {
-		if (shouldShowSelector() && mSelectorRect != null
-				&& !mSelectorRect.isEmpty()) {
+	private void drawSelector (Canvas canvas) {
+		if (shouldShowSelector() && mSelectorRect != null && !mSelectorRect.isEmpty()) {
 			final Drawable selector = mSelector;
 			selector.setBounds(mSelectorRect);
 			selector.draw(canvas);
@@ -1680,31 +1593,27 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * Controls whether the selection highlight drawable should be drawn on top
 	 * of the item or behind it.
-	 * 
-	 * @param onTop
-	 *            If true, the selector will be drawn on the item it is
-	 *            highlighting. The default is false.
-	 * 
+	 *
+	 * @param onTop If true, the selector will be drawn on the item it is
+	 *              highlighting. The default is false.
 	 * @attr ref android.R.styleable#JessAbsListView_drawSelectorOnTop
 	 */
-	public void setDrawSelectorOnTop(boolean onTop) {
+	public void setDrawSelectorOnTop (boolean onTop) {
 		mDrawSelectorOnTop = onTop;
 	}
 
 	/**
 	 * Set a Drawable that should be used to highlight the currently selected
 	 * item.
-	 * 
-	 * @param resID
-	 *            A Drawable resource to use as the selection highlight.
-	 * 
+	 *
+	 * @param resID A Drawable resource to use as the selection highlight.
 	 * @attr ref android.R.styleable#JessAbsListView_listSelector
 	 */
-	public void setSelector(int resID) {
+	public void setSelector (int resID) {
 		setSelector(getResources().getDrawable(resID));
 	}
 
-	public void setSelector(Drawable sel) {
+	public void setSelector (Drawable sel) {
 		if (mSelector != null) {
 			mSelector.setCallback(null);
 			unscheduleDrawable(mSelector);
@@ -1723,10 +1632,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * Returns the selector {@link android.graphics.drawable.Drawable} that is
 	 * used to draw the selection in the list.
-	 * 
+	 *
 	 * @return the drawable used to display the selector
 	 */
-	public Drawable getSelector() {
+	public Drawable getSelector () {
 		return mSelector;
 	}
 
@@ -1734,15 +1643,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Sets the selector state to "pressed" and posts a CheckForKeyLongPress to
 	 * see if this is a long press.
 	 */
-	void keyPressed() {
+	void keyPressed () {
 		if (!isEnabled() || !isClickable()) {
 			return;
 		}
 
 		Drawable selector = mSelector;
 		Rect selectorRect = mSelectorRect;
-		if (selector != null && (isFocused() || touchModeDrawsInPressedState())
-				&& selectorRect != null && !selectorRect.isEmpty()) {
+		if (selector != null && (isFocused() || touchModeDrawsInPressedState()) && selectorRect != null && !selectorRect.isEmpty()) {
 
 			final View v = getChildAt(mSelectedPosition - mFirstPosition);
 
@@ -1757,8 +1665,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			Drawable d = selector.getCurrent();
 			if (d != null && d instanceof TransitionDrawable) {
 				if (longClickable) {
-					((TransitionDrawable) d).startTransition(ViewConfiguration
-							.getLongPressTimeout());
+					((TransitionDrawable) d).startTransition(ViewConfiguration.getLongPressTimeout());
 				} else {
 					((TransitionDrawable) d).resetTransition();
 				}
@@ -1768,13 +1675,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					mPendingCheckForKeyLongPress = new CheckForKeyLongPress();
 				}
 				mPendingCheckForKeyLongPress.rememberWindowAttachCount();
-				postDelayed(mPendingCheckForKeyLongPress,
-						ViewConfiguration.getLongPressTimeout());
+				postDelayed(mPendingCheckForKeyLongPress, ViewConfiguration.getLongPressTimeout());
 			}
 		}
 	}
 
-	public void setScrollIndicators(View up, View down, View left, View right) {
+	public void setScrollIndicators (View up, View down, View left, View right) {
 		mScrollUp = up;
 		mScrollDown = down;
 		mScrollLeft = left;
@@ -1782,7 +1688,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected void drawableStateChanged() {
+	protected void drawableStateChanged () {
 		super.drawableStateChanged();
 		if (mSelector != null) {
 			mSelector.setState(getDrawableState());
@@ -1790,7 +1696,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected int[] onCreateDrawableState(int extraSpace) {
+	protected int[] onCreateDrawableState (int extraSpace) {
 		// If the child view is enabled then do the default behavior.
 		if (mIsChildViewEnabled) {
 			// Common case
@@ -1819,20 +1725,19 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		// Remove the enabled state
 		if (enabledPos >= 0) {
-			System.arraycopy(state, enabledPos + 1, state, enabledPos,
-					state.length - enabledPos - 1);
+			System.arraycopy(state, enabledPos + 1, state, enabledPos, state.length - enabledPos - 1);
 		}
 
 		return state;
 	}
 
 	@Override
-	public boolean verifyDrawable(Drawable dr) {
+	public boolean verifyDrawable (Drawable dr) {
 		return mSelector == dr || super.verifyDrawable(dr);
 	}
 
 	@Override
-	protected void onAttachedToWindow() {
+	protected void onAttachedToWindow () {
 		super.onAttachedToWindow();
 
 		final ViewTreeObserver treeObserver = getViewTreeObserver();
@@ -1847,7 +1752,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected void onDetachedFromWindow() {
+	protected void onDetachedFromWindow () {
 		super.onDetachedFromWindow();
 
 		// Dismiss the popup in case onSaveInstanceState() was not invoked
@@ -1871,35 +1776,30 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Creates the ContextMenuInfo returned from {@link #getContextMenuInfo()}.
 	 * This methods knows the view, position and ID of the item that received
 	 * the long press.
-	 * 
-	 * @param view
-	 *            The view that received the long press.
-	 * @param position
-	 *            The position of the item that received the long press.
-	 * @param id
-	 *            The ID of the item that received the long press.
+	 *
+	 * @param view     The view that received the long press.
+	 * @param position The position of the item that received the long press.
+	 * @param id       The ID of the item that received the long press.
 	 * @return The extra information that should be returned by
 	 *         {@link #getContextMenuInfo()}.
 	 */
-	ContextMenuInfo createContextMenuInfo(View view, int position, long id) {
+	ContextMenuInfo createContextMenuInfo (View view, int position, long id) {
 		return new AdapterContextMenuInfo(view, position, id);
 	}
 
 	/**
 	 * A base class for Runnables that will check that their view is still
 	 * attached to the original window as when the Runnable was created.
-	 * 
 	 */
 	private class WindowRunnnable {
 		private int mOriginalAttachCount;
 
-		public void rememberWindowAttachCount() {
+		public void rememberWindowAttachCount () {
 			mOriginalAttachCount = getWindowAttachCount();
 		}
 
-		public boolean sameWindow() {
-			return hasWindowFocus()
-					&& getWindowAttachCount() == mOriginalAttachCount;
+		public boolean sameWindow () {
+			return hasWindowFocus() && getWindowAttachCount() == mOriginalAttachCount;
 		}
 	}
 
@@ -1907,7 +1807,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		View mChild;
 		int mClickMotionPosition;
 
-		public void run() {
+		public void run () {
 			// The data has changed since we posted this action in the event
 			// queue,
 			// bail out before bad things happen
@@ -1916,17 +1816,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 			final ListAdapter adapter = mAdapter;
 			final int motionPosition = mClickMotionPosition;
-			if (adapter != null && mItemCount > 0
-					&& motionPosition != INVALID_POSITION
-					&& motionPosition < adapter.getCount() && sameWindow()) {
-				performItemClick(mChild, motionPosition,
-						adapter.getItemId(motionPosition));
+			if (adapter != null && mItemCount > 0 && motionPosition != INVALID_POSITION && motionPosition < adapter.getCount() && sameWindow()) {
+				performItemClick(mChild, motionPosition, adapter.getItemId(motionPosition));
 			}
 		}
 	}
 
 	private class CheckForLongPress extends WindowRunnnable implements Runnable {
-		public void run() {
+		public void run () {
 			final int motionPosition = mMotionPosition;
 			final View child = getChildAt(motionPosition - mFirstPosition);
 			if (child != null) {
@@ -1935,8 +1832,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 				boolean handled = false;
 				if (sameWindow() && !mDataChanged) {
-					handled = performLongPress(child, longPressPosition,
-							longPressId);
+					handled = performLongPress(child, longPressPosition, longPressId);
 				}
 				if (handled) {
 					mTouchMode = TOUCH_MODE_REST;
@@ -1950,9 +1846,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 	}
 
-	private class CheckForKeyLongPress extends WindowRunnnable implements
-			Runnable {
-		public void run() {
+	private class CheckForKeyLongPress extends WindowRunnnable implements Runnable {
+		public void run () {
 			if (isPressed() && mSelectedPosition >= 0) {
 				int index = mSelectedPosition - mFirstPosition;
 				View v = getChildAt(index);
@@ -1960,8 +1855,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				if (!mDataChanged) {
 					boolean handled = false;
 					if (sameWindow()) {
-						handled = performLongPress(v, mSelectedPosition,
-								mSelectedRowId);
+						handled = performLongPress(v, mSelectedPosition, mSelectedRowId);
 					}
 					if (handled) {
 						setPressed(false);
@@ -1976,18 +1870,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 	}
 
-	private boolean performLongPress(final View child,
-			final int longPressPosition, final long longPressId) {
+	private boolean performLongPress (final View child, final int longPressPosition, final long longPressId) {
 		boolean handled = false;
 
 		if (mOnItemLongClickListener != null) {
-			handled = mOnItemLongClickListener.onItemLongClick(
-					TwoWayAbsListView.this, child, longPressPosition,
-					longPressId);
+			handled = mOnItemLongClickListener.onItemLongClick(TwoWayAbsListView.this, child, longPressPosition, longPressId);
 		}
 		if (!handled) {
-			mContextMenuInfo = createContextMenuInfo(child, longPressPosition,
-					longPressId);
+			mContextMenuInfo = createContextMenuInfo(child, longPressPosition, longPressId);
 			handled = super.showContextMenuForChild(TwoWayAbsListView.this);
 		}
 		if (handled) {
@@ -1997,26 +1887,22 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected ContextMenuInfo getContextMenuInfo() {
+	protected ContextMenuInfo getContextMenuInfo () {
 		return mContextMenuInfo;
 	}
 
 	@Override
-	public boolean showContextMenuForChild(View originalView) {
+	public boolean showContextMenuForChild (View originalView) {
 		final int longPressPosition = getPositionForView(originalView);
 		if (longPressPosition >= 0) {
 			final long longPressId = mAdapter.getItemId(longPressPosition);
 			boolean handled = false;
 
 			if (mOnItemLongClickListener != null) {
-				handled = mOnItemLongClickListener.onItemLongClick(
-						TwoWayAbsListView.this, originalView,
-						longPressPosition, longPressId);
+				handled = mOnItemLongClickListener.onItemLongClick(TwoWayAbsListView.this, originalView, longPressPosition, longPressId);
 			}
 			if (!handled) {
-				mContextMenuInfo = createContextMenuInfo(
-						getChildAt(longPressPosition - mFirstPosition),
-						longPressPosition, longPressId);
+				mContextMenuInfo = createContextMenuInfo(getChildAt(longPressPosition - mFirstPosition), longPressPosition, longPressId);
 				handled = super.showContextMenuForChild(originalView);
 			}
 
@@ -2026,27 +1912,23 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown (int keyCode, KeyEvent event) {
 		return false;
 	}
 
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_DPAD_CENTER:
 			case KeyEvent.KEYCODE_ENTER:
 				if (!isEnabled()) {
 					return true;
 				}
-				if (isClickable() && isPressed() && mSelectedPosition >= 0
-						&& mAdapter != null
-						&& mSelectedPosition < mAdapter.getCount()) {
+				if (isClickable() && isPressed() && mSelectedPosition >= 0 && mAdapter != null && mSelectedPosition < mAdapter.getCount()) {
 
-					final View view = getChildAt(mSelectedPosition
-							- mFirstPosition);
+					final View view = getChildAt(mSelectedPosition - mFirstPosition);
 					if (view != null) {
-						performItemClick(view, mSelectedPosition,
-								mSelectedRowId);
+						performItemClick(view, mSelectedPosition, mSelectedRowId);
 						view.setPressed(false);
 					}
 					setPressed(false);
@@ -2058,7 +1940,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	protected void dispatchSetPressed(boolean pressed) {
+	protected void dispatchSetPressed (boolean pressed) {
 		// Don't dispatch setPressed to our children. We call setPressed on
 		// ourselves to
 		// get the selector in the right state, but we don't want to press each
@@ -2067,16 +1949,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Maps a point to a position in the list.
-	 * 
-	 * @param x
-	 *            X in local coordinate
-	 * @param y
-	 *            Y in local coordinate
+	 *
+	 * @param x X in local coordinate
+	 * @param y Y in local coordinate
 	 * @return The position of the item which contains the specified point, or
 	 *         {@link #INVALID_POSITION} if the point does not intersect an
 	 *         item.
 	 */
-	public int pointToPosition(int x, int y) {
+	public int pointToPosition (int x, int y) {
 		Rect frame = mTouchFrame;
 		if (frame == null) {
 			mTouchFrame = new Rect();
@@ -2098,15 +1978,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Maps a point to a the rowId of the item which intersects that point.
-	 * 
-	 * @param x
-	 *            X in local coordinate
-	 * @param y
-	 *            Y in local coordinate
+	 *
+	 * @param x X in local coordinate
+	 * @param y Y in local coordinate
 	 * @return The rowId of the item which contains the specified point, or
 	 *         {@link #INVALID_ROW_ID} if the point does not intersect an item.
 	 */
-	public long pointToRowId(int x, int y) {
+	public long pointToRowId (int x, int y) {
 		int position = pointToPosition(x, y);
 		if (position >= 0) {
 			return mAdapter.getItemId(position);
@@ -2115,7 +1993,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	final class CheckForTap implements Runnable {
-		public void run() {
+		public void run () {
 			if (mTouchMode == TOUCH_MODE_DOWN) {
 				mTouchMode = TOUCH_MODE_TAP;
 				final View child = getChildAt(mMotionPosition - mFirstPosition);
@@ -2128,16 +2006,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						positionSelector(child);
 						setPressed(true);
 
-						final int longPressTimeout = ViewConfiguration
-								.getLongPressTimeout();
+						final int longPressTimeout = ViewConfiguration.getLongPressTimeout();
 						final boolean longClickable = isLongClickable();
 
 						if (mSelector != null) {
 							Drawable d = mSelector.getCurrent();
 							if (d != null && d instanceof TransitionDrawable) {
 								if (longClickable) {
-									((TransitionDrawable) d)
-											.startTransition(longPressTimeout);
+									((TransitionDrawable) d).startTransition(longPressTimeout);
 								} else {
 									((TransitionDrawable) d).resetTransition();
 								}
@@ -2148,10 +2024,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							if (mPendingCheckForLongPress == null) {
 								mPendingCheckForLongPress = new CheckForLongPress();
 							}
-							mPendingCheckForLongPress
-									.rememberWindowAttachCount();
-							postDelayed(mPendingCheckForLongPress,
-									longPressTimeout);
+							mPendingCheckForLongPress.rememberWindowAttachCount();
+							postDelayed(mPendingCheckForLongPress, longPressTimeout);
 						} else {
 							mTouchMode = TOUCH_MODE_DONE_WAITING;
 						}
@@ -2163,16 +2037,16 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 	}
 
-	public boolean startScrollIfNeeded(int delta) {
+	public boolean startScrollIfNeeded (int delta) {
 		return mTouchHandler.startScrollIfNeeded(delta);
 	}
 
-	public void onTouchModeChanged(boolean isInTouchMode) {
+	public void onTouchModeChanged (boolean isInTouchMode) {
 		mTouchHandler.onTouchModeChanged(isInTouchMode);
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
+	public boolean onTouchEvent (MotionEvent ev) {
 		return mTouchHandler.onTouchEvent(ev);
 	}
 
@@ -2182,7 +2056,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 */
 
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
+	public boolean onInterceptTouchEvent (MotionEvent ev) {
 		return mTouchHandler.onInterceptTouchEvent(ev);
 	}
 
@@ -2190,7 +2064,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addTouchables(ArrayList<View> views) {
+	public void addTouchables (ArrayList<View> views) {
 		final int count = getChildCount();
 		final int firstPosition = mFirstPosition;
 		final ListAdapter adapter = mAdapter;
@@ -2213,11 +2087,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * {@link android.widget.AbsListView.OnScrollListener}, if any. The state
 	 * change is fired only if the specified state is different from the
 	 * previously known state.
-	 * 
-	 * @param newState
-	 *            The new scroll state.
+	 *
+	 * @param newState The new scroll state.
 	 */
-	void reportScrollStateChange(int newState) {
+	void reportScrollStateChange (int newState) {
 		if (newState != mLastScrollState) {
 			if (mOnScrollListener != null) {
 				mOnScrollListener.onScrollStateChanged(this, newState);
@@ -2227,7 +2100,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	}
 
 	@Override
-	public void onWindowFocusChanged(boolean hasWindowFocus) {
+	public void onWindowFocusChanged (boolean hasWindowFocus) {
 		super.onWindowFocusChanged(hasWindowFocus);
 		mTouchHandler.onWindowFocusChanged(hasWindowFocus);
 	}
@@ -2235,11 +2108,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * Smoothly scroll to the specified adapter position. The view will scroll
 	 * such that the indicated position is displayed.
-	 * 
-	 * @param position
-	 *            Scroll to this adapter position.
+	 *
+	 * @param position Scroll to this adapter position.
 	 */
-	public void smoothScrollToPosition(int position) {
+	public void smoothScrollToPosition (int position) {
 		mTouchHandler.smoothScrollToPosition(position);
 	}
 
@@ -2247,36 +2119,32 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Smoothly scroll to the specified adapter position. The view will scroll
 	 * such that the indicated position is displayed, but it will stop early if
 	 * scrolling further would scroll boundPosition out of view.
-	 * 
-	 * @param position
-	 *            Scroll to this adapter position.
-	 * @param boundPosition
-	 *            Do not scroll if it would move this adapter position out of
-	 *            view.
+	 *
+	 * @param position      Scroll to this adapter position.
+	 * @param boundPosition Do not scroll if it would move this adapter position out of
+	 *                      view.
 	 */
-	public void smoothScrollToPosition(int position, int boundPosition) {
+	public void smoothScrollToPosition (int position, int boundPosition) {
 		mTouchHandler.smoothScrollToPosition(position, boundPosition);
 	}
 
 	/**
 	 * Smoothly scroll by distance pixels over duration milliseconds.
-	 * 
-	 * @param distance
-	 *            Distance to scroll in pixels.
-	 * @param duration
-	 *            Duration of the scroll animation in milliseconds.
+	 *
+	 * @param distance Distance to scroll in pixels.
+	 * @param duration Duration of the scroll animation in milliseconds.
 	 */
-	public void smoothScrollBy(int distance, int duration) {
+	public void smoothScrollBy (int distance, int duration) {
 		mTouchHandler.smoothScrollBy(distance, duration);
 	}
 
 	/**
 	 * Returns the number of header views in the list. Header views are special
 	 * views at the top of the list that should not be recycled during a layout.
-	 * 
+	 *
 	 * @return The number of header views, 0 in the default implementation.
 	 */
-	int getHeaderViewsCount() {
+	int getHeaderViewsCount () {
 		return 0;
 	}
 
@@ -2284,10 +2152,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Returns the number of footer views in the list. Footer views are special
 	 * views at the bottom of the list that should not be recycled during a
 	 * layout.
-	 * 
+	 *
 	 * @return The number of footer views, 0 in the default implementation.
 	 */
-	int getFooterViewsCount() {
+	int getFooterViewsCount () {
 		return 0;
 	}
 
@@ -2296,19 +2164,17 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * children that remain on screen are shifted and the other ones are
 	 * discarded. The role of this method is to fill the gap thus created by
 	 * performing a partial layout in the empty space.
-	 * 
-	 * @param down
-	 *            true if the scroll is going down, false if it is going up
+	 *
+	 * @param down true if the scroll is going down, false if it is going up
 	 */
-	abstract void fillGap(boolean down);
+	abstract void fillGap (boolean down);
 
-	void hideSelector() {
+	void hideSelector () {
 		if (mSelectedPosition != INVALID_POSITION) {
 			if (mLayoutMode != LAYOUT_SPECIFIC) {
 				mResurrectToPosition = mSelectedPosition;
 			}
-			if (mNextSelectedPosition >= 0
-					&& mNextSelectedPosition != mSelectedPosition) {
+			if (mNextSelectedPosition >= 0 && mNextSelectedPosition != mSelectedPosition) {
 				mResurrectToPosition = mNextSelectedPosition;
 			}
 			setSelectedPositionInt(INVALID_POSITION);
@@ -2324,7 +2190,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 *         mResurrectToPosition. Values are pinned to the range of items
 	 *         available in the adapter
 	 */
-	int reconcileSelectedPosition() {
+	int reconcileSelectedPosition () {
 		int position = mSelectedPosition;
 		if (position < 0) {
 			position = mResurrectToPosition;
@@ -2337,65 +2203,59 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * Find the row closest to y. This row will be used as the motion row when
 	 * scrolling
-	 * 
-	 * @param y
-	 *            Where the user touched
+	 *
+	 * @param y Where the user touched
 	 * @return The position of the first (or only) item in the row containing y
 	 */
-	abstract int findMotionRowY(int y);
+	abstract int findMotionRowY (int y);
 
 	/**
 	 * Find the row closest to y. This row will be used as the motion row when
 	 * scrolling.
-	 * 
-	 * @param y
-	 *            Where the user touched
+	 *
+	 * @param y Where the user touched
 	 * @return The position of the first (or only) item in the row closest to y
 	 */
-	int findClosestMotionRowY(int y) {
+	int findClosestMotionRowY (int y) {
 		final int childCount = getChildCount();
 		if (childCount == 0) {
 			return INVALID_POSITION;
 		}
 
 		final int motionRow = findMotionRowY(y);
-		return motionRow != INVALID_POSITION ? motionRow : mFirstPosition
-				+ childCount - 1;
+		return motionRow != INVALID_POSITION ? motionRow : mFirstPosition + childCount - 1;
 	}
 
 	/**
 	 * Find the row closest to x. This row will be used as the motion row when
 	 * scrolling
-	 * 
-	 * @param x
-	 *            Where the user touched
+	 *
+	 * @param x Where the user touched
 	 * @return The position of the first (or only) item in the row containing y
 	 */
-	abstract int findMotionRowX(int x);
+	abstract int findMotionRowX (int x);
 
 	/**
 	 * Find the row closest to y. This row will be used as the motion row when
 	 * scrolling.
-	 * 
-	 * @param x
-	 *            Where the user touched
+	 *
+	 * @param x Where the user touched
 	 * @return The position of the first (or only) item in the row closest to y
 	 */
-	int findClosestMotionRow(int x) {
+	int findClosestMotionRow (int x) {
 		final int childCount = getChildCount();
 		if (childCount == 0) {
 			return INVALID_POSITION;
 		}
 
 		final int motionRow = findMotionRowX(x);
-		return motionRow != INVALID_POSITION ? motionRow : mFirstPosition
-				+ childCount - 1;
+		return motionRow != INVALID_POSITION ? motionRow : mFirstPosition + childCount - 1;
 	}
 
 	/**
 	 * Causes all the views to be rebuilt and redrawn.
 	 */
-	public void invalidateViews() {
+	public void invalidateViews () {
 		mDataChanged = true;
 		rememberSyncState();
 		requestLayout();
@@ -2404,24 +2264,23 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Makes the item at the supplied position selected.
-	 * 
-	 * @param position
-	 *            the position of the new selection
+	 *
+	 * @param position the position of the new selection
 	 */
-	abstract void setSelectionInt(int position);
+	abstract void setSelectionInt (int position);
 
 	/**
 	 * Attempt to bring the selection back if the user is switching from touch
 	 * to trackball mode
-	 * 
+	 *
 	 * @return Whether selection was set to something.
 	 */
-	boolean resurrectSelection() {
+	boolean resurrectSelection () {
 		return mTouchHandler.resurrectSelection();
 	}
 
 	@Override
-	protected void handleDataChanged() {
+	protected void handleDataChanged () {
 		int count = mItemCount;
 		if (count > 0) {
 
@@ -2435,9 +2294,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				// it
 				mNeedSync = false;
 
-				if (mTranscriptMode == TRANSCRIPT_MODE_ALWAYS_SCROLL
-						|| (mTranscriptMode == TRANSCRIPT_MODE_NORMAL && mFirstPosition
-								+ getChildCount() >= mOldItemCount)) {
+				if (mTranscriptMode == TRANSCRIPT_MODE_ALWAYS_SCROLL || (mTranscriptMode == TRANSCRIPT_MODE_NORMAL && mFirstPosition + getChildCount() >= mOldItemCount)) {
 					mLayoutMode = LAYOUT_FORCE_BOTTOM;
 					return;
 				}
@@ -2456,8 +2313,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							// adjusting if the available range changed) and
 							// return.
 							mLayoutMode = LAYOUT_SYNC;
-							mSyncPosition = Math.min(
-									Math.max(0, mSyncPosition), count - 1);
+							mSyncPosition = Math.min(Math.max(0, mSyncPosition), count - 1);
 
 							return;
 						} else {
@@ -2471,13 +2327,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 								// Found it. Now verify that new selection is
 								// still
 								// selectable
-								selectablePos = lookForSelectablePosition(
-										newPos, true);
+								selectablePos = lookForSelectablePosition(newPos, true);
 								if (selectablePos == newPos) {
 									// Same row id is selected
 									mSyncPosition = newPos;
-									int size = mIsVertical ? getHeight()
-											: getWidth();
+									int size = mIsVertical ? getHeight() : getWidth();
 									if (mSyncSize == size) {
 										// If we are at the same height as when
 										// we
@@ -2504,8 +2358,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						// Leave mSyncPosition as it is -- just pin to available
 						// range
 						mLayoutMode = LAYOUT_SYNC;
-						mSyncPosition = Math.min(Math.max(0, mSyncPosition),
-								count - 1);
+						mSyncPosition = Math.min(Math.max(0, mSyncPosition), count - 1);
 
 						return;
 				}
@@ -2619,16 +2472,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * the direction of focus navigation between them? The direction basically
 	 * helps figure out more quickly what is self evident by the relationship
 	 * between the rects...
-	 * 
-	 * @param source
-	 *            the source rectangle
-	 * @param dest
-	 *            the destination rectangle
-	 * @param direction
-	 *            the direction
+	 *
+	 * @param source    the source rectangle
+	 * @param dest      the destination rectangle
+	 * @param direction the direction
 	 * @return the distance between the rectangles
 	 */
-	static int getDistance(Rect source, Rect dest, int direction) {
+	static int getDistance (Rect source, Rect dest, int direction) {
 		int sX, sY; // source x, y
 		int dX, dY; // dest x, y
 		switch (direction) {
@@ -2664,9 +2514,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				dY = dest.top + dest.height() / 2;
 				break;
 			default:
-				throw new IllegalArgumentException("direction must be one of "
-						+ "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
-						+ "FOCUS_FORWARD, FOCUS_BACKWARD}.");
+				throw new IllegalArgumentException("direction must be one of " + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, " + "FOCUS_FORWARD, FOCUS_BACKWARD}.");
 		}
 		int deltaX = dX - sX;
 		int deltaY = dY - sY;
@@ -2946,58 +2794,53 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	// }
 
 	@Override
-	protected ViewGroup.LayoutParams generateLayoutParams(
-			ViewGroup.LayoutParams p) {
+	protected ViewGroup.LayoutParams generateLayoutParams (ViewGroup.LayoutParams p) {
 		return new LayoutParams(p);
 	}
 
 	@Override
-	public LayoutParams generateLayoutParams(AttributeSet attrs) {
+	public LayoutParams generateLayoutParams (AttributeSet attrs) {
 		return new TwoWayAbsListView.LayoutParams(getContext(), attrs);
 	}
 
 	@Override
-	protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+	protected boolean checkLayoutParams (ViewGroup.LayoutParams p) {
 		return p instanceof TwoWayAbsListView.LayoutParams;
 	}
 
 	/**
 	 * Puts the list or grid into transcript mode. In this mode the list or grid
 	 * will always scroll to the bottom to show new items.
-	 * 
-	 * @param mode
-	 *            the transcript mode to set
-	 * 
+	 *
+	 * @param mode the transcript mode to set
 	 * @see #TRANSCRIPT_MODE_DISABLED
 	 * @see #TRANSCRIPT_MODE_NORMAL
 	 * @see #TRANSCRIPT_MODE_ALWAYS_SCROLL
 	 */
-	public void setTranscriptMode(int mode) {
+	public void setTranscriptMode (int mode) {
 		mTranscriptMode = mode;
 	}
 
 	/**
 	 * Returns the current transcript mode.
-	 * 
+	 *
 	 * @return {@link #TRANSCRIPT_MODE_DISABLED},
 	 *         {@link #TRANSCRIPT_MODE_NORMAL} or
 	 *         {@link #TRANSCRIPT_MODE_ALWAYS_SCROLL}
 	 */
-	public int getTranscriptMode() {
+	public int getTranscriptMode () {
 		return mTranscriptMode;
 	}
 
 	/**
 	 * Sets the direction that the view schould scroll when in portrait
 	 * orientation
-	 * 
-	 * @param direction
-	 *            the view should scroll
-	 * 
+	 *
+	 * @param direction the view should scroll
 	 * @see #SCROLL_VERTICAL
 	 * @see #SCROLL_HORIZONTAL
 	 */
-	public void setScrollDirectionPortrait(int direction) {
+	public void setScrollDirectionPortrait (int direction) {
 		boolean tempDirection = mScrollVerticallyPortrait;
 		mScrollVerticallyPortrait = (direction == SCROLL_VERTICAL);
 		if (tempDirection != mScrollVerticallyPortrait) {
@@ -3010,24 +2853,22 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Returns the current portrait scroll direction.
-	 * 
+	 *
 	 * @return {@link #SCROLL_VERTICAL} or {@link #SCROLL_HORIZONTAL}
 	 */
-	public int getScrollDirectionPortrait() {
+	public int getScrollDirectionPortrait () {
 		return mScrollVerticallyPortrait ? SCROLL_VERTICAL : SCROLL_HORIZONTAL;
 	}
 
 	/**
 	 * Sets the direction that the view schould scroll when in landscape
 	 * orientation
-	 * 
-	 * @param direction
-	 *            the view should scroll
-	 * 
+	 *
+	 * @param direction the view should scroll
 	 * @see #SCROLL_VERTICAL
 	 * @see #SCROLL_HORIZONTAL
 	 */
-	public void setScrollDirectionLandscape(int direction) {
+	public void setScrollDirectionLandscape (int direction) {
 		boolean tempDirection = mScrollVerticallyLandscape;
 		mScrollVerticallyLandscape = (direction == SCROLL_VERTICAL);
 		if (tempDirection != mScrollVerticallyLandscape) {
@@ -3040,26 +2881,25 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 	/**
 	 * Returns the current landscape scroll direction.
-	 * 
+	 *
 	 * @return {@link #SCROLL_VERTICAL} or {@link #SCROLL_HORIZONTAL}
 	 */
-	public int getScrollDirectionLandscape() {
+	public int getScrollDirectionLandscape () {
 		return mScrollVerticallyLandscape ? SCROLL_VERTICAL : SCROLL_HORIZONTAL;
 	}
 
 	@Override
-	public int getSolidColor() {
+	public int getSolidColor () {
 		return mCacheColorHint;
 	}
 
 	/**
 	 * When set to a non-zero value, the cache color hint indicates that this
 	 * list is always drawn on top of a solid, single-color, opaque background
-	 * 
-	 * @param color
-	 *            The background color
+	 *
+	 * @param color The background color
 	 */
-	public void setCacheColorHint(int color) {
+	public void setCacheColorHint (int color) {
 		if (color != mCacheColorHint) {
 			mCacheColorHint = color;
 			int count = getChildCount();
@@ -3073,10 +2913,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * When set to a non-zero value, the cache color hint indicates that this
 	 * list is always drawn on top of a solid, single-color, opaque background
-	 * 
+	 *
 	 * @return The cache color hint
 	 */
-	public int getCacheColorHint() {
+	public int getCacheColorHint () {
 		return mCacheColorHint;
 	}
 
@@ -3085,19 +2925,17 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * TwoWayAbsListView into the supplied List. This includes views displayed
 	 * on the screen as well as views stored in TwoWayAbsListView's internal
 	 * view recycler.
-	 * 
-	 * @param views
-	 *            A list into which to put the reclaimed views
+	 *
+	 * @param views A list into which to put the reclaimed views
 	 */
-	public void reclaimViews(List<View> views) {
+	public void reclaimViews (List<View> views) {
 		int childCount = getChildCount();
 		RecyclerListener listener = mRecycler.mRecyclerListener;
 
 		// Reclaim views on screen
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
-			TwoWayAbsListView.LayoutParams lp = (TwoWayAbsListView.LayoutParams) child
-					.getLayoutParams();
+			TwoWayAbsListView.LayoutParams lp = (TwoWayAbsListView.LayoutParams) child.getLayoutParams();
 			// Don't reclaim header or footer views, or views that should be
 			// ignored
 			if (lp != null && mRecycler.shouldRecycleViewType(lp.viewType)) {
@@ -3115,7 +2953,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	/**
 	 * @hide
 	 */
-	protected boolean checkConsistency(int consistency) {
+	protected boolean checkConsistency (int consistency) {
 		boolean result = true;
 
 		final boolean checkLayout = true;
@@ -3127,9 +2965,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			for (int i = 0; i < count; i++) {
 				if (activeViews[i] != null) {
 					result = false;
-					Log.d("Consistency", "AbsListView " + this
-							+ " has a view in its active recycler: "
-							+ activeViews[i]);
+					Log.d("Consistency", "AbsListView " + this + " has a view in its active recycler: " + activeViews[i]);
 				}
 			}
 
@@ -3149,7 +2985,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		return result;
 	}
 
-	private boolean checkScrap(ArrayList<View> scrap) {
+	private boolean checkScrap (ArrayList<View> scrap) {
 		if (scrap == null)
 			return true;
 		boolean result = true;
@@ -3159,19 +2995,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final View view = scrap.get(i);
 			if (view.getParent() != null) {
 				result = false;
-				Log.d("Consistency",
-						"TwoWayAbsListView "
-								+ this
-								+ " has a view in its scrap heap still attached to a parent: "
-								+ view);
+				Log.d("Consistency", "TwoWayAbsListView " + this + " has a view in its scrap heap still attached to a parent: " + view);
 			}
 			if (indexOfChild(view) >= 0) {
 				result = false;
-				Log.d("Consistency",
-						"TwoWayAbsListView "
-								+ this
-								+ " has a view in its scrap heap that is also a direct child: "
-								+ view);
+				Log.d("Consistency", "TwoWayAbsListView " + this + " has a view in its scrap heap that is also a direct child: " + view);
 			}
 		}
 
@@ -3182,15 +3010,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * Sets the recycler listener to be notified whenever a View is set aside in
 	 * the recycler for later reuse. This listener can be used to free resources
 	 * associated to the View.
-	 * 
-	 * @param listener
-	 *            The recycler listener to be notified of views set aside in the
-	 *            recycler.
-	 * 
+	 *
+	 * @param listener The recycler listener to be notified of views set aside in the
+	 *                 recycler.
 	 * @see com.wallpaper.core.com.jess.ui.TwoWayAbsListView.RecycleBin
 	 * @see com.wallpaper.core.com.jess.ui.TwoWayAbsListView.RecyclerListener
 	 */
-	public void setRecyclerListener(RecyclerListener listener) {
+	public void setRecyclerListener (RecyclerListener listener) {
 		mRecycler.mRecyclerListener = listener;
 	}
 
@@ -3203,9 +3029,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * View type for this view, as returned by
 		 * {@link android.widget.Adapter#getItemViewType(int) }
 		 */
-		@ViewDebug.ExportedProperty(mapping = {
-				@ViewDebug.IntToString(from = ITEM_VIEW_TYPE_IGNORE, to = "ITEM_VIEW_TYPE_IGNORE"),
-				@ViewDebug.IntToString(from = ITEM_VIEW_TYPE_HEADER_OR_FOOTER, to = "ITEM_VIEW_TYPE_HEADER_OR_FOOTER") })
+		@ViewDebug.ExportedProperty(mapping = {@ViewDebug.IntToString(from = ITEM_VIEW_TYPE_IGNORE, to = "ITEM_VIEW_TYPE_IGNORE"), @ViewDebug.IntToString(from = ITEM_VIEW_TYPE_HEADER_OR_FOOTER, to = "ITEM_VIEW_TYPE_HEADER_OR_FOOTER")})
 		int viewType;
 
 		/**
@@ -3228,20 +3052,20 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		@ViewDebug.ExportedProperty
 		boolean forceAdd;
 
-		public LayoutParams(Context c, AttributeSet attrs) {
+		public LayoutParams (Context c, AttributeSet attrs) {
 			super(c, attrs);
 		}
 
-		public LayoutParams(int w, int h) {
+		public LayoutParams (int w, int h) {
 			super(w, h);
 		}
 
-		public LayoutParams(int w, int h, int viewType) {
+		public LayoutParams (int w, int h, int viewType) {
 			super(w, h);
 			this.viewType = viewType;
 		}
 
-		public LayoutParams(ViewGroup.LayoutParams source) {
+		public LayoutParams (ViewGroup.LayoutParams source) {
 			super(source);
 		}
 	}
@@ -3250,7 +3074,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * A RecyclerListener is used to receive a notification whenever a View is
 	 * placed inside the RecycleBin's scrap heap. This listener is used to free
 	 * resources associated to Views placed in the RecycleBin.
-	 * 
+	 *
 	 * @see com.wallpaper.core.com.jess.ui.TwoWayAbsListView.RecycleBin
 	 * @see com.wallpaper.core.com.jess.ui.TwoWayAbsListView#setRecyclerListener(com.wallpaper.core.com.jess.ui.TwoWayAbsListView.RecyclerListener)
 	 */
@@ -3259,10 +3083,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * Indicates that the specified View was moved into the recycler's scrap
 		 * heap. The view is not displayed on screen any more and any expensive
 		 * resource associated with the view should be discarded.
-		 * 
+		 *
 		 * @param view
 		 */
-		void onMovedToScrapHeap(View view);
+		void onMovedToScrapHeap (View view);
 	}
 
 	/**
@@ -3273,7 +3097,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 	 * layout, all views in ActiveViews are demoted to ScrapViews. ScrapViews
 	 * are old views that could potentially be used by the adapter to avoid
 	 * allocating views unnecessarily.
-	 * 
+	 *
 	 * @see com.wallpaper.core.com.jess.ui.TwoWayAbsListView#setRecyclerListener(com.wallpaper.core.com.jess.ui.TwoWayAbsListView.RecyclerListener)
 	 * @see com.wallpaper.core.com.jess.ui.TwoWayAbsListView.RecyclerListener
 	 */
@@ -3303,10 +3127,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		private ArrayList<View> mCurrentScrap;
 
-		public void setViewTypeCount(int viewTypeCount) {
+		public void setViewTypeCount (int viewTypeCount) {
 			if (viewTypeCount < 1) {
-				throw new IllegalArgumentException(
-						"Can't have a viewTypeCount < 1");
+				throw new IllegalArgumentException("Can't have a viewTypeCount < 1");
 			}
 			// noinspection unchecked
 			ArrayList<View>[] scrapViews = new ArrayList[viewTypeCount];
@@ -3318,7 +3141,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			mScrapViews = scrapViews;
 		}
 
-		public void markChildrenDirty() {
+		public void markChildrenDirty () {
 			if (mViewTypeCount == 1) {
 				final ArrayList<View> scrap = mCurrentScrap;
 				final int scrapCount = scrap.size();
@@ -3337,14 +3160,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			}
 		}
 
-		public boolean shouldRecycleViewType(int viewType) {
+		public boolean shouldRecycleViewType (int viewType) {
 			return viewType >= 0;
 		}
 
 		/**
 		 * Clears the scrap heap.
 		 */
-		void clear() {
+		void clear () {
 			if (mViewTypeCount == 1) {
 				final ArrayList<View> scrap = mCurrentScrap;
 				final int scrapCount = scrap.size();
@@ -3357,8 +3180,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					final ArrayList<View> scrap = mScrapViews[i];
 					final int scrapCount = scrap.size();
 					for (int j = 0; j < scrapCount; j++) {
-						removeDetachedView(scrap.remove(scrapCount - 1 - j),
-								false);
+						removeDetachedView(scrap.remove(scrapCount - 1 - j), false);
 					}
 				}
 			}
@@ -3366,14 +3188,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Fill ActiveViews with all of the children of the TwoWayAbsListView.
-		 * 
-		 * @param childCount
-		 *            The minimum number of views mActiveViews should hold
-		 * @param firstActivePosition
-		 *            The position of the first view that will be stored in
-		 *            mActiveViews
+		 *
+		 * @param childCount          The minimum number of views mActiveViews should hold
+		 * @param firstActivePosition The position of the first view that will be stored in
+		 *                            mActiveViews
 		 */
-		void fillActiveViews(int childCount, int firstActivePosition) {
+		void fillActiveViews (int childCount, int firstActivePosition) {
 			if (mActiveViews.length < childCount) {
 				mActiveViews = new View[childCount];
 			}
@@ -3382,11 +3202,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final View[] activeViews = mActiveViews;
 			for (int i = 0; i < childCount; i++) {
 				View child = getChildAt(i);
-				TwoWayAbsListView.LayoutParams lp = (TwoWayAbsListView.LayoutParams) child
-						.getLayoutParams();
+				TwoWayAbsListView.LayoutParams lp = (TwoWayAbsListView.LayoutParams) child.getLayoutParams();
 				// Don't put header or footer views into the scrap heap
-				if (lp != null
-						&& lp.viewType != ITEM_VIEW_TYPE_HEADER_OR_FOOTER) {
+				if (lp != null && lp.viewType != ITEM_VIEW_TYPE_HEADER_OR_FOOTER) {
 					// Note: We do place TwoWayAdapterView.ITEM_VIEW_TYPE_IGNORE
 					// in active views.
 					// However, we will NOT place them into scrap views.
@@ -3398,12 +3216,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		/**
 		 * Get the view corresponding to the specified position. The view will
 		 * be removed from mActiveViews if it is found.
-		 * 
-		 * @param position
-		 *            The position to look up in mActiveViews
+		 *
+		 * @param position The position to look up in mActiveViews
 		 * @return The view if it is found, null otherwise
 		 */
-		View getActiveView(int position) {
+		View getActiveView (int position) {
 			int index = position - mFirstActivePosition;
 			final View[] activeViews = mActiveViews;
 			if (index >= 0 && index < activeViews.length) {
@@ -3417,7 +3234,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		/**
 		 * @return A view from the ScrapViews collection. These are unordered.
 		 */
-		View getScrapView(int position) {
+		View getScrapView (int position) {
 			ArrayList<View> scrapViews;
 			if (mViewTypeCount == 1) {
 				scrapViews = mCurrentScrap;
@@ -3442,13 +3259,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Put a view into the ScapViews list. These views are unordered.
-		 * 
-		 * @param scrap
-		 *            The view to add
+		 *
+		 * @param scrap The view to add
 		 */
-		void addScrapView(View scrap) {
-			TwoWayAbsListView.LayoutParams lp = (TwoWayAbsListView.LayoutParams) scrap
-					.getLayoutParams();
+		void addScrapView (View scrap) {
+			TwoWayAbsListView.LayoutParams lp = (TwoWayAbsListView.LayoutParams) scrap.getLayoutParams();
 			if (lp == null) {
 				return;
 			}
@@ -3479,7 +3294,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		/**
 		 * Move all views remaining in mActiveViews to mScrapViews.
 		 */
-		void scrapActiveViews() {
+		void scrapActiveViews () {
 			final View[] activeViews = mActiveViews;
 			final boolean hasListener = mRecyclerListener != null;
 			final boolean multipleScraps = mViewTypeCount > 1;
@@ -3489,8 +3304,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			for (int i = count - 1; i >= 0; i--) {
 				final View victim = activeViews[i];
 				if (victim != null) {
-					int whichScrap = ((TwoWayAbsListView.LayoutParams) victim
-							.getLayoutParams()).viewType;
+					int whichScrap = ((TwoWayAbsListView.LayoutParams) victim.getLayoutParams()).viewType;
 
 					activeViews[i] = null;
 
@@ -3513,10 +3327,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					}
 
 					if (ViewDebug.TRACE_RECYCLER) {
-						ViewDebug
-								.trace(victim,
-										ViewDebug.RecyclerTraceType.MOVE_FROM_ACTIVE_TO_SCRAP_HEAP,
-										mFirstActivePosition + i, -1);
+						ViewDebug.trace(victim, ViewDebug.RecyclerTraceType.MOVE_FROM_ACTIVE_TO_SCRAP_HEAP, mFirstActivePosition + i, -1);
 					}
 				}
 			}
@@ -3529,7 +3340,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * mActiveViews. (This can happen if an adapter does not recycle its
 		 * views).
 		 */
-		private void pruneScrapViews() {
+		private void pruneScrapViews () {
 			final int maxViews = mActiveViews.length;
 			final int viewTypeCount = mViewTypeCount;
 			final ArrayList<View>[] scrapViews = mScrapViews;
@@ -3547,7 +3358,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		/**
 		 * Puts all views in the scrap heap into the supplied list.
 		 */
-		void reclaimScrapViews(List<View> views) {
+		void reclaimScrapViews (List<View> views) {
 			if (mViewTypeCount == 1) {
 				views.addAll(mCurrentScrap);
 			} else {
@@ -3562,11 +3373,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Updates the cache color hint of all known views.
-		 * 
-		 * @param color
-		 *            The new cache color hint.
+		 *
+		 * @param color The new cache color hint.
 		 */
-		void setCacheColorHint(int color) {
+		void setCacheColorHint (int color) {
 			if (mViewTypeCount == 1) {
 				final ArrayList<View> scrap = mCurrentScrap;
 				final int scrapCount = scrap.size();
@@ -3615,10 +3425,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 */
 		int mMotionCorrection;
 
-		public void onWindowFocusChanged(boolean hasWindowFocus) {
+		public void onWindowFocusChanged (boolean hasWindowFocus) {
 
-			final int touchMode = isInTouchMode() ? TOUCH_MODE_ON
-					: TOUCH_MODE_OFF;
+			final int touchMode = isInTouchMode() ? TOUCH_MODE_ON : TOUCH_MODE_OFF;
 
 			if (!hasWindowFocus) {
 				setChildrenDrawingCacheEnabled(false);
@@ -3648,8 +3457,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				// }
 
 				// If we changed touch mode since the last time we had focus
-				if (touchMode != mLastTouchMode
-						&& mLastTouchMode != TOUCH_MODE_UNKNOWN) {
+				if (touchMode != mLastTouchMode && mLastTouchMode != TOUCH_MODE_UNKNOWN) {
 					// If we come back in trackball mode, we bring the selection
 					// back
 					if (touchMode == TOUCH_MODE_OFF) {
@@ -3669,7 +3477,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			mLastTouchMode = touchMode;
 		}
 
-		public boolean startScrollIfNeeded(int delta) {
+		public boolean startScrollIfNeeded (int delta) {
 			// Check if we have moved far enough that it looks more like a
 			// scroll than a tap
 			final int distance = Math.abs(delta);
@@ -3702,7 +3510,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			return false;
 		}
 
-		public void onTouchModeChanged(boolean isInTouchMode) {
+		public void onTouchModeChanged (boolean isInTouchMode) {
 			if (isInTouchMode) {
 				// Get rid of the selection when we enter touch mode
 				hideSelector();
@@ -3725,15 +3533,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * {@link com.wallpaper.core.com.jess.ui.TwoWayAbsListView.OnScrollListener}
 		 * , if any. The state change is fired only if the specified state is
 		 * different from the previously known state.
-		 * 
-		 * @param newState
-		 *            The new scroll state.
+		 *
+		 * @param newState The new scroll state.
 		 */
-		void reportScrollStateChange(int newState) {
+		void reportScrollStateChange (int newState) {
 			if (newState != mLastScrollState) {
 				if (mOnScrollListener != null) {
-					mOnScrollListener.onScrollStateChanged(
-							TwoWayAbsListView.this, newState);
+					mOnScrollListener.onScrollStateChanged(TwoWayAbsListView.this, newState);
 					mLastScrollState = newState;
 				}
 			}
@@ -3742,11 +3548,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		/**
 		 * Smoothly scroll to the specified adapter position. The view will
 		 * scroll such that the indicated position is displayed.
-		 * 
-		 * @param position
-		 *            Scroll to this adapter position.
+		 *
+		 * @param position Scroll to this adapter position.
 		 */
-		public void smoothScrollToPosition(int position) {
+		public void smoothScrollToPosition (int position) {
 			if (mPositionScroller == null) {
 				mPositionScroller = getPositionScroller();
 			}
@@ -3758,14 +3563,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * scroll such that the indicated position is displayed, but it will
 		 * stop early if scrolling further would scroll boundPosition out of
 		 * view.
-		 * 
-		 * @param position
-		 *            Scroll to this adapter position.
-		 * @param boundPosition
-		 *            Do not scroll if it would move this adapter position out
-		 *            of view.
+		 *
+		 * @param position      Scroll to this adapter position.
+		 * @param boundPosition Do not scroll if it would move this adapter position out
+		 *                      of view.
 		 */
-		public void smoothScrollToPosition(int position, int boundPosition) {
+		public void smoothScrollToPosition (int position, int boundPosition) {
 			if (mPositionScroller == null) {
 				mPositionScroller = getPositionScroller();
 			}
@@ -3774,13 +3577,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Smoothly scroll by distance pixels over duration milliseconds.
-		 * 
-		 * @param distance
-		 *            Distance to scroll in pixels.
-		 * @param duration
-		 *            Duration of the scroll animation in milliseconds.
+		 *
+		 * @param distance Distance to scroll in pixels.
+		 * @param duration Duration of the scroll animation in milliseconds.
 		 */
-		public void smoothScrollBy(int distance, int duration) {
+		public void smoothScrollBy (int distance, int duration) {
 			if (mFlingRunnable == null) {
 				mFlingRunnable = getFlingRunnable();
 			} else {
@@ -3789,7 +3590,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			mFlingRunnable.startScroll(distance, duration);
 		}
 
-		protected void createScrollingCache() {
+		protected void createScrollingCache () {
 			if (mScrollingCacheEnabled && !mCachingStarted) {
 				setChildrenDrawnWithCacheEnabled(true);
 				setChildrenDrawingCacheEnabled(true);
@@ -3797,15 +3598,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			}
 		}
 
-		protected void clearScrollingCache() {
+		protected void clearScrollingCache () {
 			if (mClearScrollingCache == null) {
 				mClearScrollingCache = new Runnable() {
-					public void run() {
+					public void run () {
 						if (mCachingStarted) {
 							mCachingStarted = false;
 							setChildrenDrawnWithCacheEnabled(false);
-							if ((TwoWayAbsListView.this
-									.getPersistentDrawingCache() & PERSISTENT_SCROLLING_CACHE) == 0) {
+							if ((TwoWayAbsListView.this.getPersistentDrawingCache() & PERSISTENT_SCROLLING_CACHE) == 0) {
 								setChildrenDrawingCacheEnabled(false);
 							}
 							if (!isAlwaysDrawnWithCacheEnabled()) {
@@ -3820,39 +3620,36 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Track a motion scroll
-		 * 
-		 * @param delta
-		 *            Amount to offset mMotionView. This is the accumulated
-		 *            delta since the motion began. Positive numbers mean the
-		 *            user's finger is moving down or right on the screen.
-		 * @param incrementalDelta
-		 *            Change in delta from the previous event.
+		 *
+		 * @param delta            Amount to offset mMotionView. This is the accumulated
+		 *                         delta since the motion began. Positive numbers mean the
+		 *                         user's finger is moving down or right on the screen.
+		 * @param incrementalDelta Change in delta from the previous event.
 		 * @return true if we're already at the beginning/end of the list and
 		 *         have nothing to do.
 		 */
-		abstract boolean trackMotionScroll(int delta, int incrementalDelta);
+		abstract boolean trackMotionScroll (int delta, int incrementalDelta);
 
 		/**
 		 * Attempt to bring the selection back if the user is switching from
 		 * touch to trackball mode
-		 * 
+		 *
 		 * @return Whether selection was set to something.
 		 */
-		abstract boolean resurrectSelection();
+		abstract boolean resurrectSelection ();
 
-		public abstract boolean onTouchEvent(MotionEvent ev);
+		public abstract boolean onTouchEvent (MotionEvent ev);
 
-		public abstract boolean onInterceptTouchEvent(MotionEvent ev);
+		public abstract boolean onInterceptTouchEvent (MotionEvent ev);
 
-		protected abstract PositionScroller getPositionScroller();
+		protected abstract PositionScroller getPositionScroller ();
 
-		protected abstract FlingRunnable getFlingRunnable();
+		protected abstract FlingRunnable getFlingRunnable ();
 
 		/**
 		 * Responsible for fling behavior. Use {@link #start(int)} to initiate a
 		 * fling. Each frame of the fling is handled in {@link #run()}. A
 		 * FlingRunnable will keep re-posting itself until the fling is done.
-		 * 
 		 */
 		protected abstract class FlingRunnable implements Runnable {
 			/**
@@ -3860,15 +3657,15 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			 */
 			protected final Scroller mScroller;
 
-			FlingRunnable() {
+			FlingRunnable () {
 				mScroller = new Scroller(getContext());
 			}
 
-			abstract void start(int initialVelocity);
+			abstract void start (int initialVelocity);
 
-			abstract void startScroll(int distance, int duration);
+			abstract void startScroll (int distance, int duration);
 
-			protected void endFling() {
+			protected void endFling () {
 				mTouchMode = TOUCH_MODE_REST;
 
 				reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
@@ -3881,7 +3678,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				}
 			}
 
-			public abstract void run();
+			public abstract void run ();
 		}
 
 		abstract class PositionScroller implements Runnable {
@@ -3900,12 +3697,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			protected int mScrollDuration;
 			protected final int mExtraScroll;
 
-			PositionScroller() {
-				mExtraScroll = ViewConfiguration.get(mContext)
-						.getScaledFadingEdgeLength();
+			PositionScroller () {
+				mExtraScroll = ViewConfiguration.get(mContext).getScaledFadingEdgeLength();
 			}
 
-			void start(int position) {
+			void start (int position) {
 				final int firstPos = mFirstPosition;
 				final int lastPos = firstPos + getChildCount() - 1;
 
@@ -3933,7 +3729,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				post(this);
 			}
 
-			void start(int position, int boundPosition) {
+			void start (int position, int boundPosition) {
 				if (boundPosition == INVALID_POSITION) {
 					start(position);
 					return;
@@ -3994,11 +3790,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				post(this);
 			}
 
-			void stop() {
+			void stop () {
 				removeCallbacks(this);
 			}
 
-			public abstract void run();
+			public abstract void run ();
 		}
 
 	}
@@ -4026,7 +3822,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		int mMotionViewNewTop;
 
 		@Override
-		public boolean onTouchEvent(MotionEvent ev) {
+		public boolean onTouchEvent (MotionEvent ev) {
 			if (!isEnabled()) {
 				// A disabled view that is clickable still consumes the touch
 				// events, it just doesn't respond to them.
@@ -4055,9 +3851,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					final int y = (int) ev.getY();
 					int motionPosition = pointToPosition(x, y);
 					if (!mDataChanged) {
-						if ((mTouchMode != TOUCH_MODE_FLING)
-								&& (motionPosition >= 0)
-								&& (getAdapter().isEnabled(motionPosition))) {
+						if ((mTouchMode != TOUCH_MODE_FLING) && (motionPosition >= 0) && (getAdapter().isEnabled(motionPosition))) {
 							// User clicked on an actual view (and was not
 							// stopping
 							// a fling). It might be a
@@ -4069,8 +3863,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							if (mPendingCheckForTap == null) {
 								mPendingCheckForTap = new CheckForTap();
 							}
-							postDelayed(mPendingCheckForTap,
-									ViewConfiguration.getTapTimeout());
+							postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
 						} else {
 							if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
 								// If we couldn't find a view to click on, but
@@ -4131,17 +3924,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 							if (y != mLastY) {
 								deltaY -= mMotionCorrection;
-								int incrementalDeltaY = mLastY != Integer.MIN_VALUE ? y
-										- mLastY
-										: deltaY;
+								int incrementalDeltaY = mLastY != Integer.MIN_VALUE ? y - mLastY : deltaY;
 
 								// No need to do all this work if we're not
 								// going to
 								// move anyway
 								boolean atEdge = false;
 								if (incrementalDeltaY != 0) {
-									atEdge = trackMotionScroll(deltaY,
-											incrementalDeltaY);
+									atEdge = trackMotionScroll(deltaY, incrementalDeltaY);
 								}
 
 								// Check to see if we have bumped into the
@@ -4159,10 +3949,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 									// point where they hit the limit first.
 									int motionPosition = findMotionRowY(y);
 									if (motionPosition >= 0) {
-										final View motionView = getChildAt(motionPosition
-												- mFirstPosition);
-										mMotionViewOriginalTop = motionView
-												.getTop();
+										final View motionView = getChildAt(motionPosition - mFirstPosition);
+										mMotionViewOriginalTop = motionView.getTop();
 									}
 									mMotionY = y;
 									mMotionPosition = motionPosition;
@@ -4182,8 +3970,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						case TOUCH_MODE_TAP:
 						case TOUCH_MODE_DONE_WAITING:
 							final int motionPosition = mMotionPosition;
-							final View child = getChildAt(motionPosition
-									- mFirstPosition);
+							final View child = getChildAt(motionPosition - mFirstPosition);
 							if (child != null && !child.hasFocusable()) {
 								if (mTouchMode != TOUCH_MODE_DOWN) {
 									child.setPressed(false);
@@ -4200,17 +3987,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 								mResurrectToPosition = motionPosition;
 
-								if (mTouchMode == TOUCH_MODE_DOWN
-										|| mTouchMode == TOUCH_MODE_TAP) {
+								if (mTouchMode == TOUCH_MODE_DOWN || mTouchMode == TOUCH_MODE_TAP) {
 									final Handler handler = getHandler();
 									if (handler != null) {
-										handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
-												: mPendingCheckForLongPress);
+										handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap : mPendingCheckForLongPress);
 									}
 									mLayoutMode = LAYOUT_NORMAL;
-									if (!mDataChanged
-											&& mAdapter
-													.isEnabled(motionPosition)) {
+									if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
 										mTouchMode = TOUCH_MODE_TAP;
 										setSelectedPositionInt(mMotionPosition);
 										layoutChildren();
@@ -4219,14 +4002,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 										setPressed(true);
 										if (mSelector != null) {
 											Drawable d = mSelector.getCurrent();
-											if (d != null
-													&& d instanceof TransitionDrawable) {
-												((TransitionDrawable) d)
-														.resetTransition();
+											if (d != null && d instanceof TransitionDrawable) {
+												((TransitionDrawable) d).resetTransition();
 											}
 										}
 										postDelayed(new Runnable() {
-											public void run() {
+											public void run () {
 												child.setPressed(false);
 												setPressed(false);
 												if (!mDataChanged) {
@@ -4234,14 +4015,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 												}
 												mTouchMode = TOUCH_MODE_REST;
 											}
-										}, ViewConfiguration
-												.getPressedStateDuration());
+										}, ViewConfiguration.getPressedStateDuration());
 									} else {
 										mTouchMode = TOUCH_MODE_REST;
 									}
 									return true;
-								} else if (!mDataChanged
-										&& mAdapter.isEnabled(motionPosition)) {
+								} else if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
 									post(performClick);
 								}
 							}
@@ -4250,20 +4029,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						case TOUCH_MODE_SCROLL:
 							final int childCount = getChildCount();
 							if (childCount > 0) {
-								if (mFirstPosition == 0
-										&& getChildAt(0).getTop() >= mListPadding.top
-										&& mFirstPosition + childCount < mItemCount
-										&& getChildAt(childCount - 1)
-												.getBottom() <= getHeight()
-												- mListPadding.bottom) {
+								if (mFirstPosition == 0 && getChildAt(0).getTop() >= mListPadding.top && mFirstPosition + childCount < mItemCount && getChildAt(childCount - 1).getBottom() <= getHeight() - mListPadding.bottom) {
 									mTouchMode = TOUCH_MODE_REST;
 									reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 								} else {
 									final VelocityTracker velocityTracker = mVelocityTracker;
-									velocityTracker
-											.computeCurrentVelocity(1000);
-									final int initialVelocity = (int) velocityTracker
-											.getYVelocity();
+									velocityTracker.computeCurrentVelocity(1000);
+									final int initialVelocity = (int) velocityTracker.getYVelocity();
 
 									if (Math.abs(initialVelocity) > mMinimumVelocity) {
 										if (mFlingRunnable == null) {
@@ -4315,8 +4087,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				case MotionEvent.ACTION_CANCEL: {
 					mTouchMode = TOUCH_MODE_REST;
 					setPressed(false);
-					View motionView = TwoWayAbsListView.this
-							.getChildAt(mMotionPosition - mFirstPosition);
+					View motionView = TwoWayAbsListView.this.getChildAt(mMotionPosition - mFirstPosition);
 					if (motionView != null) {
 						motionView.setPressed(false);
 					}
@@ -4342,7 +4113,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		public boolean onInterceptTouchEvent(MotionEvent ev) {
+		public boolean onInterceptTouchEvent (MotionEvent ev) {
 			int action = ev.getAction();
 			View v;
 
@@ -4405,21 +4176,18 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		/**
 		 * Track a motion scroll
-		 * 
-		 * @param deltaY
-		 *            Amount to offset mMotionView. This is the accumulated
-		 *            delta since the motion began. Positive numbers mean the
-		 *            user's finger is moving down the screen.
-		 * @param incrementalDeltaY
-		 *            Change in deltaY from the previous event.
+		 *
+		 * @param deltaY            Amount to offset mMotionView. This is the accumulated
+		 *                          delta since the motion began. Positive numbers mean the
+		 *                          user's finger is moving down the screen.
+		 * @param incrementalDeltaY Change in deltaY from the previous event.
 		 * @return true if we're already at the beginning/end of the list and
 		 *         have nothing to do.
 		 */
 		@Override
-		boolean trackMotionScroll(int deltaY, int incrementalDeltaY) {
+		boolean trackMotionScroll (int deltaY, int incrementalDeltaY) {
 			if (DEBUG)
-				Log.i(TAG, "trackMotionScroll() - deltaY: " + deltaY
-						+ " incrDeltaY: " + incrementalDeltaY);
+				Log.i(TAG, "trackMotionScroll() - deltaY: " + deltaY + " incrDeltaY: " + incrementalDeltaY);
 			final int childCount = getChildCount();
 			if (childCount == 0) {
 				return true;
@@ -4435,8 +4203,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int end = getHeight() - listPadding.bottom;
 			final int spaceBelow = lastBottom - end;
 
-			final int height = getHeight() - getPaddingBottom()
-					- getPaddingTop();
+			final int height = getHeight() - getPaddingBottom() - getPaddingTop();
 			if (deltaY < 0) {
 				deltaY = Math.max(-(height - 1), deltaY);
 			} else {
@@ -4451,16 +4218,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 			final int firstPosition = mFirstPosition;
 
-			if (firstPosition == 0 && firstTop >= listPadding.top
-					&& deltaY >= 0) {
+			if (firstPosition == 0 && firstTop >= listPadding.top && deltaY >= 0) {
 				// Don't need to move views down if the top of the first
 				// position
 				// is already visible
 				return true;
 			}
 
-			if (firstPosition + childCount == mItemCount && lastBottom <= end
-					&& deltaY <= 0) {
+			if (firstPosition + childCount == mItemCount && lastBottom <= end && deltaY <= 0) {
 				// Don't need to move views up if the bottom of the last
 				// position
 				// is already visible
@@ -4489,22 +4254,17 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					} else {
 						count++;
 						int position = firstPosition + i;
-						if (position >= headerViewsCount
-								&& position < footerViewsStart) {
+						if (position >= headerViewsCount && position < footerViewsStart) {
 							mRecycler.addScrapView(child);
 
 							if (ViewDebug.TRACE_RECYCLER) {
-								ViewDebug
-										.trace(child,
-												ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP,
-												firstPosition + i, -1);
+								ViewDebug.trace(child, ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP, firstPosition + i, -1);
 							}
 						}
 					}
 				}
 			} else {
-				final int bottom = getHeight() - listPadding.bottom
-						- incrementalDeltaY;
+				final int bottom = getHeight() - listPadding.bottom - incrementalDeltaY;
 				for (int i = childCount - 1; i >= 0; i--) {
 					final View child = getChildAt(i);
 					if (child.getTop() <= bottom) {
@@ -4513,15 +4273,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						start = i;
 						count++;
 						int position = firstPosition + i;
-						if (position >= headerViewsCount
-								&& position < footerViewsStart) {
+						if (position >= headerViewsCount && position < footerViewsStart) {
 							mRecycler.addScrapView(child);
 
 							if (ViewDebug.TRACE_RECYCLER) {
-								ViewDebug
-										.trace(child,
-												ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP,
-												firstPosition + i, -1);
+								ViewDebug.trace(child, ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP, firstPosition + i, -1);
 							}
 						}
 					}
@@ -4544,8 +4300,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			invalidate();
 
 			final int absIncrementalDeltaY = Math.abs(incrementalDeltaY);
-			if (spaceAbove < absIncrementalDeltaY
-					|| spaceBelow < absIncrementalDeltaY) {
+			if (spaceAbove < absIncrementalDeltaY || spaceBelow < absIncrementalDeltaY) {
 				fillGap(down);
 			}
 
@@ -4567,11 +4322,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		/**
 		 * Attempt to bring the selection back if the user is switching from
 		 * touch to trackball mode
-		 * 
+		 *
 		 * @return Whether selection was set to something.
 		 */
 		@Override
-		boolean resurrectSelection() {
+		boolean resurrectSelection () {
 			final int childCount = getChildCount();
 
 			if (childCount <= 0) {
@@ -4586,8 +4341,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int toPosition = mResurrectToPosition;
 			boolean down = true;
 
-			if (toPosition >= firstPosition
-					&& toPosition < firstPosition + childCount) {
+			if (toPosition >= firstPosition && toPosition < firstPosition + childCount) {
 				selectedPos = toPosition;
 
 				final View selected = getChildAt(selectedPos - mFirstPosition);
@@ -4598,8 +4352,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				if (selectedTop < childrenTop) {
 					selectedTop = childrenTop + getVerticalFadingEdgeLength();
 				} else if (selectedBottom > childrenBottom) {
-					selectedTop = childrenBottom - selected.getMeasuredHeight()
-							- getVerticalFadingEdgeLength();
+					selectedTop = childrenBottom - selected.getMeasuredHeight() - getVerticalFadingEdgeLength();
 				}
 			} else {
 				if (toPosition < firstPosition) {
@@ -4639,8 +4392,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 						if (i == childCount - 1) {
 							selectedTop = top;
-							if (firstPosition + childCount < itemCount
-									|| bottom > childrenBottom) {
+							if (firstPosition + childCount < itemCount || bottom > childrenBottom) {
 								childrenBottom -= getVerticalFadingEdgeLength();
 							}
 						}
@@ -4660,8 +4412,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			clearScrollingCache();
 			mSpecificTop = selectedTop;
 			selectedPos = lookForSelectablePosition(selectedPos, down);
-			if (selectedPos >= firstPosition
-					&& selectedPos <= getLastVisiblePosition()) {
+			if (selectedPos >= firstPosition && selectedPos <= getLastVisiblePosition()) {
 				mLayoutMode = LAYOUT_SPECIFIC;
 				setSelectionInt(selectedPos);
 				invokeOnItemScrollListener();
@@ -4674,12 +4425,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		protected PositionScroller getPositionScroller() {
+		protected PositionScroller getPositionScroller () {
 			return new VerticalPositionScroller();
 		}
 
 		@Override
-		protected FlingRunnable getFlingRunnable() {
+		protected FlingRunnable getFlingRunnable () {
 			return new VerticalFlingRunnable();
 		}
 
@@ -4687,7 +4438,6 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * Responsible for fling behavior. Use {@link #start(int)} to initiate a
 		 * fling. Each frame of the fling is handled in {@link #run()}. A
 		 * FlingRunnable will keep re-posting itself until the fling is done.
-		 * 
 		 */
 		private class VerticalFlingRunnable extends FlingRunnable {
 			/**
@@ -4696,11 +4446,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			protected int mLastFlingY;
 
 			@Override
-			void start(int initialVelocity) {
+			void start (int initialVelocity) {
 				int initialY = initialVelocity < 0 ? Integer.MAX_VALUE : 0;
 				mLastFlingY = initialY;
-				mScroller.fling(0, initialY, 0, initialVelocity, 0,
-						Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+				mScroller.fling(0, initialY, 0, initialVelocity, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 				mTouchMode = TOUCH_MODE_FLING;
 				post(this);
 
@@ -4713,7 +4462,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			}
 
 			@Override
-			void startScroll(int distance, int duration) {
+			void startScroll (int distance, int duration) {
 				int initialY = distance < 0 ? Integer.MAX_VALUE : 0;
 				mLastFlingY = initialY;
 				mScroller.startScroll(0, initialY, 0, distance, duration);
@@ -4722,7 +4471,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			}
 
 			@Override
-			public void run() {
+			public void run () {
 				switch (mTouchMode) {
 					default:
 						return;
@@ -4754,8 +4503,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							mMotionViewOriginalTop = firstView.getTop();
 
 							// Don't fling more than 1 screen
-							delta = Math.min(getHeight() - getPaddingBottom()
-									- getPaddingTop() - 1, delta);
+							delta = Math.min(getHeight() - getPaddingBottom() - getPaddingTop() - 1, delta);
 						} else {
 							// List is moving towards the bottom. Use last view
 							// as
@@ -4767,8 +4515,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							mMotionViewOriginalTop = lastView.getTop();
 
 							// Don't fling more than 1 screen
-							delta = Math.max(-(getHeight() - getPaddingBottom()
-									- getPaddingTop() - 1), delta);
+							delta = Math.max(-(getHeight() - getPaddingBottom() - getPaddingTop() - 1), delta);
 						}
 
 						final boolean atEnd = trackMotionScroll(delta, delta);
@@ -4796,7 +4543,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		class VerticalPositionScroller extends PositionScroller {
 			@Override
-			public void run() {
+			public void run () {
 				final int listHeight = getHeight();
 				final int firstPos = mFirstPosition;
 
@@ -4818,13 +4565,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final View lastView = getChildAt(lastViewIndex);
 						final int lastViewHeight = lastView.getHeight();
 						final int lastViewTop = lastView.getTop();
-						final int lastViewPixelsShowing = listHeight
-								- lastViewTop;
-						final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll
-								: mListPadding.bottom;
+						final int lastViewPixelsShowing = listHeight - lastViewTop;
+						final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll : mListPadding.bottom;
 
-						smoothScrollBy(lastViewHeight - lastViewPixelsShowing
-								+ extraScroll, mScrollDuration);
+						smoothScrollBy(lastViewHeight - lastViewPixelsShowing + extraScroll, mScrollDuration);
 
 						mLastSeenPos = lastPos;
 						if (lastPos < mTargetPos) {
@@ -4837,9 +4581,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final int nextViewIndex = 1;
 						final int childCount = getChildCount();
 
-						if (firstPos == mBoundPos
-								|| childCount <= nextViewIndex
-								|| firstPos + childCount >= mItemCount) {
+						if (firstPos == mBoundPos || childCount <= nextViewIndex || firstPos + childCount >= mItemCount) {
 							return;
 						}
 						final int nextPos = firstPos + nextViewIndex;
@@ -4855,17 +4597,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final int nextViewTop = nextView.getTop();
 						final int extraScroll = mExtraScroll;
 						if (nextPos < mBoundPos) {
-							smoothScrollBy(
-									Math.max(0, nextViewHeight + nextViewTop
-											- extraScroll), mScrollDuration);
+							smoothScrollBy(Math.max(0, nextViewHeight + nextViewTop - extraScroll), mScrollDuration);
 
 							mLastSeenPos = nextPos;
 
 							post(this);
 						} else {
 							if (nextViewTop > extraScroll) {
-								smoothScrollBy(nextViewTop - extraScroll,
-										mScrollDuration);
+								smoothScrollBy(nextViewTop - extraScroll, mScrollDuration);
 							}
 						}
 						break;
@@ -4883,11 +4622,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							return;
 						}
 						final int firstViewTop = firstView.getTop();
-						final int extraScroll = firstPos > 0 ? mExtraScroll
-								: mListPadding.top;
+						final int extraScroll = firstPos > 0 ? mExtraScroll : mListPadding.top;
 
-						smoothScrollBy(firstViewTop - extraScroll,
-								mScrollDuration);
+						smoothScrollBy(firstViewTop - extraScroll, mScrollDuration);
 
 						mLastSeenPos = firstPos;
 
@@ -4913,21 +4650,16 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final View lastView = getChildAt(lastViewIndex);
 						final int lastViewHeight = lastView.getHeight();
 						final int lastViewTop = lastView.getTop();
-						final int lastViewPixelsShowing = listHeight
-								- lastViewTop;
+						final int lastViewPixelsShowing = listHeight - lastViewTop;
 						mLastSeenPos = lastPos;
 						if (lastPos > mBoundPos) {
-							smoothScrollBy(
-									-(lastViewPixelsShowing - mExtraScroll),
-									mScrollDuration);
+							smoothScrollBy(-(lastViewPixelsShowing - mExtraScroll), mScrollDuration);
 							post(this);
 						} else {
 							final int bottom = listHeight - mExtraScroll;
-							final int lastViewBottom = lastViewTop
-									+ lastViewHeight;
+							final int lastViewBottom = lastViewTop + lastViewHeight;
 							if (bottom > lastViewBottom) {
-								smoothScrollBy(-(bottom - lastViewBottom),
-										mScrollDuration);
+								smoothScrollBy(-(bottom - lastViewBottom), mScrollDuration);
 							}
 						}
 						break;
@@ -4963,17 +4695,17 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		int mMotionViewNewLeft;
 
 		@Override
-		protected FlingRunnable getFlingRunnable() {
+		protected FlingRunnable getFlingRunnable () {
 			return new HorizontalFlingRunnable();
 		}
 
 		@Override
-		protected PositionScroller getPositionScroller() {
+		protected PositionScroller getPositionScroller () {
 			return new HorizontalPositionScroller();
 		}
 
 		@Override
-		public boolean onInterceptTouchEvent(MotionEvent ev) {
+		public boolean onInterceptTouchEvent (MotionEvent ev) {
 			int action = ev.getAction();
 			View v;
 
@@ -5036,7 +4768,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		public boolean onTouchEvent(MotionEvent ev) {
+		public boolean onTouchEvent (MotionEvent ev) {
 			if (!isEnabled()) {
 				// A disabled view that is clickable still consumes the touch
 				// events, it just doesn't respond to them.
@@ -5065,9 +4797,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					final int y = (int) ev.getY();
 					int motionPosition = pointToPosition(x, y);
 					if (!mDataChanged) {
-						if ((mTouchMode != TOUCH_MODE_FLING)
-								&& (motionPosition >= 0)
-								&& (getAdapter().isEnabled(motionPosition))) {
+						if ((mTouchMode != TOUCH_MODE_FLING) && (motionPosition >= 0) && (getAdapter().isEnabled(motionPosition))) {
 							// User clicked on an actual view (and was not
 							// stopping
 							// a fling). It might be a
@@ -5079,8 +4809,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							if (mPendingCheckForTap == null) {
 								mPendingCheckForTap = new CheckForTap();
 							}
-							postDelayed(mPendingCheckForTap,
-									ViewConfiguration.getTapTimeout());
+							postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
 						} else {
 							if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
 								// If we couldn't find a view to click on, but
@@ -5141,17 +4870,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 							if (x != mLastX) {
 								deltaX -= mMotionCorrection;
-								int incrementalDeltaX = mLastX != Integer.MIN_VALUE ? x
-										- mLastX
-										: deltaX;
+								int incrementalDeltaX = mLastX != Integer.MIN_VALUE ? x - mLastX : deltaX;
 
 								// No need to do all this work if we're not
 								// going to
 								// move anyway
 								boolean atEdge = false;
 								if (incrementalDeltaX != 0) {
-									atEdge = trackMotionScroll(deltaX,
-											incrementalDeltaX);
+									atEdge = trackMotionScroll(deltaX, incrementalDeltaX);
 								}
 
 								// Check to see if we have bumped into the
@@ -5169,10 +4895,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 									// point where they hit the limit first.
 									int motionPosition = findMotionRowX(x);
 									if (motionPosition >= 0) {
-										final View motionView = getChildAt(motionPosition
-												- mFirstPosition);
-										mMotionViewOriginalLeft = motionView
-												.getLeft();
+										final View motionView = getChildAt(motionPosition - mFirstPosition);
+										mMotionViewOriginalLeft = motionView.getLeft();
 									}
 									mMotionX = x;
 									mMotionPosition = motionPosition;
@@ -5192,8 +4916,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						case TOUCH_MODE_TAP:
 						case TOUCH_MODE_DONE_WAITING:
 							final int motionPosition = mMotionPosition;
-							final View child = getChildAt(motionPosition
-									- mFirstPosition);
+							final View child = getChildAt(motionPosition - mFirstPosition);
 							if (child != null && !child.hasFocusable()) {
 								if (mTouchMode != TOUCH_MODE_DOWN) {
 									child.setPressed(false);
@@ -5210,17 +4933,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 								mResurrectToPosition = motionPosition;
 
-								if (mTouchMode == TOUCH_MODE_DOWN
-										|| mTouchMode == TOUCH_MODE_TAP) {
+								if (mTouchMode == TOUCH_MODE_DOWN || mTouchMode == TOUCH_MODE_TAP) {
 									final Handler handler = getHandler();
 									if (handler != null) {
-										handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap
-												: mPendingCheckForLongPress);
+										handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ? mPendingCheckForTap : mPendingCheckForLongPress);
 									}
 									mLayoutMode = LAYOUT_NORMAL;
-									if (!mDataChanged
-											&& mAdapter
-													.isEnabled(motionPosition)) {
+									if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
 										mTouchMode = TOUCH_MODE_TAP;
 										setSelectedPositionInt(mMotionPosition);
 										layoutChildren();
@@ -5229,14 +4948,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 										setPressed(true);
 										if (mSelector != null) {
 											Drawable d = mSelector.getCurrent();
-											if (d != null
-													&& d instanceof TransitionDrawable) {
-												((TransitionDrawable) d)
-														.resetTransition();
+											if (d != null && d instanceof TransitionDrawable) {
+												((TransitionDrawable) d).resetTransition();
 											}
 										}
 										postDelayed(new Runnable() {
-											public void run() {
+											public void run () {
 												child.setPressed(false);
 												setPressed(false);
 												if (!mDataChanged) {
@@ -5244,14 +4961,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 												}
 												mTouchMode = TOUCH_MODE_REST;
 											}
-										}, ViewConfiguration
-												.getPressedStateDuration());
+										}, ViewConfiguration.getPressedStateDuration());
 									} else {
 										mTouchMode = TOUCH_MODE_REST;
 									}
 									return true;
-								} else if (!mDataChanged
-										&& mAdapter.isEnabled(motionPosition)) {
+								} else if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
 									post(performClick);
 								}
 							}
@@ -5260,20 +4975,13 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						case TOUCH_MODE_SCROLL:
 							final int childCount = getChildCount();
 							if (childCount > 0) {
-								if (mFirstPosition == 0
-										&& getChildAt(0).getLeft() >= mListPadding.left
-										&& mFirstPosition + childCount < mItemCount
-										&& getChildAt(childCount - 1)
-												.getRight() <= getWidth()
-												- mListPadding.right) {
+								if (mFirstPosition == 0 && getChildAt(0).getLeft() >= mListPadding.left && mFirstPosition + childCount < mItemCount && getChildAt(childCount - 1).getRight() <= getWidth() - mListPadding.right) {
 									mTouchMode = TOUCH_MODE_REST;
 									reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 								} else {
 									final VelocityTracker velocityTracker = mVelocityTracker;
-									velocityTracker
-											.computeCurrentVelocity(1000);
-									final int initialVelocity = (int) velocityTracker
-											.getXVelocity();
+									velocityTracker.computeCurrentVelocity(1000);
+									final int initialVelocity = (int) velocityTracker.getXVelocity();
 
 									if (Math.abs(initialVelocity) > mMinimumVelocity) {
 										if (mFlingRunnable == null) {
@@ -5325,8 +5033,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				case MotionEvent.ACTION_CANCEL: {
 					mTouchMode = TOUCH_MODE_REST;
 					setPressed(false);
-					View motionView = TwoWayAbsListView.this
-							.getChildAt(mMotionPosition - mFirstPosition);
+					View motionView = TwoWayAbsListView.this.getChildAt(mMotionPosition - mFirstPosition);
 					if (motionView != null) {
 						motionView.setPressed(false);
 					}
@@ -5351,7 +5058,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		boolean resurrectSelection() {
+		boolean resurrectSelection () {
 			final int childCount = getChildCount();
 
 			if (childCount <= 0) {
@@ -5366,8 +5073,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			final int toPosition = mResurrectToPosition;
 			boolean down = true;
 
-			if (toPosition >= firstPosition
-					&& toPosition < firstPosition + childCount) {
+			if (toPosition >= firstPosition && toPosition < firstPosition + childCount) {
 				selectedPos = toPosition;
 
 				final View selected = getChildAt(selectedPos - mFirstPosition);
@@ -5376,11 +5082,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 				// We are scrolled, don't get in the fade
 				if (selectedLeft < childrenLeft) {
-					selectedLeft = childrenLeft
-							+ getHorizontalFadingEdgeLength();
+					selectedLeft = childrenLeft + getHorizontalFadingEdgeLength();
 				} else if (selectedRight > childrenRight) {
-					selectedLeft = childrenRight - selected.getMeasuredWidth()
-							- getHorizontalFadingEdgeLength();
+					selectedLeft = childrenRight - selected.getMeasuredWidth() - getHorizontalFadingEdgeLength();
 				}
 			} else {
 				if (toPosition < firstPosition) {
@@ -5420,8 +5124,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 						if (i == childCount - 1) {
 							selectedLeft = left;
-							if (firstPosition + childCount < itemCount
-									|| right > childrenRight) {
+							if (firstPosition + childCount < itemCount || right > childrenRight) {
 								childrenRight -= getHorizontalFadingEdgeLength();
 							}
 						}
@@ -5441,8 +5144,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			clearScrollingCache();
 			mSpecificTop = selectedLeft;
 			selectedPos = lookForSelectablePosition(selectedPos, down);
-			if (selectedPos >= firstPosition
-					&& selectedPos <= getLastVisiblePosition()) {
+			if (selectedPos >= firstPosition && selectedPos <= getLastVisiblePosition()) {
 				mLayoutMode = LAYOUT_SPECIFIC;
 				setSelectionInt(selectedPos);
 				invokeOnItemScrollListener();
@@ -5455,10 +5157,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		}
 
 		@Override
-		boolean trackMotionScroll(int delta, int incrementalDelta) {
+		boolean trackMotionScroll (int delta, int incrementalDelta) {
 			if (DEBUG)
-				Log.i(TAG, "trackMotionScroll() - deltaX: " + delta
-						+ " incrDeltaX: " + incrementalDelta);
+				Log.i(TAG, "trackMotionScroll() - deltaX: " + delta + " incrDeltaX: " + incrementalDelta);
 			final int childCount = getChildCount();
 			if (childCount == 0) {
 				return true;
@@ -5489,8 +5190,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 			final int firstPosition = mFirstPosition;
 
-			if (firstPosition == 0 && firstLeft >= listPadding.left
-					&& delta >= 0) {
+			if (firstPosition == 0 && firstLeft >= listPadding.left && delta >= 0) {
 				// Don't need to move views right if the top of the first
 				// position
 				// is already visible
@@ -5499,8 +5199,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 				return true;
 			}
 
-			if (firstPosition + childCount == mItemCount && lastRight <= end
-					&& delta <= 0) {
+			if (firstPosition + childCount == mItemCount && lastRight <= end && delta <= 0) {
 				// Don't need to move views left if the bottom of the last
 				// position
 				// is already visible
@@ -5531,22 +5230,17 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 					} else {
 						count++;
 						int position = firstPosition + i;
-						if (position >= headerViewsCount
-								&& position < footerViewsStart) {
+						if (position >= headerViewsCount && position < footerViewsStart) {
 							mRecycler.addScrapView(child);
 
 							if (ViewDebug.TRACE_RECYCLER) {
-								ViewDebug
-										.trace(child,
-												ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP,
-												firstPosition + i, -1);
+								ViewDebug.trace(child, ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP, firstPosition + i, -1);
 							}
 						}
 					}
 				}
 			} else {
-				final int right = getWidth() - listPadding.right
-						- incrementalDelta;
+				final int right = getWidth() - listPadding.right - incrementalDelta;
 				for (int i = childCount - 1; i >= 0; i--) {
 					final View child = getChildAt(i);
 					if (child.getLeft() <= right) {
@@ -5555,15 +5249,11 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						start = i;
 						count++;
 						int position = firstPosition + i;
-						if (position >= headerViewsCount
-								&& position < footerViewsStart) {
+						if (position >= headerViewsCount && position < footerViewsStart) {
 							mRecycler.addScrapView(child);
 
 							if (ViewDebug.TRACE_RECYCLER) {
-								ViewDebug
-										.trace(child,
-												ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP,
-												firstPosition + i, -1);
+								ViewDebug.trace(child, ViewDebug.RecyclerTraceType.MOVE_TO_SCRAP_HEAP, firstPosition + i, -1);
 							}
 						}
 					}
@@ -5586,8 +5276,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			invalidate();
 
 			final int absIncrementalDelta = Math.abs(incrementalDelta);
-			if (spaceAbove < absIncrementalDelta
-					|| spaceBelow < absIncrementalDelta) {
+			if (spaceAbove < absIncrementalDelta || spaceBelow < absIncrementalDelta) {
 				fillGap(down);
 			}
 
@@ -5603,9 +5292,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			invokeOnItemScrollListener();
 			// awakenScrollBars();
 			if (DEBUG)
-				Log.i(TAG,
-						"trackScrollMotion returning false - mFirstPosition: "
-								+ mFirstPosition);
+				Log.i(TAG, "trackScrollMotion returning false - mFirstPosition: " + mFirstPosition);
 			return false;
 		}
 
@@ -5613,7 +5300,6 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 		 * Responsible for fling behavior. Use {@link #start(int)} to initiate a
 		 * fling. Each frame of the fling is handled in {@link #run()}. A
 		 * FlingRunnable will keep re-posting itself until the fling is done.
-		 * 
 		 */
 		private class HorizontalFlingRunnable extends FlingRunnable {
 			/**
@@ -5622,11 +5308,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			protected int mLastFlingX;
 
 			@Override
-			void start(int initialVelocity) {
+			void start (int initialVelocity) {
 				int initialX = initialVelocity < 0 ? Integer.MAX_VALUE : 0;
 				mLastFlingX = initialX;
-				mScroller.fling(initialX, 0, initialVelocity, 0, 0,
-						Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+				mScroller.fling(initialX, 0, initialVelocity, 0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 				mTouchMode = TOUCH_MODE_FLING;
 				post(this);
 
@@ -5639,7 +5324,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			}
 
 			@Override
-			void startScroll(int distance, int duration) {
+			void startScroll (int distance, int duration) {
 				int initialX = distance < 0 ? Integer.MAX_VALUE : 0;
 				mLastFlingX = initialX;
 				mScroller.startScroll(initialX, 0, distance, 0, duration);
@@ -5648,7 +5333,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 			}
 
 			@Override
-			public void run() {
+			public void run () {
 				switch (mTouchMode) {
 					default:
 						return;
@@ -5680,8 +5365,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							mMotionViewOriginalLeft = firstView.getLeft();
 
 							// Don't fling more than 1 screen
-							delta = Math.min(getWidth() - getPaddingRight()
-									- getPaddingLeft() - 1, delta);
+							delta = Math.min(getWidth() - getPaddingRight() - getPaddingLeft() - 1, delta);
 						} else {
 							// List is moving towards the bottom. Use last view
 							// as
@@ -5693,8 +5377,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							mMotionViewOriginalLeft = lastView.getLeft();
 
 							// Don't fling more than 1 screen
-							delta = Math.max(-(getWidth() - getPaddingRight()
-									- getPaddingLeft() - 1), delta);
+							delta = Math.max(-(getWidth() - getPaddingRight() - getPaddingLeft() - 1), delta);
 						}
 
 						final boolean atEnd = trackMotionScroll(delta, delta);
@@ -5722,7 +5405,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 
 		class HorizontalPositionScroller extends PositionScroller {
 			@Override
-			public void run() {
+			public void run () {
 				final int listWidth = getWidth();
 				final int firstPos = mFirstPosition;
 
@@ -5744,13 +5427,10 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final View lastView = getChildAt(lastViewIndex);
 						final int lastViewWidth = lastView.getWidth();
 						final int lastViewLeft = lastView.getLeft();
-						final int lastViewPixelsShowing = listWidth
-								- lastViewLeft;
-						final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll
-								: mListPadding.right;
+						final int lastViewPixelsShowing = listWidth - lastViewLeft;
+						final int extraScroll = lastPos < mItemCount - 1 ? mExtraScroll : mListPadding.right;
 
-						smoothScrollBy(lastViewWidth - lastViewPixelsShowing
-								+ extraScroll, mScrollDuration);
+						smoothScrollBy(lastViewWidth - lastViewPixelsShowing + extraScroll, mScrollDuration);
 
 						mLastSeenPos = lastPos;
 						if (lastPos < mTargetPos) {
@@ -5763,9 +5443,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final int nextViewIndex = 1;
 						final int childCount = getChildCount();
 
-						if (firstPos == mBoundPos
-								|| childCount <= nextViewIndex
-								|| firstPos + childCount >= mItemCount) {
+						if (firstPos == mBoundPos || childCount <= nextViewIndex || firstPos + childCount >= mItemCount) {
 							return;
 						}
 						final int nextPos = firstPos + nextViewIndex;
@@ -5781,17 +5459,14 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final int nextViewLeft = nextView.getLeft();
 						final int extraScroll = mExtraScroll;
 						if (nextPos < mBoundPos) {
-							smoothScrollBy(
-									Math.max(0, nextViewWidth + nextViewLeft
-											- extraScroll), mScrollDuration);
+							smoothScrollBy(Math.max(0, nextViewWidth + nextViewLeft - extraScroll), mScrollDuration);
 
 							mLastSeenPos = nextPos;
 
 							post(this);
 						} else {
 							if (nextViewLeft > extraScroll) {
-								smoothScrollBy(nextViewLeft - extraScroll,
-										mScrollDuration);
+								smoothScrollBy(nextViewLeft - extraScroll, mScrollDuration);
 							}
 						}
 						break;
@@ -5809,11 +5484,9 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 							return;
 						}
 						final int firstViewLeft = firstView.getLeft();
-						final int extraScroll = firstPos > 0 ? mExtraScroll
-								: mListPadding.left;
+						final int extraScroll = firstPos > 0 ? mExtraScroll : mListPadding.left;
 
-						smoothScrollBy(firstViewLeft - extraScroll,
-								mScrollDuration);
+						smoothScrollBy(firstViewLeft - extraScroll, mScrollDuration);
 
 						mLastSeenPos = firstPos;
 
@@ -5839,21 +5512,16 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter>
 						final View lastView = getChildAt(lastViewIndex);
 						final int lastViewWidth = lastView.getWidth();
 						final int lastViewLeft = lastView.getLeft();
-						final int lastViewPixelsShowing = listWidth
-								- lastViewLeft;
+						final int lastViewPixelsShowing = listWidth - lastViewLeft;
 						mLastSeenPos = lastPos;
 						if (lastPos > mBoundPos) {
-							smoothScrollBy(
-									-(lastViewPixelsShowing - mExtraScroll),
-									mScrollDuration);
+							smoothScrollBy(-(lastViewPixelsShowing - mExtraScroll), mScrollDuration);
 							post(this);
 						} else {
 							final int right = listWidth - mExtraScroll;
-							final int lastViewRight = lastViewLeft
-									+ lastViewWidth;
+							final int lastViewRight = lastViewLeft + lastViewWidth;
 							if (right > lastViewRight) {
-								smoothScrollBy(-(right - lastViewRight),
-										mScrollDuration);
+								smoothScrollBy(-(right - lastViewRight), mScrollDuration);
 							}
 						}
 						break;

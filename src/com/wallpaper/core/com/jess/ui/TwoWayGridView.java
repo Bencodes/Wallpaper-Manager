@@ -35,25 +35,19 @@
 
 package com.wallpaper.core.com.jess.ui;
 
-import com.wallpaper.activity.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.SoundEffectConstants;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.animation.GridLayoutAnimationController;
 import android.widget.ListAdapter;
+import com.wallpaper.activity.R;
 
 /**
  * A view that shows items in two-dimensional scrolling grid. The items in the
  * grid come from the {@link ListAdapter} associated with this view.
- * 
  */
 public class TwoWayGridView extends TwoWayAbsListView {
 	public static final int NO_STRETCH = 0;
@@ -90,43 +84,37 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	protected GridBuilder mGridBuilder = null;
 
-	public TwoWayGridView(Context context) {
+	public TwoWayGridView (Context context) {
 		super(context);
 		setupGridType();
 	}
 
-	public TwoWayGridView(Context context, AttributeSet attrs) {
+	public TwoWayGridView (Context context, AttributeSet attrs) {
 		this(context, attrs, android.R.attr.gridViewStyle);
 	}
 
-	public TwoWayGridView(Context context, AttributeSet attrs, int defStyle) {
+	public TwoWayGridView (Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
-		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.TwoWayGridView, defStyle, 0);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TwoWayGridView, defStyle, 0);
 
-		int hSpacing = a.getDimensionPixelOffset(
-				R.styleable.TwoWayGridView_horizontalSpacing, 0);
+		int hSpacing = a.getDimensionPixelOffset(R.styleable.TwoWayGridView_horizontalSpacing, 0);
 		setHorizontalSpacing(hSpacing);
 
-		int vSpacing = a.getDimensionPixelOffset(
-				R.styleable.TwoWayGridView_verticalSpacing, 0);
+		int vSpacing = a.getDimensionPixelOffset(R.styleable.TwoWayGridView_verticalSpacing, 0);
 		setVerticalSpacing(vSpacing);
 
-		int index = a.getInt(R.styleable.TwoWayGridView_stretchMode,
-				STRETCH_COLUMN_WIDTH);
+		int index = a.getInt(R.styleable.TwoWayGridView_stretchMode, STRETCH_COLUMN_WIDTH);
 		if (index >= 0) {
 			setStretchMode(index);
 		}
 
-		int columnWidth = a.getDimensionPixelOffset(
-				R.styleable.TwoWayGridView_columnWidth, -1);
+		int columnWidth = a.getDimensionPixelOffset(R.styleable.TwoWayGridView_columnWidth, -1);
 		if (columnWidth > 0) {
 			setColumnWidth(columnWidth);
 		}
 
-		int rowHeight = a.getDimensionPixelOffset(
-				R.styleable.TwoWayGridView_rowHeight, -1);
+		int rowHeight = a.getDimensionPixelOffset(R.styleable.TwoWayGridView_rowHeight, -1);
 		if (rowHeight > 0) {
 			setRowHeight(rowHeight);
 		}
@@ -146,7 +134,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		setupGridType();
 	}
 
-	private void setupGridType() {
+	private void setupGridType () {
 		if (mScrollVertically) {
 			mGridBuilder = new VerticalGridBuilder();
 		} else {
@@ -155,18 +143,17 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	public ListAdapter getAdapter() {
+	public ListAdapter getAdapter () {
 		return mAdapter;
 	}
 
 	/**
 	 * Sets the data behind this TwoWayGridView.
-	 * 
-	 * @param adapter
-	 *            the adapter providing the grid's data
+	 *
+	 * @param adapter the adapter providing the grid's data
 	 */
 	@Override
-	public void setAdapter(ListAdapter adapter) {
+	public void setAdapter (ListAdapter adapter) {
 		if (null != mAdapter) {
 			mAdapter.unregisterDataSetObserver(mDataSetObserver);
 		}
@@ -208,7 +195,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	int lookForSelectablePosition(int position, boolean lookDown) {
+	int lookForSelectablePosition (int position, boolean lookDown) {
 		final ListAdapter adapter = mAdapter;
 		if (adapter == null || isInTouchMode()) {
 			return INVALID_POSITION;
@@ -224,14 +211,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	 * {@inheritDoc}
 	 */
 	@Override
-	void fillGap(boolean down) {
+	void fillGap (boolean down) {
 		if (DEBUG)
 			Log.i(TAG, "fillGap() down: " + down);
 		mGridBuilder.fillGap(down);
 	}
 
 	@Override
-	int findMotionRowY(int y) {
+	int findMotionRowY (int y) {
 		final int childCount = getChildCount();
 		if (childCount > 0) {
 
@@ -254,7 +241,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	int findMotionRowX(int x) {
+	int findMotionRowX (int x) {
 		final int childCount = getChildCount();
 		if (childCount > 0) {
 
@@ -277,10 +264,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		if ((mScrollVertically && !(mGridBuilder instanceof VerticalGridBuilder))
-				|| (!mScrollVertically && !(mGridBuilder instanceof HorizontalGridBuilder))) {
+		if ((mScrollVertically && !(mGridBuilder instanceof VerticalGridBuilder)) || (!mScrollVertically && !(mGridBuilder instanceof HorizontalGridBuilder))) {
 			setupGridType();
 		}
 		// Sets up mListPadding
@@ -289,8 +275,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	// TODO implement horizontal support
 	@Override
-	protected void attachLayoutAnimationParameters(View child,
-			ViewGroup.LayoutParams params, int index, int count) {
+	protected void attachLayoutAnimationParameters (View child, ViewGroup.LayoutParams params, int index, int count) {
 
 		GridLayoutAnimationController.AnimationParameters animationParams = (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;
 
@@ -310,15 +295,13 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		} else {
 			final int invertedIndex = count - 1 - index;
 
-			animationParams.column = mNumColumns - 1
-					- (invertedIndex % mNumColumns);
-			animationParams.row = animationParams.rowsCount - 1 - invertedIndex
-					/ mNumColumns;
+			animationParams.column = mNumColumns - 1 - (invertedIndex % mNumColumns);
+			animationParams.row = animationParams.rowsCount - 1 - invertedIndex / mNumColumns;
 		}
 	}
 
 	@Override
-	protected void layoutChildren() {
+	protected void layoutChildren () {
 		final boolean blockLayoutRequests = mBlockLayoutRequests;
 		if (!blockLayoutRequests) {
 			mBlockLayoutRequests = true;
@@ -346,15 +329,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Sets the currently selected item
-	 * 
-	 * @param position
-	 *            Index (starting at 0) of the data item to be selected.
-	 * 
-	 *            If in touch mode, the item will not be selected but it will
-	 *            still be positioned appropriately.
+	 *
+	 * @param position Index (starting at 0) of the data item to be selected.
+	 *                 <p/>
+	 *                 If in touch mode, the item will not be selected but it will
+	 *                 still be positioned appropriately.
 	 */
 	@Override
-	public void setSelection(int position) {
+	public void setSelection (int position) {
 		if (!isInTouchMode()) {
 			setNextSelectedPositionInt(position);
 		} else {
@@ -366,31 +348,30 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Makes the item at the supplied position selected.
-	 * 
-	 * @param position
-	 *            the position of the new selection
+	 *
+	 * @param position the position of the new selection
 	 */
 	@Override
-	void setSelectionInt(int position) {
+	void setSelectionInt (int position) {
 		mGridBuilder.setSelectionInt(position);
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown (int keyCode, KeyEvent event) {
 		return commonKey(keyCode, 1, event);
 	}
 
 	@Override
-	public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
+	public boolean onKeyMultiple (int keyCode, int repeatCount, KeyEvent event) {
 		return commonKey(keyCode, repeatCount, event);
 	}
 
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
+	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		return commonKey(keyCode, 1, event);
 	}
 
-	private boolean commonKey(int keyCode, int count, KeyEvent event) {
+	private boolean commonKey (int keyCode, int count, KeyEvent event) {
 		if (mAdapter == null) {
 			return false;
 		}
@@ -405,70 +386,70 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		if (action != KeyEvent.ACTION_UP) {
 			if (mSelectedPosition < 0) {
 				switch (keyCode) {
-				case KeyEvent.KEYCODE_DPAD_UP:
-				case KeyEvent.KEYCODE_DPAD_DOWN:
-				case KeyEvent.KEYCODE_DPAD_LEFT:
-				case KeyEvent.KEYCODE_DPAD_RIGHT:
-				case KeyEvent.KEYCODE_DPAD_CENTER:
-				case KeyEvent.KEYCODE_SPACE:
-				case KeyEvent.KEYCODE_ENTER:
-					resurrectSelection();
-					return true;
+					case KeyEvent.KEYCODE_DPAD_UP:
+					case KeyEvent.KEYCODE_DPAD_DOWN:
+					case KeyEvent.KEYCODE_DPAD_LEFT:
+					case KeyEvent.KEYCODE_DPAD_RIGHT:
+					case KeyEvent.KEYCODE_DPAD_CENTER:
+					case KeyEvent.KEYCODE_SPACE:
+					case KeyEvent.KEYCODE_ENTER:
+						resurrectSelection();
+						return true;
 				}
 			}
 
 			switch (keyCode) {
-			case KeyEvent.KEYCODE_DPAD_LEFT:
-				if (!event.isAltPressed()) {
-					handled = mGridBuilder.arrowScroll(FOCUS_LEFT);
-				} else {
-					handled = fullScroll(FOCUS_UP);
+				case KeyEvent.KEYCODE_DPAD_LEFT:
+					if (!event.isAltPressed()) {
+						handled = mGridBuilder.arrowScroll(FOCUS_LEFT);
+					} else {
+						handled = fullScroll(FOCUS_UP);
+					}
+					break;
+
+				case KeyEvent.KEYCODE_DPAD_RIGHT:
+					if (!event.isAltPressed()) {
+						handled = mGridBuilder.arrowScroll(FOCUS_RIGHT);
+					} else {
+						handled = fullScroll(FOCUS_DOWN);
+					}
+					break;
+
+				case KeyEvent.KEYCODE_DPAD_UP:
+					if (!event.isAltPressed()) {
+						handled = mGridBuilder.arrowScroll(FOCUS_UP);
+
+					} else {
+						handled = fullScroll(FOCUS_UP);
+					}
+					break;
+
+				case KeyEvent.KEYCODE_DPAD_DOWN:
+					if (!event.isAltPressed()) {
+						handled = mGridBuilder.arrowScroll(FOCUS_DOWN);
+					} else {
+						handled = fullScroll(FOCUS_DOWN);
+					}
+					break;
+
+				case KeyEvent.KEYCODE_DPAD_CENTER:
+				case KeyEvent.KEYCODE_ENTER: {
+					if (getChildCount() > 0 && event.getRepeatCount() == 0) {
+						keyPressed();
+					}
+
+					return true;
 				}
-				break;
 
-			case KeyEvent.KEYCODE_DPAD_RIGHT:
-				if (!event.isAltPressed()) {
-					handled = mGridBuilder.arrowScroll(FOCUS_RIGHT);
-				} else {
-					handled = fullScroll(FOCUS_DOWN);
-				}
-				break;
-
-			case KeyEvent.KEYCODE_DPAD_UP:
-				if (!event.isAltPressed()) {
-					handled = mGridBuilder.arrowScroll(FOCUS_UP);
-
-				} else {
-					handled = fullScroll(FOCUS_UP);
-				}
-				break;
-
-			case KeyEvent.KEYCODE_DPAD_DOWN:
-				if (!event.isAltPressed()) {
-					handled = mGridBuilder.arrowScroll(FOCUS_DOWN);
-				} else {
-					handled = fullScroll(FOCUS_DOWN);
-				}
-				break;
-
-			case KeyEvent.KEYCODE_DPAD_CENTER:
-			case KeyEvent.KEYCODE_ENTER: {
-				if (getChildCount() > 0 && event.getRepeatCount() == 0) {
-					keyPressed();
-				}
-
-				return true;
-			}
-
-			case KeyEvent.KEYCODE_SPACE:
-				// if (mPopup == null || !mPopup.isShowing()) {
-				if (!event.isShiftPressed()) {
-					handled = pageScroll(FOCUS_DOWN);
-				} else {
-					handled = pageScroll(FOCUS_UP);
-				}
-				// }
-				break;
+				case KeyEvent.KEYCODE_SPACE:
+					// if (mPopup == null || !mPopup.isShowing()) {
+					if (!event.isShiftPressed()) {
+						handled = pageScroll(FOCUS_DOWN);
+					} else {
+						handled = pageScroll(FOCUS_UP);
+					}
+					// }
+					break;
 			}
 		}
 
@@ -480,33 +461,31 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			return true;
 		} else {
 			switch (action) {
-			case KeyEvent.ACTION_DOWN:
-				return super.onKeyDown(keyCode, event);
-			case KeyEvent.ACTION_UP:
-				return super.onKeyUp(keyCode, event);
-			case KeyEvent.ACTION_MULTIPLE:
-				return super.onKeyMultiple(keyCode, count, event);
-			default:
-				return false;
+				case KeyEvent.ACTION_DOWN:
+					return super.onKeyDown(keyCode, event);
+				case KeyEvent.ACTION_UP:
+					return super.onKeyUp(keyCode, event);
+				case KeyEvent.ACTION_MULTIPLE:
+					return super.onKeyMultiple(keyCode, count, event);
+				default:
+					return false;
 			}
 		}
 	}
 
 	/**
 	 * Scrolls up or down by the number of items currently present on screen.
-	 * 
-	 * @param direction
-	 *            either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}
+	 *
+	 * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}
 	 * @return whether selection was moved
 	 */
-	boolean pageScroll(int direction) {
+	boolean pageScroll (int direction) {
 		int nextPage = -1;
 		// TODO this doesn't look correct...
 		if (direction == FOCUS_UP) {
 			nextPage = Math.max(0, mSelectedPosition - getChildCount() - 1);
 		} else if (direction == FOCUS_DOWN) {
-			nextPage = Math.min(mItemCount - 1, mSelectedPosition
-					+ getChildCount() - 1);
+			nextPage = Math.min(mItemCount - 1, mSelectedPosition + getChildCount() - 1);
 		}
 
 		if (nextPage >= 0) {
@@ -521,13 +500,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Go to the last or first item if possible.
-	 * 
-	 * @param direction
-	 *            either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}.
-	 * 
+	 *
+	 * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}.
 	 * @return Whether selection was moved.
 	 */
-	boolean fullScroll(int direction) {
+	boolean fullScroll (int direction) {
 		boolean moved = false;
 		if (direction == FOCUS_UP) {
 			mLayoutMode = LAYOUT_SET_SELECTION;
@@ -549,8 +526,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	protected void onFocusChanged(boolean gainFocus, int direction,
-			Rect previouslyFocusedRect) {
+	protected void onFocusChanged (boolean gainFocus, int direction, Rect previouslyFocusedRect) {
 		super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
 
 		int closestChildIndex = -1;
@@ -571,8 +547,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				final View other = getChildAt(i);
 				other.getDrawingRect(otherRect);
 				offsetDescendantRectToMyCoords(other, otherRect);
-				int distance = getDistance(previouslyFocusedRect, otherRect,
-						direction);
+				int distance = getDistance(previouslyFocusedRect, otherRect, direction);
 
 				if (distance < minDistance) {
 					minDistance = distance;
@@ -591,13 +566,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	/**
 	 * Describes how the child views are horizontally aligned. Defaults to
 	 * Gravity.LEFT
-	 * 
-	 * @param gravity
-	 *            the gravity to apply to this grid's children
-	 * 
+	 *
+	 * @param gravity the gravity to apply to this grid's children
 	 * @attr ref android.R.styleable#JessGridView_gravity
 	 */
-	public void setGravity(int gravity) {
+	public void setGravity (int gravity) {
 		if (mGravity != gravity) {
 			mGravity = gravity;
 			requestLayoutIfNecessary();
@@ -607,13 +580,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	/**
 	 * Set the amount of horizontal (x) spacing to place between each item in
 	 * the grid.
-	 * 
-	 * @param horizontalSpacing
-	 *            The amount of horizontal space between items, in pixels.
-	 * 
+	 *
+	 * @param horizontalSpacing The amount of horizontal space between items, in pixels.
 	 * @attr ref android.R.styleable#JessGridView_horizontalSpacing
 	 */
-	public void setHorizontalSpacing(int horizontalSpacing) {
+	public void setHorizontalSpacing (int horizontalSpacing) {
 		if (horizontalSpacing != mRequestedHorizontalSpacing) {
 			mRequestedHorizontalSpacing = horizontalSpacing;
 			requestLayoutIfNecessary();
@@ -623,13 +594,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	/**
 	 * Set the amount of vertical (y) spacing to place between each item in the
 	 * grid.
-	 * 
-	 * @param verticalSpacing
-	 *            The amount of vertical space between items, in pixels.
-	 * 
+	 *
+	 * @param verticalSpacing The amount of vertical space between items, in pixels.
 	 * @attr ref android.R.styleable#JessGridView_verticalSpacing
 	 */
-	public void setVerticalSpacing(int verticalSpacing) {
+	public void setVerticalSpacing (int verticalSpacing) {
 		if (verticalSpacing != mRequestedVerticalSpacing) {
 			mRequestedVerticalSpacing = verticalSpacing;
 			requestLayoutIfNecessary();
@@ -638,34 +607,30 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Control how items are stretched to fill their space.
-	 * 
-	 * @param stretchMode
-	 *            Either {@link #NO_STRETCH}, {@link #STRETCH_SPACING},
-	 *            {@link #STRETCH_SPACING_UNIFORM}, or
-	 *            {@link #STRETCH_COLUMN_WIDTH}.
-	 * 
+	 *
+	 * @param stretchMode Either {@link #NO_STRETCH}, {@link #STRETCH_SPACING},
+	 *                    {@link #STRETCH_SPACING_UNIFORM}, or
+	 *                    {@link #STRETCH_COLUMN_WIDTH}.
 	 * @attr ref android.R.styleable#JessGridView_stretchMode
 	 */
-	public void setStretchMode(int stretchMode) {
+	public void setStretchMode (int stretchMode) {
 		if (stretchMode != mStretchMode) {
 			mStretchMode = stretchMode;
 			requestLayoutIfNecessary();
 		}
 	}
 
-	public int getStretchMode() {
+	public int getStretchMode () {
 		return mStretchMode;
 	}
 
 	/**
 	 * Set the width of columns in the grid. (Only used in vertical scroll mode)
-	 * 
-	 * @param columnWidth
-	 *            The column width, in pixels.
-	 * 
+	 *
+	 * @param columnWidth The column width, in pixels.
 	 * @attr ref android.R.styleable#JessGridView_columnWidth
 	 */
-	public void setColumnWidth(int columnWidth) {
+	public void setColumnWidth (int columnWidth) {
 		if (columnWidth != mRequestedColumnWidth) {
 			mRequestedColumnWidth = columnWidth;
 			requestLayoutIfNecessary();
@@ -674,13 +639,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Set the height of rows in the grid. (Only used in horizontal scroll mode)
-	 * 
-	 * @param rowHeight
-	 *            The row height, in pixels.
-	 * 
+	 *
+	 * @param rowHeight The row height, in pixels.
 	 * @attr ref android.R.styleable#JessGridView_rowHeight
 	 */
-	public void setRowHeight(int rowHeight) {
+	public void setRowHeight (int rowHeight) {
 		if (rowHeight != mRequestedRowHeight) {
 			mRequestedRowHeight = rowHeight;
 			requestLayoutIfNecessary();
@@ -689,13 +652,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Set the number of columns in the grid
-	 * 
-	 * @param numColumns
-	 *            The desired number of columns.
-	 * 
+	 *
+	 * @param numColumns The desired number of columns.
 	 * @attr ref android.R.styleable#JessGridView_numColumns
 	 */
-	public void setNumColumns(int numColumns) {
+	public void setNumColumns (int numColumns) {
 		if (numColumns != mRequestedNumColumns) {
 			mRequestedNumColumns = numColumns;
 			requestLayoutIfNecessary();
@@ -704,13 +665,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	/**
 	 * Set the number of rows in the grid
-	 * 
-	 * @param numRows
-	 *            The desired number of rows.
-	 * 
+	 *
+	 * @param numRows The desired number of rows.
 	 * @attr ref android.R.styleable#JessGridView_numRows
 	 */
-	public void setNumRows(int numRows) {
+	public void setNumRows (int numRows) {
 		if (numRows != mRequestedNumRows) {
 			mRequestedNumRows = numRows;
 			requestLayoutIfNecessary();
@@ -718,7 +677,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	protected int computeVerticalScrollExtent() {
+	protected int computeVerticalScrollExtent () {
 		final int count = getChildCount();
 		if (count > 0 && mScrollVertically) {
 			final int numColumns = mNumColumns;
@@ -746,7 +705,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	protected int computeVerticalScrollOffset() {
+	protected int computeVerticalScrollOffset () {
 		if (mFirstPosition >= 0 && getChildCount() > 0 && mScrollVertically) {
 			final View view = getChildAt(0);
 			final int top = view.getTop();
@@ -755,20 +714,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				final int numColumns = mNumColumns;
 				final int whichRow = mFirstPosition / numColumns;
 				final int rowCount = (mItemCount + numColumns - 1) / numColumns;
-				return Math.max(
-						whichRow
-								* 100
-								- (top * 100)
-								/ height
-								+ (int) ((float) getScrollY() / getHeight()
-										* rowCount * 100), 0);
+				return Math.max(whichRow * 100 - (top * 100) / height + (int) ((float) getScrollY() / getHeight() * rowCount * 100), 0);
 			}
 		}
 		return 0;
 	}
 
 	@Override
-	protected int computeVerticalScrollRange() {
+	protected int computeVerticalScrollRange () {
 		// TODO: Account for vertical spacing too
 		if (!mScrollVertically) {
 			return 0;
@@ -779,7 +732,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	protected int computeHorizontalScrollExtent() {
+	protected int computeHorizontalScrollExtent () {
 		final int count = getChildCount();
 		if (count > 0 && !mScrollVertically) {
 			final int numRows = mNumRows;
@@ -807,7 +760,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 	}
 
 	@Override
-	protected int computeHorizontalScrollOffset() {
+	protected int computeHorizontalScrollOffset () {
 		if (mFirstPosition >= 0 && getChildCount() > 0 && !mScrollVertically) {
 			final View view = getChildAt(0);
 			final int left = view.getLeft();
@@ -816,19 +769,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				final int numRows = mNumRows;
 				final int whichColumn = mFirstPosition / numRows;
 				final int columnCount = (mItemCount + numRows - 1) / numRows;
-				return Math.max(whichColumn
-						* 100
-						- (left * 100)
-						/ width
-						+ (int) ((float) getScrollX() / getWidth()
-								* columnCount * 100), 0);
+				return Math.max(whichColumn * 100 - (left * 100) / width + (int) ((float) getScrollX() / getWidth() * columnCount * 100), 0);
 			}
 		}
 		return 0;
 	}
 
 	@Override
-	protected int computeHorizontalScrollRange() {
+	protected int computeHorizontalScrollRange () {
 		// TODO: Account for horizontal spacing too
 		if (mScrollVertically) {
 			return 0;
@@ -840,22 +788,19 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 	private abstract class GridBuilder {
 
-		protected abstract View makeAndAddView(int position, int y,
-				boolean flow, int childrenLeft, boolean selected, int where);
+		protected abstract View makeAndAddView (int position, int y, boolean flow, int childrenLeft, boolean selected, int where);
 
-		protected abstract void fillGap(boolean down);
+		protected abstract void fillGap (boolean down);
 
-		protected abstract void onMeasure(int widthMeasureSpec,
-				int heightMeasureSpec);
+		protected abstract void onMeasure (int widthMeasureSpec, int heightMeasureSpec);
 
-		protected abstract void layoutChildren();
+		protected abstract void layoutChildren ();
 
-		protected abstract void setSelectionInt(int position);
+		protected abstract void setSelectionInt (int position);
 
-		protected abstract boolean arrowScroll(int direction);
+		protected abstract boolean arrowScroll (int direction);
 
-		protected abstract boolean isCandidateSelection(int childIndex,
-				int direction);
+		protected abstract boolean isCandidateSelection (int childIndex, int direction);
 	}
 
 	private class VerticalGridBuilder extends GridBuilder {
@@ -864,40 +809,30 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * Obtain the view and add it to our list of children. The view can be
 		 * made fresh, converted from an unused view, or used as is if it was in
 		 * the recycle bin.
-		 * 
-		 * @param position
-		 *            Logical position in the list
-		 * @param y
-		 *            Top or bottom edge of the view to add
-		 * @param flow
-		 *            if true, align top edge to y. If false, align bottom edge
-		 *            to y.
-		 * @param childrenLeft
-		 *            Left edge where children should be positioned
-		 * @param selected
-		 *            Is this position selected?
-		 * @param where
-		 *            to add new item in the list
+		 *
+		 * @param position     Logical position in the list
+		 * @param y            Top or bottom edge of the view to add
+		 * @param flow         if true, align top edge to y. If false, align bottom edge
+		 *                     to y.
+		 * @param childrenLeft Left edge where children should be positioned
+		 * @param selected     Is this position selected?
+		 * @param where        to add new item in the list
 		 * @return View that was added
 		 */
 		@Override
-		protected View makeAndAddView(int position, int y, boolean flow,
-				int childrenLeft, boolean selected, int where) {
+		protected View makeAndAddView (int position, int y, boolean flow, int childrenLeft, boolean selected, int where) {
 			View child;
 			if (DEBUG)
-				Log.i(TAG, "makeAndAddView() - start - position: " + position
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "makeAndAddView() - start - position: " + position + " mFirstPosition: " + mFirstPosition);
 			if (!mDataChanged) {
 				// Try to use an existing view for this position
 				child = mRecycler.getActiveView(position);
 				if (child != null) {
 					// Found it -- we're using an existing child
 					// This just needs to be positioned
-					setupChild(child, position, y, flow, childrenLeft,
-							selected, true, where);
+					setupChild(child, position, y, flow, childrenLeft, selected, true, where);
 					if (DEBUG)
-						Log.i(TAG, "makeAndAddView() - end - position: "
-								+ position + "reused a view");
+						Log.i(TAG, "makeAndAddView() - end - position: " + position + "reused a view");
 					return child;
 				}
 			}
@@ -907,16 +842,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			child = obtainView(position, mIsScrap);
 
 			// This needs to be positioned and measured
-			setupChild(child, position, y, flow, childrenLeft, selected,
-					mIsScrap[0], where);
+			setupChild(child, position, y, flow, childrenLeft, selected, mIsScrap[0], where);
 			if (DEBUG)
-				Log.i(TAG, "makeAndAddView() - end - position: " + position
-						+ "did NOT reuse a view - scrap: " + mIsScrap[0]);
+				Log.i(TAG, "makeAndAddView() - end - position: " + position + "did NOT reuse a view - scrap: " + mIsScrap[0]);
 			return child;
 		}
 
 		@Override
-		protected void fillGap(boolean down) {
+		protected void fillGap (boolean down) {
 
 			final int numColumns = mNumColumns;
 			final int verticalSpacing = mVerticalSpacing;
@@ -924,8 +857,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			final int count = getChildCount();
 
 			if (down) {
-				final int startOffset = count > 0 ? getChildAt(count - 1)
-						.getBottom() + verticalSpacing : getListPaddingTop();
+				final int startOffset = count > 0 ? getChildAt(count - 1).getBottom() + verticalSpacing : getListPaddingTop();
 				int position = mFirstPosition + count;
 				if (mStackFromBottom) {
 					position += numColumns - 1;
@@ -933,9 +865,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				fillDown(position, startOffset);
 				correctTooHigh(numColumns, verticalSpacing, getChildCount());
 			} else {
-				final int startOffset = count > 0 ? getChildAt(0).getTop()
-						- verticalSpacing : getHeight()
-						- getListPaddingBottom();
+				final int startOffset = count > 0 ? getChildAt(0).getTop() - verticalSpacing : getHeight() - getListPaddingBottom();
 				int position = mFirstPosition;
 				if (!mStackFromBottom) {
 					position -= numColumns;
@@ -949,21 +879,16 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Fills the list from pos down to the end of the list view.
-		 * 
-		 * @param pos
-		 *            The first position to put in the list
-		 * 
-		 * @param nextTop
-		 *            The location where the top of the item associated with pos
-		 *            should be drawn
-		 * 
+		 *
+		 * @param pos     The first position to put in the list
+		 * @param nextTop The location where the top of the item associated with pos
+		 *                should be drawn
 		 * @return The view that is currently selected, if it happens to be in
 		 *         the range that we draw.
 		 */
-		private View fillDown(int pos, int nextTop) {
+		private View fillDown (int pos, int nextTop) {
 			if (DEBUG)
-				Log.i(TAG, "fillDown() pos: " + pos + " nextTop: " + nextTop
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillDown() pos: " + pos + " nextTop: " + nextTop + " mFirstPosition: " + mFirstPosition);
 			View selectedView = null;
 
 			final int end = (getBottom() - getTop()) - mListPadding.bottom;
@@ -984,18 +909,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			return selectedView;
 		}
 
-		private View makeRow(int startPos, int y, boolean flow) {
+		private View makeRow (int startPos, int y, boolean flow) {
 			if (DEBUG)
-				Log.i(TAG, "makeRow() startPos: " + startPos + " y: " + y
-						+ " flow: " + flow + " mFirstPosition: "
-						+ mFirstPosition);
+				Log.i(TAG, "makeRow() startPos: " + startPos + " y: " + y + " flow: " + flow + " mFirstPosition: " + mFirstPosition);
 			final int columnWidth = mColumnWidth;
 			final int horizontalSpacing = mHorizontalSpacing;
 
 			int last;
-			int nextLeft = mListPadding.left
-					+ ((mStretchMode == STRETCH_SPACING_UNIFORM) ? horizontalSpacing
-							: 0);
+			int nextLeft = mListPadding.left + ((mStretchMode == STRETCH_SPACING_UNIFORM) ? horizontalSpacing : 0);
 
 			if (!mStackFromBottom) {
 				last = Math.min(startPos + mNumColumns, mItemCount);
@@ -1004,8 +925,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				startPos = Math.max(0, startPos - mNumColumns + 1);
 
 				if (last - startPos < mNumColumns) {
-					nextLeft += (mNumColumns - (last - startPos))
-							* (columnWidth + horizontalSpacing);
+					nextLeft += (mNumColumns - (last - startPos)) * (columnWidth + horizontalSpacing);
 				}
 			}
 
@@ -1045,20 +965,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Fills the list from pos up to the top of the list view.
-		 * 
-		 * @param pos
-		 *            The first position to put in the list
-		 * 
-		 * @param nextBottom
-		 *            The location where the bottom of the item associated with
-		 *            pos should be drawn
-		 * 
+		 *
+		 * @param pos        The first position to put in the list
+		 * @param nextBottom The location where the bottom of the item associated with
+		 *                   pos should be drawn
 		 * @return The view that is currently selected
 		 */
-		private View fillUp(int pos, int nextBottom) {
+		private View fillUp (int pos, int nextBottom) {
 			if (DEBUG)
-				Log.i(TAG, "fillLeft() pos: " + pos + " nextBottom: "
-						+ nextBottom + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillLeft() pos: " + pos + " nextBottom: " + nextBottom + " mFirstPosition: " + mFirstPosition);
 			View selectedView = null;
 
 			final int end = mListPadding.top;
@@ -1086,17 +1001,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Fills the list from top to bottom, starting with mFirstPosition
-		 * 
-		 * @param nextTop
-		 *            The location where the top of the first item should be
-		 *            drawn
-		 * 
+		 *
+		 * @param nextTop The location where the top of the first item should be
+		 *                drawn
 		 * @return The view that is currently selected
 		 */
-		private View fillFromTop(int nextTop) {
+		private View fillFromTop (int nextTop) {
 			if (DEBUG)
-				Log.i(TAG, "fillFromTop() nextLeft: " + nextTop
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillFromTop() nextLeft: " + nextTop + " mFirstPosition: " + mFirstPosition);
 			mFirstPosition = Math.min(mFirstPosition, mSelectedPosition);
 			mFirstPosition = Math.min(mFirstPosition, mItemCount - 1);
 			if (mFirstPosition < 0) {
@@ -1106,26 +1018,21 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			return fillDown(mFirstPosition, nextTop);
 		}
 
-		private View fillFromBottom(int lastPosition, int nextBottom) {
+		private View fillFromBottom (int lastPosition, int nextBottom) {
 			if (DEBUG)
-				Log.i(TAG, "fillFromBotom() lastPosition: " + lastPosition
-						+ " nextBottom: " + nextBottom + " mFirstPosition: "
-						+ mFirstPosition);
+				Log.i(TAG, "fillFromBotom() lastPosition: " + lastPosition + " nextBottom: " + nextBottom + " mFirstPosition: " + mFirstPosition);
 			lastPosition = Math.max(lastPosition, mSelectedPosition);
 			lastPosition = Math.min(lastPosition, mItemCount - 1);
 
 			final int invertedPosition = mItemCount - 1 - lastPosition;
-			lastPosition = mItemCount - 1
-					- (invertedPosition - (invertedPosition % mNumColumns));
+			lastPosition = mItemCount - 1 - (invertedPosition - (invertedPosition % mNumColumns));
 
 			return fillUp(lastPosition, nextBottom);
 		}
 
-		private View fillSelection(int childrenTop, int childrenBottom) {
+		private View fillSelection (int childrenTop, int childrenBottom) {
 			if (DEBUG)
-				Log.i(TAG, "fillSelection() childrenTop: " + childrenTop
-						+ " childrenBottom: " + childrenBottom
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillSelection() childrenTop: " + childrenTop + " childrenBottom: " + childrenBottom + " mFirstPosition: " + mFirstPosition);
 			final int selectedPosition = reconcileSelectedPosition();
 			final int numColumns = mNumColumns;
 			final int verticalSpacing = mVerticalSpacing;
@@ -1138,39 +1045,30 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			} else {
 				final int invertedSelection = mItemCount - 1 - selectedPosition;
 
-				rowEnd = mItemCount
-						- 1
-						- (invertedSelection - (invertedSelection % numColumns));
+				rowEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numColumns));
 				rowStart = Math.max(0, rowEnd - numColumns + 1);
 			}
 
 			final int fadingEdgeLength = getVerticalFadingEdgeLength();
-			final int topSelectionPixel = getTopSelectionPixel(childrenTop,
-					fadingEdgeLength, rowStart);
+			final int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
 
-			final View sel = makeRow(mStackFromBottom ? rowEnd : rowStart,
-					topSelectionPixel, true);
+			final View sel = makeRow(mStackFromBottom ? rowEnd : rowStart, topSelectionPixel, true);
 			mFirstPosition = rowStart;
 
 			final View referenceView = mReferenceView;
 
 			if (!mStackFromBottom) {
-				fillDown(rowStart + numColumns, referenceView.getBottom()
-						+ verticalSpacing);
+				fillDown(rowStart + numColumns, referenceView.getBottom() + verticalSpacing);
 				pinToBottom(childrenBottom);
-				fillUp(rowStart - numColumns, referenceView.getTop()
-						- verticalSpacing);
+				fillUp(rowStart - numColumns, referenceView.getTop() - verticalSpacing);
 				adjustViewsUpOrDown();
 			} else {
-				final int bottomSelectionPixel = getBottomSelectionPixel(
-						childrenBottom, fadingEdgeLength, numColumns, rowStart);
-				final int offset = bottomSelectionPixel
-						- referenceView.getBottom();
+				final int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, rowStart);
+				final int offset = bottomSelectionPixel - referenceView.getBottom();
 				offsetChildrenTopAndBottom(offset);
 				fillUp(rowStart - 1, referenceView.getTop() - verticalSpacing);
 				pinToTop(childrenTop);
-				fillDown(rowEnd + numColumns, referenceView.getBottom()
-						+ verticalSpacing);
+				fillDown(rowEnd + numColumns, referenceView.getBottom() + verticalSpacing);
 				adjustViewsUpOrDown();
 			}
 
@@ -1181,18 +1079,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * Layout during a scroll that results from tracking motion events.
 		 * Places the mMotionPosition view at the offset specified by
 		 * mMotionViewTop, and then build surrounding views from there.
-		 * 
-		 * @param position
-		 *            the position at which to start filling
-		 * @param top
-		 *            the top of the view at that position
+		 *
+		 * @param position the position at which to start filling
+		 * @param top      the top of the view at that position
 		 * @return The selected view, or null if the selected view is outside
 		 *         the visible area.
 		 */
-		private View fillSpecific(int position, int top) {
+		private View fillSpecific (int position, int top) {
 			if (DEBUG)
-				Log.i(TAG, "fillSpecific() position: " + position + " top: "
-						+ top + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillSpecific() position: " + position + " top: " + top + " mFirstPosition: " + mFirstPosition);
 			final int numColumns = mNumColumns;
 
 			int motionRowStart;
@@ -1203,14 +1098,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			} else {
 				final int invertedSelection = mItemCount - 1 - position;
 
-				motionRowEnd = mItemCount
-						- 1
-						- (invertedSelection - (invertedSelection % numColumns));
+				motionRowEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numColumns));
 				motionRowStart = Math.max(0, motionRowEnd - numColumns + 1);
 			}
 
-			final View temp = makeRow(mStackFromBottom ? motionRowEnd
-					: motionRowStart, top, true);
+			final View temp = makeRow(mStackFromBottom ? motionRowEnd : motionRowStart, top, true);
 
 			// Possibly changed again in fillUp if we add rows above this one.
 			mFirstPosition = motionRowStart;
@@ -1227,22 +1119,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			View below;
 
 			if (!mStackFromBottom) {
-				above = fillUp(motionRowStart - numColumns,
-						referenceView.getTop() - verticalSpacing);
+				above = fillUp(motionRowStart - numColumns, referenceView.getTop() - verticalSpacing);
 				adjustViewsUpOrDown();
-				below = fillDown(motionRowStart + numColumns,
-						referenceView.getBottom() + verticalSpacing);
+				below = fillDown(motionRowStart + numColumns, referenceView.getBottom() + verticalSpacing);
 				// Check if we have dragged the bottom of the grid too high
 				final int childCount = getChildCount();
 				if (childCount > 0) {
 					correctTooHigh(numColumns, verticalSpacing, childCount);
 				}
 			} else {
-				below = fillDown(motionRowEnd + numColumns,
-						referenceView.getBottom() + verticalSpacing);
+				below = fillDown(motionRowEnd + numColumns, referenceView.getBottom() + verticalSpacing);
 				adjustViewsUpOrDown();
-				above = fillUp(motionRowStart - 1, referenceView.getTop()
-						- verticalSpacing);
+				above = fillUp(motionRowStart - 1, referenceView.getTop() - verticalSpacing);
 				// Check if we have dragged the bottom of the grid too high
 				final int childCount = getChildCount();
 				if (childCount > 0) {
@@ -1259,12 +1147,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void correctTooHigh(int numColumns, int verticalSpacing,
-				int childCount) {
+		private void correctTooHigh (int numColumns, int verticalSpacing, int childCount) {
 			if (DEBUG)
-				Log.i(TAG, "correctTooLeft() numColumns: " + numColumns
-						+ " verticalSpacing: " + verticalSpacing
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "correctTooLeft() numColumns: " + numColumns + " verticalSpacing: " + verticalSpacing + " mFirstPosition: " + mFirstPosition);
 			// First see if the last item is visible
 			final int lastPosition = mFirstPosition + childCount - 1;
 			if (lastPosition == mItemCount - 1 && childCount > 0) {
@@ -1288,12 +1173,10 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				// rows above the
 				// first row or the first row is scrolled off the top of the
 				// drawable area
-				if (bottomOffset > 0
-						&& (mFirstPosition > 0 || firstTop < mListPadding.top)) {
+				if (bottomOffset > 0 && (mFirstPosition > 0 || firstTop < mListPadding.top)) {
 					if (mFirstPosition == 0) {
 						// Don't pull the top too far down
-						bottomOffset = Math.min(bottomOffset, mListPadding.top
-								- firstTop);
+						bottomOffset = Math.min(bottomOffset, mListPadding.top - firstTop);
 					}
 
 					// Move everything down
@@ -1302,9 +1185,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 						// Fill the gap that was opened above mFirstPosition
 						// with more rows, if
 						// possible
-						fillUp(mFirstPosition
-								- (mStackFromBottom ? 1 : numColumns),
-								firstChild.getTop() - verticalSpacing);
+						fillUp(mFirstPosition - (mStackFromBottom ? 1 : numColumns), firstChild.getTop() - verticalSpacing);
 						// Close up the remaining gap
 						adjustViewsUpOrDown();
 					}
@@ -1312,12 +1193,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void correctTooLow(int numColumns, int verticalSpacing,
-				int childCount) {
+		private void correctTooLow (int numColumns, int verticalSpacing, int childCount) {
 			if (DEBUG)
-				Log.i(TAG, "correctTooLow() numColumns: " + numColumns
-						+ " verticalSpacing: " + verticalSpacing
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "correctTooLow() numColumns: " + numColumns + " verticalSpacing: " + verticalSpacing + " mFirstPosition: " + mFirstPosition);
 			if (mFirstPosition == 0 && childCount > 0) {
 				// Get the first child ...
 				final View firstChild = getChildAt(0);
@@ -1343,8 +1221,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				// rows below the
 				// last row or the last row is scrolled off the bottom of the
 				// drawable area
-				if (topOffset > 0
-						&& (lastPosition < mItemCount - 1 || lastBottom > end)) {
+				if (topOffset > 0 && (lastPosition < mItemCount - 1 || lastBottom > end)) {
 					if (lastPosition == mItemCount - 1) {
 						// Don't pull the bottom too far up
 						topOffset = Math.min(topOffset, lastBottom - end);
@@ -1356,9 +1233,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 						// Fill the gap that was opened below the last position
 						// with more rows, if
 						// possible
-						fillDown(lastPosition
-								+ (!mStackFromBottom ? 1 : numColumns),
-								lastChild.getBottom() + verticalSpacing);
+						fillDown(lastPosition + (!mStackFromBottom ? 1 : numColumns), lastChild.getBottom() + verticalSpacing);
 						// Close up the remaining gap
 						adjustViewsUpOrDown();
 					}
@@ -1371,21 +1246,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * location. The selection may be moved so that it does not intersect
 		 * the faded edges. The grid is then filled upwards and downwards from
 		 * there.
-		 * 
-		 * @param selectedTop
-		 *            Where the selected item should be
-		 * @param childrenTop
-		 *            Where to start drawing children
-		 * @param childrenBottom
-		 *            Last pixel where children can be drawn
+		 *
+		 * @param selectedTop    Where the selected item should be
+		 * @param childrenTop    Where to start drawing children
+		 * @param childrenBottom Last pixel where children can be drawn
 		 * @return The view that currently has selection
 		 */
-		private View fillFromSelection(int selectedTop, int childrenTop,
-				int childrenBottom) {
+		private View fillFromSelection (int selectedTop, int childrenTop, int childrenBottom) {
 			if (DEBUG)
-				Log.i(TAG, "fillFromSelection() selectedTop: " + selectedTop
-						+ " childrenTop: " + childrenTop + " childrenBottom: "
-						+ childrenBottom + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillFromSelection() selectedTop: " + selectedTop + " childrenTop: " + childrenTop + " childrenBottom: " + childrenBottom + " mFirstPosition: " + mFirstPosition);
 			final int fadingEdgeLength = getVerticalFadingEdgeLength();
 			final int selectedPosition = mSelectedPosition;
 			final int numColumns = mNumColumns;
@@ -1399,40 +1268,30 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			} else {
 				int invertedSelection = mItemCount - 1 - selectedPosition;
 
-				rowEnd = mItemCount
-						- 1
-						- (invertedSelection - (invertedSelection % numColumns));
+				rowEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numColumns));
 				rowStart = Math.max(0, rowEnd - numColumns + 1);
 			}
 
 			View sel;
 			View referenceView;
 
-			int topSelectionPixel = getTopSelectionPixel(childrenTop,
-					fadingEdgeLength, rowStart);
-			int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom,
-					fadingEdgeLength, numColumns, rowStart);
+			int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
+			int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, rowStart);
 
-			sel = makeRow(mStackFromBottom ? rowEnd : rowStart, selectedTop,
-					true);
+			sel = makeRow(mStackFromBottom ? rowEnd : rowStart, selectedTop, true);
 			// Possibly changed again in fillUp if we add rows above this one.
 			mFirstPosition = rowStart;
 
 			referenceView = mReferenceView;
-			adjustForTopFadingEdge(referenceView, topSelectionPixel,
-					bottomSelectionPixel);
-			adjustForBottomFadingEdge(referenceView, topSelectionPixel,
-					bottomSelectionPixel);
+			adjustForTopFadingEdge(referenceView, topSelectionPixel, bottomSelectionPixel);
+			adjustForBottomFadingEdge(referenceView, topSelectionPixel, bottomSelectionPixel);
 
 			if (!mStackFromBottom) {
-				fillUp(rowStart - numColumns, referenceView.getTop()
-						- verticalSpacing);
+				fillUp(rowStart - numColumns, referenceView.getTop() - verticalSpacing);
 				adjustViewsUpOrDown();
-				fillDown(rowStart + numColumns, referenceView.getBottom()
-						+ verticalSpacing);
+				fillDown(rowStart + numColumns, referenceView.getBottom() + verticalSpacing);
 			} else {
-				fillDown(rowEnd + numColumns, referenceView.getBottom()
-						+ verticalSpacing);
+				fillDown(rowEnd + numColumns, referenceView.getBottom() + verticalSpacing);
 				adjustViewsUpOrDown();
 				fillUp(rowStart - 1, referenceView.getTop() - verticalSpacing);
 			}
@@ -1442,19 +1301,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Calculate the bottom-most pixel we can draw the selection into
-		 * 
-		 * @param childrenBottom
-		 *            Bottom pixel were children can be drawn
-		 * @param fadingEdgeLength
-		 *            Length of the fading edge in pixels, if present
-		 * @param numColumns
-		 *            Number of columns in the grid
-		 * @param rowStart
-		 *            The start of the row that will contain the selection
+		 *
+		 * @param childrenBottom   Bottom pixel were children can be drawn
+		 * @param fadingEdgeLength Length of the fading edge in pixels, if present
+		 * @param numColumns       Number of columns in the grid
+		 * @param rowStart         The start of the row that will contain the selection
 		 * @return The bottom-most pixel we can draw the selection into
 		 */
-		private int getBottomSelectionPixel(int childrenBottom,
-				int fadingEdgeLength, int numColumns, int rowStart) {
+		private int getBottomSelectionPixel (int childrenBottom, int fadingEdgeLength, int numColumns, int rowStart) {
 			// Last pixel we can draw the selection into
 			int bottomSelectionPixel = childrenBottom;
 			if (rowStart + numColumns - 1 < mItemCount - 1) {
@@ -1465,17 +1319,13 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Calculate the top-most pixel we can draw the selection into
-		 * 
-		 * @param childrenTop
-		 *            Top pixel were children can be drawn
-		 * @param fadingEdgeLength
-		 *            Length of the fading edge in pixels, if present
-		 * @param rowStart
-		 *            The start of the row that will contain the selection
+		 *
+		 * @param childrenTop      Top pixel were children can be drawn
+		 * @param fadingEdgeLength Length of the fading edge in pixels, if present
+		 * @param rowStart         The start of the row that will contain the selection
 		 * @return The top-most pixel we can draw the selection into
 		 */
-		private int getTopSelectionPixel(int childrenTop, int fadingEdgeLength,
-				int rowStart) {
+		private int getTopSelectionPixel (int childrenTop, int fadingEdgeLength, int rowStart) {
 			// first pixel we can draw the selection into
 			int topSelectionPixel = childrenTop;
 			if (rowStart > 0) {
@@ -1487,29 +1337,23 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Move all views upwards so the selected row does not interesect the
 		 * bottom fading edge (if necessary).
-		 * 
-		 * @param childInSelectedRow
-		 *            A child in the row that contains the selection
-		 * @param topSelectionPixel
-		 *            The topmost pixel we can draw the selection into
-		 * @param bottomSelectionPixel
-		 *            The bottommost pixel we can draw the selection into
+		 *
+		 * @param childInSelectedRow   A child in the row that contains the selection
+		 * @param topSelectionPixel    The topmost pixel we can draw the selection into
+		 * @param bottomSelectionPixel The bottommost pixel we can draw the selection into
 		 */
-		private void adjustForBottomFadingEdge(View childInSelectedRow,
-				int topSelectionPixel, int bottomSelectionPixel) {
+		private void adjustForBottomFadingEdge (View childInSelectedRow, int topSelectionPixel, int bottomSelectionPixel) {
 			// Some of the newly selected item extends below the bottom of the
 			// list
 			if (childInSelectedRow.getBottom() > bottomSelectionPixel) {
 
 				// Find space available above the selection into which we can
 				// scroll upwards
-				int spaceAbove = childInSelectedRow.getTop()
-						- topSelectionPixel;
+				int spaceAbove = childInSelectedRow.getTop() - topSelectionPixel;
 
 				// Find space required to bring the bottom of the selected item
 				// fully into view
-				int spaceBelow = childInSelectedRow.getBottom()
-						- bottomSelectionPixel;
+				int spaceBelow = childInSelectedRow.getBottom() - bottomSelectionPixel;
 				int offset = Math.min(spaceAbove, spaceBelow);
 
 				// Now offset the selected item to get it into view
@@ -1520,27 +1364,21 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Move all views upwards so the selected row does not interesect the
 		 * top fading edge (if necessary).
-		 * 
-		 * @param childInSelectedRow
-		 *            A child in the row that contains the selection
-		 * @param topSelectionPixel
-		 *            The topmost pixel we can draw the selection into
-		 * @param bottomSelectionPixel
-		 *            The bottommost pixel we can draw the selection into
+		 *
+		 * @param childInSelectedRow   A child in the row that contains the selection
+		 * @param topSelectionPixel    The topmost pixel we can draw the selection into
+		 * @param bottomSelectionPixel The bottommost pixel we can draw the selection into
 		 */
-		private void adjustForTopFadingEdge(View childInSelectedRow,
-				int topSelectionPixel, int bottomSelectionPixel) {
+		private void adjustForTopFadingEdge (View childInSelectedRow, int topSelectionPixel, int bottomSelectionPixel) {
 			// Some of the newly selected item extends above the top of the list
 			if (childInSelectedRow.getTop() < topSelectionPixel) {
 				// Find space required to bring the top of the selected item
 				// fully into view
-				int spaceAbove = topSelectionPixel
-						- childInSelectedRow.getTop();
+				int spaceAbove = topSelectionPixel - childInSelectedRow.getTop();
 
 				// Find space available below the selection into which we can
 				// scroll downwards
-				int spaceBelow = bottomSelectionPixel
-						- childInSelectedRow.getBottom();
+				int spaceBelow = bottomSelectionPixel - childInSelectedRow.getBottom();
 				int offset = Math.min(spaceAbove, spaceBelow);
 
 				// Now offset the selected item to get it into view
@@ -1548,7 +1386,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void determineColumns(int availableSpace) {
+		private void determineColumns (int availableSpace) {
 			final int requestedHorizontalSpacing = mRequestedHorizontalSpacing;
 			final int stretchMode = mStretchMode;
 			final int requestedColumnWidth = mRequestedColumnWidth;
@@ -1557,8 +1395,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			if (mRequestedNumColumns == AUTO_FIT) {
 				if (requestedColumnWidth > 0) {
 					// Client told us to pick the number of columns
-					mNumColumns = (availableSpace + requestedHorizontalSpacing)
-							/ (requestedColumnWidth + requestedHorizontalSpacing);
+					mNumColumns = (availableSpace + requestedHorizontalSpacing) / (requestedColumnWidth + requestedHorizontalSpacing);
 				} else {
 					// Just make up a number if we don't have enough info
 					mNumColumns = 2;
@@ -1573,57 +1410,46 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 
 			switch (stretchMode) {
-			case NO_STRETCH:
-				// Nobody stretches
-				mColumnWidth = requestedColumnWidth;
-				mHorizontalSpacing = requestedHorizontalSpacing;
-				break;
-
-			default:
-				int spaceLeftOver = 0;
-				switch (stretchMode) {
-				case STRETCH_COLUMN_WIDTH:
-					// Stretch the columns
-					spaceLeftOver = availableSpace
-							- (mNumColumns * requestedColumnWidth)
-							- ((mNumColumns - 1) * requestedHorizontalSpacing);
-					mColumnWidth = requestedColumnWidth + spaceLeftOver
-							/ mNumColumns;
+				case NO_STRETCH:
+					// Nobody stretches
+					mColumnWidth = requestedColumnWidth;
 					mHorizontalSpacing = requestedHorizontalSpacing;
 					break;
 
-				case STRETCH_SPACING:
-					// Stretch the spacing between columns
-					spaceLeftOver = availableSpace
-							- (mNumColumns * requestedColumnWidth)
-							- ((mNumColumns - 1) * requestedHorizontalSpacing);
-					mColumnWidth = requestedColumnWidth;
-					if (mNumColumns > 1) {
-						mHorizontalSpacing = requestedHorizontalSpacing
-								+ spaceLeftOver / (mNumColumns - 1);
-					} else {
-						mHorizontalSpacing = requestedHorizontalSpacing
-								+ spaceLeftOver;
-					}
-					break;
+				default:
+					int spaceLeftOver = 0;
+					switch (stretchMode) {
+						case STRETCH_COLUMN_WIDTH:
+							// Stretch the columns
+							spaceLeftOver = availableSpace - (mNumColumns * requestedColumnWidth) - ((mNumColumns - 1) * requestedHorizontalSpacing);
+							mColumnWidth = requestedColumnWidth + spaceLeftOver / mNumColumns;
+							mHorizontalSpacing = requestedHorizontalSpacing;
+							break;
 
-				case STRETCH_SPACING_UNIFORM:
-					// Stretch the spacing between columns
-					spaceLeftOver = availableSpace
-							- (mNumColumns * requestedColumnWidth)
-							- ((mNumColumns + 1) * requestedHorizontalSpacing);
-					mColumnWidth = requestedColumnWidth;
-					if (mNumColumns > 1) {
-						mHorizontalSpacing = requestedHorizontalSpacing
-								+ spaceLeftOver / (mNumColumns + 1);
-					} else {
-						mHorizontalSpacing = requestedHorizontalSpacing
-								+ spaceLeftOver;
-					}
-					break;
-				}
+						case STRETCH_SPACING:
+							// Stretch the spacing between columns
+							spaceLeftOver = availableSpace - (mNumColumns * requestedColumnWidth) - ((mNumColumns - 1) * requestedHorizontalSpacing);
+							mColumnWidth = requestedColumnWidth;
+							if (mNumColumns > 1) {
+								mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver / (mNumColumns - 1);
+							} else {
+								mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
+							}
+							break;
 
-				break;
+						case STRETCH_SPACING_UNIFORM:
+							// Stretch the spacing between columns
+							spaceLeftOver = availableSpace - (mNumColumns * requestedColumnWidth) - ((mNumColumns + 1) * requestedHorizontalSpacing);
+							mColumnWidth = requestedColumnWidth;
+							if (mNumColumns > 1) {
+								mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver / (mNumColumns + 1);
+							} else {
+								mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
+							}
+							break;
+					}
+
+					break;
 			}
 		}
 
@@ -1634,21 +1460,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * moving. The selection will then be pinned to the visible part of the
 		 * screen, excluding the edges that are faded. The grid is then filled
 		 * upwards and downwards from there.
-		 * 
-		 * @param delta
-		 *            Which way we are moving
-		 * @param childrenTop
-		 *            Where to start drawing children
-		 * @param childrenBottom
-		 *            Last pixel where children can be drawn
+		 *
+		 * @param delta          Which way we are moving
+		 * @param childrenTop    Where to start drawing children
+		 * @param childrenBottom Last pixel where children can be drawn
 		 * @return The view that currently has selection
 		 */
-		private View moveSelection(int delta, int childrenTop,
-				int childrenBottom) {
+		private View moveSelection (int delta, int childrenTop, int childrenBottom) {
 			if (DEBUG)
-				Log.i(TAG, "moveSelection() delta: " + delta + " childrenTop: "
-						+ childrenTop + " childrenBottom: " + childrenBottom
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "moveSelection() delta: " + delta + " childrenTop: " + childrenTop + " childrenBottom: " + childrenBottom + " mFirstPosition: " + mFirstPosition);
 			final int fadingEdgeLength = getVerticalFadingEdgeLength();
 			final int selectedPosition = mSelectedPosition;
 			final int numColumns = mNumColumns;
@@ -1659,31 +1479,24 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			int rowEnd = -1;
 
 			if (!mStackFromBottom) {
-				oldRowStart = (selectedPosition - delta)
-						- ((selectedPosition - delta) % numColumns);
+				oldRowStart = (selectedPosition - delta) - ((selectedPosition - delta) % numColumns);
 
 				rowStart = selectedPosition - (selectedPosition % numColumns);
 			} else {
 				int invertedSelection = mItemCount - 1 - selectedPosition;
 
-				rowEnd = mItemCount
-						- 1
-						- (invertedSelection - (invertedSelection % numColumns));
+				rowEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numColumns));
 				rowStart = Math.max(0, rowEnd - numColumns + 1);
 
 				invertedSelection = mItemCount - 1 - (selectedPosition - delta);
-				oldRowStart = mItemCount
-						- 1
-						- (invertedSelection - (invertedSelection % numColumns));
+				oldRowStart = mItemCount - 1 - (invertedSelection - (invertedSelection % numColumns));
 				oldRowStart = Math.max(0, oldRowStart - numColumns + 1);
 			}
 
 			final int rowDelta = rowStart - oldRowStart;
 
-			final int topSelectionPixel = getTopSelectionPixel(childrenTop,
-					fadingEdgeLength, rowStart);
-			final int bottomSelectionPixel = getBottomSelectionPixel(
-					childrenBottom, fadingEdgeLength, numColumns, rowStart);
+			final int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
+			final int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, rowStart);
 
 			// Possibly changed again in fillUp if we add rows above this one.
 			mFirstPosition = rowStart;
@@ -1696,49 +1509,38 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				 * Case 1: Scrolling down.
 				 */
 
-				final int oldBottom = mReferenceViewInSelectedRow == null ? 0
-						: mReferenceViewInSelectedRow.getBottom();
+				final int oldBottom = mReferenceViewInSelectedRow == null ? 0 : mReferenceViewInSelectedRow.getBottom();
 
-				sel = makeRow(mStackFromBottom ? rowEnd : rowStart, oldBottom
-						+ verticalSpacing, true);
+				sel = makeRow(mStackFromBottom ? rowEnd : rowStart, oldBottom + verticalSpacing, true);
 				referenceView = mReferenceView;
 
-				adjustForBottomFadingEdge(referenceView, topSelectionPixel,
-						bottomSelectionPixel);
+				adjustForBottomFadingEdge(referenceView, topSelectionPixel, bottomSelectionPixel);
 			} else if (rowDelta < 0) {
 				/*
 				 * Case 2: Scrolling up.
 				 */
-				final int oldTop = mReferenceViewInSelectedRow == null ? 0
-						: mReferenceViewInSelectedRow.getTop();
+				final int oldTop = mReferenceViewInSelectedRow == null ? 0 : mReferenceViewInSelectedRow.getTop();
 
-				sel = makeRow(mStackFromBottom ? rowEnd : rowStart, oldTop
-						- verticalSpacing, false);
+				sel = makeRow(mStackFromBottom ? rowEnd : rowStart, oldTop - verticalSpacing, false);
 				referenceView = mReferenceView;
 
-				adjustForTopFadingEdge(referenceView, topSelectionPixel,
-						bottomSelectionPixel);
+				adjustForTopFadingEdge(referenceView, topSelectionPixel, bottomSelectionPixel);
 			} else {
 				/*
 				 * Keep selection where it was
 				 */
-				final int oldTop = mReferenceViewInSelectedRow == null ? 0
-						: mReferenceViewInSelectedRow.getTop();
+				final int oldTop = mReferenceViewInSelectedRow == null ? 0 : mReferenceViewInSelectedRow.getTop();
 
-				sel = makeRow(mStackFromBottom ? rowEnd : rowStart, oldTop,
-						true);
+				sel = makeRow(mStackFromBottom ? rowEnd : rowStart, oldTop, true);
 				referenceView = mReferenceView;
 			}
 
 			if (!mStackFromBottom) {
-				fillUp(rowStart - numColumns, referenceView.getTop()
-						- verticalSpacing);
+				fillUp(rowStart - numColumns, referenceView.getTop() - verticalSpacing);
 				adjustViewsUpOrDown();
-				fillDown(rowStart + numColumns, referenceView.getBottom()
-						+ verticalSpacing);
+				fillDown(rowStart + numColumns, referenceView.getBottom() + verticalSpacing);
 			} else {
-				fillDown(rowEnd + numColumns, referenceView.getBottom()
-						+ verticalSpacing);
+				fillDown(rowEnd + numColumns, referenceView.getBottom() + verticalSpacing);
 				adjustViewsUpOrDown();
 				fillUp(rowStart - 1, referenceView.getTop() - verticalSpacing);
 			}
@@ -1747,7 +1549,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		}
 
 		@Override
-		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec) {
 			int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 			int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 			int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -1756,8 +1558,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				Log.i(TAG, "vertical onMeasure heightMode: " + heightMode);
 			if (widthMode == MeasureSpec.UNSPECIFIED) {
 				if (mColumnWidth > 0) {
-					widthSize = mColumnWidth + mListPadding.left
-							+ mListPadding.right;
+					widthSize = mColumnWidth + mListPadding.left + mListPadding.right;
 				} else {
 					widthSize = mListPadding.left + mListPadding.right;
 				}
@@ -1774,23 +1575,16 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			if (count > 0) {
 				final View child = obtainView(0, mIsScrap);
 
-				TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child
-						.getLayoutParams();
+				TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child.getLayoutParams();
 				if (p == null) {
-					p = new TwoWayAbsListView.LayoutParams(
-							ViewGroup.LayoutParams.FILL_PARENT,
-							ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+					p = new TwoWayAbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
 					child.setLayoutParams(p);
 				}
 				p.viewType = mAdapter.getItemViewType(0);
 				p.forceAdd = true;
 
-				int childHeightSpec = getChildMeasureSpec(
-						MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-						0, p.height);
-				int childWidthSpec = getChildMeasureSpec(
-						MeasureSpec.makeMeasureSpec(mColumnWidth,
-								MeasureSpec.EXACTLY), 0, p.width);
+				int childHeightSpec = getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), 0, p.height);
+				int childWidthSpec = getChildMeasureSpec(MeasureSpec.makeMeasureSpec(mColumnWidth, MeasureSpec.EXACTLY), 0, p.width);
 				child.measure(childWidthSpec, childHeightSpec);
 
 				childHeight = child.getMeasuredHeight();
@@ -1801,8 +1595,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 
 			if (heightMode == MeasureSpec.UNSPECIFIED) {
-				heightSize = mListPadding.top + mListPadding.bottom
-						+ childHeight + getVerticalFadingEdgeLength() * 2;
+				heightSize = mListPadding.top + mListPadding.bottom + childHeight + getVerticalFadingEdgeLength() * 2;
 			}
 
 			if (heightMode == MeasureSpec.AT_MOST) {
@@ -1825,15 +1618,13 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			setMeasuredDimension(widthSize, heightSize);
 			mWidthMeasureSpec = widthMeasureSpec;
 			if (DEBUG)
-				Log.i(TAG, "Vertical onMeasure widthSize: " + widthSize
-						+ " heightSize: " + heightSize);
+				Log.i(TAG, "Vertical onMeasure widthSize: " + widthSize + " heightSize: " + heightSize);
 		}
 
 		@Override
-		protected void layoutChildren() {
+		protected void layoutChildren () {
 			final int childrenTop = mListPadding.top;
-			final int childrenBottom = getBottom() - getTop()
-					- mListPadding.bottom;
+			final int childrenBottom = getBottom() - getTop() - mListPadding.bottom;
 
 			int childCount = getChildCount();
 			int index;
@@ -1846,31 +1637,31 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 			// Remember stuff we will need down below
 			switch (mLayoutMode) {
-			case LAYOUT_SET_SELECTION:
-				index = mNextSelectedPosition - mFirstPosition;
-				if (index >= 0 && index < childCount) {
-					newSel = getChildAt(index);
-				}
-				break;
-			case LAYOUT_FORCE_TOP:
-			case LAYOUT_FORCE_BOTTOM:
-			case LAYOUT_SPECIFIC:
-			case LAYOUT_SYNC:
-				break;
-			case LAYOUT_MOVE_SELECTION:
-				if (mNextSelectedPosition >= 0) {
-					delta = mNextSelectedPosition - mSelectedPosition;
-				}
-				break;
-			default:
-				// Remember the previously selected view
-				index = mSelectedPosition - mFirstPosition;
-				if (index >= 0 && index < childCount) {
-					oldSel = getChildAt(index);
-				}
+				case LAYOUT_SET_SELECTION:
+					index = mNextSelectedPosition - mFirstPosition;
+					if (index >= 0 && index < childCount) {
+						newSel = getChildAt(index);
+					}
+					break;
+				case LAYOUT_FORCE_TOP:
+				case LAYOUT_FORCE_BOTTOM:
+				case LAYOUT_SPECIFIC:
+				case LAYOUT_SYNC:
+					break;
+				case LAYOUT_MOVE_SELECTION:
+					if (mNextSelectedPosition >= 0) {
+						delta = mNextSelectedPosition - mSelectedPosition;
+					}
+					break;
+				default:
+					// Remember the previously selected view
+					index = mSelectedPosition - mFirstPosition;
+					if (index >= 0 && index < childCount) {
+						oldSel = getChildAt(index);
+					}
 
-				// Remember the previous first child
-				oldFirst = getChildAt(0);
+					// Remember the previous first child
+					oldFirst = getChildAt(0);
 			}
 
 			boolean dataChanged = mDataChanged;
@@ -1906,60 +1697,52 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			detachAllViewsFromParent();
 
 			switch (mLayoutMode) {
-			case LAYOUT_SET_SELECTION:
-				if (newSel != null) {
-					sel = fillFromSelection(newSel.getTop(), childrenTop,
-							childrenBottom);
-				} else {
-					sel = fillSelection(childrenTop, childrenBottom);
-				}
-				break;
-			case LAYOUT_FORCE_TOP:
-				mFirstPosition = 0;
-				sel = fillFromTop(childrenTop);
-				adjustViewsUpOrDown();
-				break;
-			case LAYOUT_FORCE_BOTTOM:
-				sel = fillUp(mItemCount - 1, childrenBottom);
-				adjustViewsUpOrDown();
-				break;
-			case LAYOUT_SPECIFIC:
-				sel = fillSpecific(mSelectedPosition, mSpecificTop);
-				break;
-			case LAYOUT_SYNC:
-				sel = fillSpecific(mSyncPosition, mSpecificTop);
-				break;
-			case LAYOUT_MOVE_SELECTION:
-				// Move the selection relative to its old position
-				sel = moveSelection(delta, childrenTop, childrenBottom);
-				break;
-			default:
-				if (childCount == 0) {
-					if (!mStackFromBottom) {
-						setSelectedPositionInt(mAdapter == null
-								|| isInTouchMode() ? INVALID_POSITION : 0);
-						sel = fillFromTop(childrenTop);
+				case LAYOUT_SET_SELECTION:
+					if (newSel != null) {
+						sel = fillFromSelection(newSel.getTop(), childrenTop, childrenBottom);
 					} else {
-						final int last = mItemCount - 1;
-						setSelectedPositionInt(mAdapter == null
-								|| isInTouchMode() ? INVALID_POSITION : last);
-						sel = fillFromBottom(last, childrenBottom);
+						sel = fillSelection(childrenTop, childrenBottom);
 					}
-				} else {
-					if (mSelectedPosition >= 0
-							&& mSelectedPosition < mItemCount) {
-						sel = fillSpecific(mSelectedPosition,
-								oldSel == null ? childrenTop : oldSel.getTop());
-					} else if (mFirstPosition < mItemCount) {
-						sel = fillSpecific(
-								mFirstPosition,
-								oldFirst == null ? childrenTop : oldFirst
-										.getTop());
+					break;
+				case LAYOUT_FORCE_TOP:
+					mFirstPosition = 0;
+					sel = fillFromTop(childrenTop);
+					adjustViewsUpOrDown();
+					break;
+				case LAYOUT_FORCE_BOTTOM:
+					sel = fillUp(mItemCount - 1, childrenBottom);
+					adjustViewsUpOrDown();
+					break;
+				case LAYOUT_SPECIFIC:
+					sel = fillSpecific(mSelectedPosition, mSpecificTop);
+					break;
+				case LAYOUT_SYNC:
+					sel = fillSpecific(mSyncPosition, mSpecificTop);
+					break;
+				case LAYOUT_MOVE_SELECTION:
+					// Move the selection relative to its old position
+					sel = moveSelection(delta, childrenTop, childrenBottom);
+					break;
+				default:
+					if (childCount == 0) {
+						if (!mStackFromBottom) {
+							setSelectedPositionInt(mAdapter == null || isInTouchMode() ? INVALID_POSITION : 0);
+							sel = fillFromTop(childrenTop);
+						} else {
+							final int last = mItemCount - 1;
+							setSelectedPositionInt(mAdapter == null || isInTouchMode() ? INVALID_POSITION : last);
+							sel = fillFromBottom(last, childrenBottom);
+						}
 					} else {
-						sel = fillSpecific(0, childrenTop);
+						if (mSelectedPosition >= 0 && mSelectedPosition < mItemCount) {
+							sel = fillSpecific(mSelectedPosition, oldSel == null ? childrenTop : oldSel.getTop());
+						} else if (mFirstPosition < mItemCount) {
+							sel = fillSpecific(mFirstPosition, oldFirst == null ? childrenTop : oldFirst.getTop());
+						} else {
+							sel = fillSpecific(0, childrenTop);
+						}
 					}
-				}
-				break;
+					break;
 			}
 
 			// Flush any cached views that did not get reused above
@@ -1968,8 +1751,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			if (sel != null) {
 				positionSelector(sel);
 				mSelectedTop = sel.getTop();
-			} else if (mTouchMode > TOUCH_MODE_DOWN
-					&& mTouchMode < TOUCH_MODE_SCROLL) {
+			} else if (mTouchMode > TOUCH_MODE_DOWN && mTouchMode < TOUCH_MODE_SCROLL) {
 				View child = getChildAt(mMotionPosition - mFirstPosition);
 				if (child != null)
 					positionSelector(child);
@@ -1997,7 +1779,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * Make sure views are touching the top or bottom edge, as appropriate
 		 * for our gravity
 		 */
-		private void adjustViewsUpOrDown() {
+		private void adjustViewsUpOrDown () {
 			final int childCount = getChildCount();
 
 			if (childCount > 0) {
@@ -2025,8 +1807,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 					// we are too high, slide all views down to align with
 					// bottom
 					child = getChildAt(childCount - 1);
-					delta = child.getBottom()
-							- (getHeight() - mListPadding.bottom);
+					delta = child.getBottom() - (getHeight() - mListPadding.bottom);
 
 					if (mFirstPosition + childCount < mItemCount) {
 						// It's OK to have some space below the last item if it
@@ -2051,50 +1832,34 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Add a view as a child and make sure it is measured (if necessary) and
 		 * positioned properly.
-		 * 
-		 * @param child
-		 *            The view to add
-		 * @param position
-		 *            The position of the view
-		 * @param y
-		 *            The y position relative to which this view will be
-		 *            positioned
-		 * @param flow
-		 *            if true, align top edge to y. If false, align bottom edge
-		 *            to y.
-		 * @param childrenLeft
-		 *            Left edge where children should be positioned
-		 * @param selected
-		 *            Is this position selected?
-		 * @param recycled
-		 *            Has this view been pulled from the recycle bin? If so it
-		 *            does not need to be remeasured.
-		 * @param where
-		 *            Where to add the item in the list
-		 * 
+		 *
+		 * @param child        The view to add
+		 * @param position     The position of the view
+		 * @param y            The y position relative to which this view will be
+		 *                     positioned
+		 * @param flow         if true, align top edge to y. If false, align bottom edge
+		 *                     to y.
+		 * @param childrenLeft Left edge where children should be positioned
+		 * @param selected     Is this position selected?
+		 * @param recycled     Has this view been pulled from the recycle bin? If so it
+		 *                     does not need to be remeasured.
+		 * @param where        Where to add the item in the list
 		 */
-		private void setupChild(View child, int position, int y, boolean flow,
-				int childrenLeft, boolean selected, boolean recycled, int where) {
+		private void setupChild (View child, int position, int y, boolean flow, int childrenLeft, boolean selected, boolean recycled, int where) {
 			boolean isSelected = selected && shouldShowSelector();
-			final boolean updateChildSelected = isSelected != child
-					.isSelected();
+			final boolean updateChildSelected = isSelected != child.isSelected();
 			final int mode = mTouchMode;
-			final boolean isPressed = mode > TOUCH_MODE_DOWN
-					&& mode < TOUCH_MODE_SCROLL && mMotionPosition == position;
+			final boolean isPressed = mode > TOUCH_MODE_DOWN && mode < TOUCH_MODE_SCROLL && mMotionPosition == position;
 			final boolean updateChildPressed = isPressed != child.isPressed();
 
-			boolean needToMeasure = !recycled || updateChildSelected
-					|| child.isLayoutRequested();
+			boolean needToMeasure = !recycled || updateChildSelected || child.isLayoutRequested();
 
 			// Respect layout params that are already in the view. Otherwise
 			// make
 			// some up...
-			TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child
-					.getLayoutParams();
+			TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child.getLayoutParams();
 			if (p == null) {
-				p = new TwoWayAbsListView.LayoutParams(
-						ViewGroup.LayoutParams.FILL_PARENT,
-						ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+				p = new TwoWayAbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
 			}
 			p.viewType = mAdapter.getItemViewType(position);
 
@@ -2117,13 +1882,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 
 			if (needToMeasure) {
-				int childHeightSpec = ViewGroup
-						.getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0,
-								MeasureSpec.UNSPECIFIED), 0, p.height);
+				int childHeightSpec = ViewGroup.getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), 0, p.height);
 
-				int childWidthSpec = ViewGroup.getChildMeasureSpec(MeasureSpec
-						.makeMeasureSpec(mColumnWidth, MeasureSpec.EXACTLY), 0,
-						p.width);
+				int childWidthSpec = ViewGroup.getChildMeasureSpec(MeasureSpec.makeMeasureSpec(mColumnWidth, MeasureSpec.EXACTLY), 0, p.width);
 				child.measure(childWidthSpec, childHeightSpec);
 			} else {
 				cleanupLayoutState(child);
@@ -2136,18 +1897,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			final int childTop = flow ? y : y - h;
 
 			switch (mGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-			case Gravity.LEFT:
-				childLeft = childrenLeft;
-				break;
-			case Gravity.CENTER_HORIZONTAL:
-				childLeft = childrenLeft + ((mColumnWidth - w) / 2);
-				break;
-			case Gravity.RIGHT:
-				childLeft = childrenLeft + mColumnWidth - w;
-				break;
-			default:
-				childLeft = childrenLeft;
-				break;
+				case Gravity.LEFT:
+					childLeft = childrenLeft;
+					break;
+				case Gravity.CENTER_HORIZONTAL:
+					childLeft = childrenLeft + ((mColumnWidth - w) / 2);
+					break;
+				case Gravity.RIGHT:
+					childLeft = childrenLeft + mColumnWidth - w;
+					break;
+				default:
+					childLeft = childrenLeft;
+					break;
 			}
 
 			if (needToMeasure) {
@@ -2164,7 +1925,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void pinToTop(int childrenTop) {
+		private void pinToTop (int childrenTop) {
 			if (mFirstPosition == 0) {
 				final int top = getChildAt(0).getTop();
 				final int offset = childrenTop - top;
@@ -2174,7 +1935,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void pinToBottom(int childrenBottom) {
+		private void pinToBottom (int childrenBottom) {
 			final int count = getChildCount();
 			if (mFirstPosition + count == mItemCount) {
 				final int bottom = getChildAt(count - 1).getBottom();
@@ -2187,21 +1948,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Makes the item at the supplied position selected.
-		 * 
-		 * @param position
-		 *            the position of the new selection
+		 *
+		 * @param position the position of the new selection
 		 */
 		@Override
-		protected void setSelectionInt(int position) {
+		protected void setSelectionInt (int position) {
 			int previousSelectedPosition = mNextSelectedPosition;
 
 			setNextSelectedPositionInt(position);
 			TwoWayGridView.this.layoutChildren();
 
-			final int next = mStackFromBottom ? mItemCount - 1
-					- mNextSelectedPosition : mNextSelectedPosition;
-			final int previous = mStackFromBottom ? mItemCount - 1
-					- previousSelectedPosition : previousSelectedPosition;
+			final int next = mStackFromBottom ? mItemCount - 1 - mNextSelectedPosition : mNextSelectedPosition;
+			final int previous = mStackFromBottom ? mItemCount - 1 - previousSelectedPosition : previousSelectedPosition;
 
 			final int nextRow = next / mNumColumns;
 			final int previousRow = previous / mNumColumns;
@@ -2214,15 +1972,13 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Scrolls to the next or previous item, horizontally or vertically.
-		 * 
-		 * @param direction
-		 *            either {@link View#FOCUS_LEFT}, {@link View#FOCUS_RIGHT},
-		 *            {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}
-		 * 
+		 *
+		 * @param direction either {@link View#FOCUS_LEFT}, {@link View#FOCUS_RIGHT},
+		 *                  {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}
 		 * @return whether selection was moved
 		 */
 		@Override
-		protected boolean arrowScroll(int direction) {
+		protected boolean arrowScroll (int direction) {
 			final int selectedPosition = mSelectedPosition;
 			final int numColumns = mNumColumns;
 
@@ -2233,51 +1989,46 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 			if (!mStackFromBottom) {
 				startOfRowPos = (selectedPosition / numColumns) * numColumns;
-				endOfRowPos = Math.min(startOfRowPos + numColumns - 1,
-						mItemCount - 1);
+				endOfRowPos = Math.min(startOfRowPos + numColumns - 1, mItemCount - 1);
 			} else {
 				final int invertedSelection = mItemCount - 1 - selectedPosition;
-				endOfRowPos = mItemCount - 1 - (invertedSelection / numColumns)
-						* numColumns;
+				endOfRowPos = mItemCount - 1 - (invertedSelection / numColumns) * numColumns;
 				startOfRowPos = Math.max(0, endOfRowPos - numColumns + 1);
 			}
 
 			switch (direction) {
-			case FOCUS_UP:
-				if (startOfRowPos > 0) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.max(0, selectedPosition - numColumns));
-					moved = true;
-				}
-				break;
-			case FOCUS_DOWN:
-				if (endOfRowPos < mItemCount - 1) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.min(selectedPosition + numColumns,
-							mItemCount - 1));
-					moved = true;
-				}
-				break;
-			case FOCUS_LEFT:
-				if (selectedPosition > startOfRowPos) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.max(0, selectedPosition - 1));
-					moved = true;
-				}
-				break;
-			case FOCUS_RIGHT:
-				if (selectedPosition < endOfRowPos) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.min(selectedPosition + 1,
-							mItemCount - 1));
-					moved = true;
-				}
-				break;
+				case FOCUS_UP:
+					if (startOfRowPos > 0) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.max(0, selectedPosition - numColumns));
+						moved = true;
+					}
+					break;
+				case FOCUS_DOWN:
+					if (endOfRowPos < mItemCount - 1) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.min(selectedPosition + numColumns, mItemCount - 1));
+						moved = true;
+					}
+					break;
+				case FOCUS_LEFT:
+					if (selectedPosition > startOfRowPos) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.max(0, selectedPosition - 1));
+						moved = true;
+					}
+					break;
+				case FOCUS_RIGHT:
+					if (selectedPosition < endOfRowPos) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.min(selectedPosition + 1, mItemCount - 1));
+						moved = true;
+					}
+					break;
 			}
 
 			if (moved) {
-				playSoundEffect(SoundEffectConstants
-						.getContantForFocusDirection(direction));
+				playSoundEffect(SoundEffectConstants.getContantForFocusDirection(direction));
 				invokeOnItemScrollListener();
 			}
 
@@ -2291,16 +2042,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Is childIndex a candidate for next focus given the direction the
 		 * focus change is coming from?
-		 * 
-		 * @param childIndex
-		 *            The index to check.
-		 * @param direction
-		 *            The direction, one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT,
-		 *            FOCUS_RIGHT}
+		 *
+		 * @param childIndex The index to check.
+		 * @param direction  The direction, one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT,
+		 *                   FOCUS_RIGHT}
 		 * @return Whether childIndex is a candidate.
 		 */
 		@Override
-		protected boolean isCandidateSelection(int childIndex, int direction) {
+		protected boolean isCandidateSelection (int childIndex, int direction) {
 			final int count = getChildCount();
 			final int invertedIndex = count - 1 - childIndex;
 
@@ -2311,35 +2060,32 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				rowStart = childIndex - (childIndex % mNumColumns);
 				rowEnd = Math.max(rowStart + mNumColumns - 1, count);
 			} else {
-				rowEnd = count - 1
-						- (invertedIndex - (invertedIndex % mNumColumns));
+				rowEnd = count - 1 - (invertedIndex - (invertedIndex % mNumColumns));
 				rowStart = Math.max(0, rowEnd - mNumColumns + 1);
 			}
 
 			switch (direction) {
-			case View.FOCUS_RIGHT:
-				// coming from left, selection is only valid if it is on left
-				// edge
-				return childIndex == rowStart;
-			case View.FOCUS_DOWN:
-				// coming from top; only valid if in top row
-				return rowStart == 0;
-			case View.FOCUS_LEFT:
-				// coming from right, must be on right edge
-				return childIndex == rowEnd;
-			case View.FOCUS_UP:
-				// coming from bottom, need to be in last row
-				return rowEnd == count - 1;
-			case View.FOCUS_FORWARD:
-				// coming from top-left, need to be first in top row
-				return childIndex == rowStart && rowStart == 0;
-			case View.FOCUS_BACKWARD:
-				// coming from bottom-right, need to be last in bottom row
-				return childIndex == rowEnd && rowEnd == count - 1;
-			default:
-				throw new IllegalArgumentException("direction must be one of "
-						+ "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
-						+ "FOCUS_FORWARD, FOCUS_BACKWARD}");
+				case View.FOCUS_RIGHT:
+					// coming from left, selection is only valid if it is on left
+					// edge
+					return childIndex == rowStart;
+				case View.FOCUS_DOWN:
+					// coming from top; only valid if in top row
+					return rowStart == 0;
+				case View.FOCUS_LEFT:
+					// coming from right, must be on right edge
+					return childIndex == rowEnd;
+				case View.FOCUS_UP:
+					// coming from bottom, need to be in last row
+					return rowEnd == count - 1;
+				case View.FOCUS_FORWARD:
+					// coming from top-left, need to be first in top row
+					return childIndex == rowStart && rowStart == 0;
+				case View.FOCUS_BACKWARD:
+					// coming from bottom-right, need to be last in bottom row
+					return childIndex == rowEnd && rowEnd == count - 1;
+				default:
+					throw new IllegalArgumentException("direction must be one of " + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, " + "FOCUS_FORWARD, FOCUS_BACKWARD}");
 			}
 		}
 
@@ -2355,25 +2101,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * Obtain the view and add it to our list of children. The view can be
 		 * made fresh, converted from an unused view, or used as is if it was in
 		 * the recycle bin.
-		 * 
-		 * @param position
-		 *            Logical position in the list
-		 * @param x
-		 *            Left or Right edge of the view to add
-		 * @param flow
-		 *            if true, align left edge to x. If false, align right edge
-		 *            to x.
-		 * @param childrenTop
-		 *            Top edge where children should be positioned
-		 * @param selected
-		 *            Is this position selected?
-		 * @param where
-		 *            to add new item in the list
+		 *
+		 * @param position    Logical position in the list
+		 * @param x           Left or Right edge of the view to add
+		 * @param flow        if true, align left edge to x. If false, align right edge
+		 *                    to x.
+		 * @param childrenTop Top edge where children should be positioned
+		 * @param selected    Is this position selected?
+		 * @param where       to add new item in the list
 		 * @return View that was added
 		 */
 		@Override
-		protected View makeAndAddView(int position, int x, boolean flow,
-				int childrenTop, boolean selected, int where) {
+		protected View makeAndAddView (int position, int x, boolean flow, int childrenTop, boolean selected, int where) {
 			View child;
 
 			if (!mDataChanged) {
@@ -2382,11 +2121,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				if (child != null) {
 					// Found it -- we're using an existing child
 					// This just needs to be positioned
-					setupChild(child, position, x, flow, childrenTop, selected,
-							true, where);
+					setupChild(child, position, x, flow, childrenTop, selected, true, where);
 					if (DEBUG)
-						Log.i(TAG, "makeAndAddView() - end - position: "
-								+ position + " reused a view");
+						Log.i(TAG, "makeAndAddView() - end - position: " + position + " reused a view");
 					return child;
 				}
 			}
@@ -2396,24 +2133,21 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			child = obtainView(position, mIsScrap);
 
 			// This needs to be positioned and measured
-			setupChild(child, position, x, flow, childrenTop, selected,
-					mIsScrap[0], where);
+			setupChild(child, position, x, flow, childrenTop, selected, mIsScrap[0], where);
 			if (DEBUG)
-				Log.i(TAG, "makeAndAddView() - end - position: " + position
-						+ "did NOT reuse a view - scrap: " + mIsScrap[0]);
+				Log.i(TAG, "makeAndAddView() - end - position: " + position + "did NOT reuse a view - scrap: " + mIsScrap[0]);
 			return child;
 		}
 
 		@Override
-		protected void fillGap(boolean right) {
+		protected void fillGap (boolean right) {
 			final int numRows = mNumRows;
 			final int horizontalSpacing = mHorizontalSpacing;
 
 			final int count = getChildCount();
 
 			if (right) {
-				final int startOffset = count > 0 ? getChildAt(count - 1)
-						.getRight() + horizontalSpacing : getListPaddingLeft();
+				final int startOffset = count > 0 ? getChildAt(count - 1).getRight() + horizontalSpacing : getListPaddingLeft();
 				int position = mFirstPosition + count;
 				if (mStackFromBottom) {
 					position += numRows - 1;
@@ -2421,9 +2155,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				fillRight(position, startOffset);
 				correctTooLeft(numRows, horizontalSpacing, getChildCount());
 			} else {
-				final int startOffset = count > 0 ? getChildAt(0).getLeft()
-						- horizontalSpacing : getWidth()
-						- getListPaddingRight();
+				final int startOffset = count > 0 ? getChildAt(0).getLeft() - horizontalSpacing : getWidth() - getListPaddingRight();
 				int position = mFirstPosition;
 				if (!mStackFromBottom) {
 					position -= numRows;
@@ -2437,21 +2169,16 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Fills the list from pos right to the end of the list view.
-		 * 
-		 * @param pos
-		 *            The first position to put in the list
-		 * 
-		 * @param nextLeft
-		 *            The location where the left of the item associated with
-		 *            pos should be drawn
-		 * 
+		 *
+		 * @param pos      The first position to put in the list
+		 * @param nextLeft The location where the left of the item associated with
+		 *                 pos should be drawn
 		 * @return The view that is currently selected, if it happens to be in
 		 *         the range that we draw.
 		 */
-		private View fillRight(int pos, int nextLeft) {
+		private View fillRight (int pos, int nextLeft) {
 			if (DEBUG)
-				Log.i(TAG, "fillRight() pos: " + pos + " nextLeft: " + nextLeft
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillRight() pos: " + pos + " nextLeft: " + nextLeft + " mFirstPosition: " + mFirstPosition);
 			View selectedView = null;
 
 			final int end = (getRight() - getLeft()) - mListPadding.right;
@@ -2472,18 +2199,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			return selectedView;
 		}
 
-		private View makeColumn(int startPos, int x, boolean flow) {
+		private View makeColumn (int startPos, int x, boolean flow) {
 			if (DEBUG)
-				Log.i(TAG, "makeColumn() startPos: " + startPos + " x: " + x
-						+ " flow: " + flow + " mFirstPosition: "
-						+ mFirstPosition);
+				Log.i(TAG, "makeColumn() startPos: " + startPos + " x: " + x + " flow: " + flow + " mFirstPosition: " + mFirstPosition);
 			final int rowHeight = mRowHeight;
 			final int verticalSpacing = mVerticalSpacing;
 
 			int last;
-			int nextTop = mListPadding.top
-					+ ((mStretchMode == STRETCH_SPACING_UNIFORM) ? verticalSpacing
-							: 0);
+			int nextTop = mListPadding.top + ((mStretchMode == STRETCH_SPACING_UNIFORM) ? verticalSpacing : 0);
 
 			if (!mStackFromBottom) {
 				last = Math.min(startPos + mNumRows, mItemCount);
@@ -2492,8 +2215,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				startPos = Math.max(0, startPos - mNumRows + 1);
 
 				if (last - startPos < mNumRows) {
-					nextTop += (mNumRows - (last - startPos))
-							* (rowHeight + verticalSpacing);
+					nextTop += (mNumRows - (last - startPos)) * (rowHeight + verticalSpacing);
 				}
 			}
 
@@ -2533,20 +2255,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Fills the list from pos to the left of the list view.
-		 * 
-		 * @param pos
-		 *            The first position to put in the list
-		 * 
-		 * @param nextRight
-		 *            The location where the right of the item associated with
-		 *            pos should be drawn
-		 * 
+		 *
+		 * @param pos       The first position to put in the list
+		 * @param nextRight The location where the right of the item associated with
+		 *                  pos should be drawn
 		 * @return The view that is currently selected
 		 */
-		private View fillLeft(int pos, int nextRight) {
+		private View fillLeft (int pos, int nextRight) {
 			if (DEBUG)
-				Log.i(TAG, "fillLeft() pos: " + pos + " nextRight: "
-						+ nextRight + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillLeft() pos: " + pos + " nextRight: " + nextRight + " mFirstPosition: " + mFirstPosition);
 			View selectedView = null;
 
 			final int end = mListPadding.left;
@@ -2574,17 +2291,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Fills the list from left to right, starting with mFirstPosition
-		 * 
-		 * @param nextLeft
-		 *            The location where the left of the first item should be
-		 *            drawn
-		 * 
+		 *
+		 * @param nextLeft The location where the left of the first item should be
+		 *                 drawn
 		 * @return The view that is currently selected
 		 */
-		private View fillFromTop(int nextLeft) {
+		private View fillFromTop (int nextLeft) {
 			if (DEBUG)
-				Log.i(TAG, "fillFromTop() nextLeft: " + nextLeft
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillFromTop() nextLeft: " + nextLeft + " mFirstPosition: " + mFirstPosition);
 			mFirstPosition = Math.min(mFirstPosition, mSelectedPosition);
 			mFirstPosition = Math.min(mFirstPosition, mItemCount - 1);
 			if (mFirstPosition < 0) {
@@ -2594,26 +2308,21 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			return fillRight(mFirstPosition, nextLeft);
 		}
 
-		private View fillFromBottom(int lastPosition, int nextRight) {
+		private View fillFromBottom (int lastPosition, int nextRight) {
 			if (DEBUG)
-				Log.i(TAG, "fillFromBotom() lastPosition: " + lastPosition
-						+ " nextRight: " + nextRight + " mFirstPosition: "
-						+ mFirstPosition);
+				Log.i(TAG, "fillFromBotom() lastPosition: " + lastPosition + " nextRight: " + nextRight + " mFirstPosition: " + mFirstPosition);
 			lastPosition = Math.max(lastPosition, mSelectedPosition);
 			lastPosition = Math.min(lastPosition, mItemCount - 1);
 
 			final int invertedPosition = mItemCount - 1 - lastPosition;
-			lastPosition = mItemCount - 1
-					- (invertedPosition - (invertedPosition % mNumRows));
+			lastPosition = mItemCount - 1 - (invertedPosition - (invertedPosition % mNumRows));
 
 			return fillLeft(lastPosition, nextRight);
 		}
 
-		private View fillSelection(int childrenLeft, int childrenRight) {
+		private View fillSelection (int childrenLeft, int childrenRight) {
 			if (DEBUG)
-				Log.i(TAG, "fillSelection() childrenLeft: " + childrenLeft
-						+ " childrenRight: " + childrenRight
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillSelection() childrenLeft: " + childrenLeft + " childrenRight: " + childrenRight + " mFirstPosition: " + mFirstPosition);
 			final int selectedPosition = reconcileSelectedPosition();
 			final int numRows = mNumRows;
 			final int horizontalSpacing = mHorizontalSpacing;
@@ -2626,39 +2335,30 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			} else {
 				final int invertedSelection = mItemCount - 1 - selectedPosition;
 
-				columnEnd = mItemCount - 1
-						- (invertedSelection - (invertedSelection % numRows));
+				columnEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numRows));
 				columnStart = Math.max(0, columnEnd - numRows + 1);
 			}
 
 			final int fadingEdgeLength = getHorizontalFadingEdgeLength();
-			final int leftSelectionPixel = getLeftSelectionPixel(childrenLeft,
-					fadingEdgeLength, columnStart);
+			final int leftSelectionPixel = getLeftSelectionPixel(childrenLeft, fadingEdgeLength, columnStart);
 
-			final View sel = makeColumn(mStackFromBottom ? columnEnd
-					: columnStart, leftSelectionPixel, true);
+			final View sel = makeColumn(mStackFromBottom ? columnEnd : columnStart, leftSelectionPixel, true);
 			mFirstPosition = columnStart;
 
 			final View referenceView = mReferenceView;
 
 			if (!mStackFromBottom) {
-				fillRight(columnStart + numRows, referenceView.getRight()
-						+ horizontalSpacing);
+				fillRight(columnStart + numRows, referenceView.getRight() + horizontalSpacing);
 				pinToRight(childrenRight);
-				fillLeft(columnStart - numRows, referenceView.getLeft()
-						- horizontalSpacing);
+				fillLeft(columnStart - numRows, referenceView.getLeft() - horizontalSpacing);
 				adjustViewsLeftOrRight();
 			} else {
-				final int rightSelectionPixel = getRightSelectionPixel(
-						childrenRight, fadingEdgeLength, numRows, columnStart);
-				final int offset = rightSelectionPixel
-						- referenceView.getRight();
+				final int rightSelectionPixel = getRightSelectionPixel(childrenRight, fadingEdgeLength, numRows, columnStart);
+				final int offset = rightSelectionPixel - referenceView.getRight();
 				offsetChildrenLeftAndRight(offset);
-				fillLeft(columnStart - 1, referenceView.getLeft()
-						- horizontalSpacing);
+				fillLeft(columnStart - 1, referenceView.getLeft() - horizontalSpacing);
 				pinToLeft(childrenLeft);
-				fillRight(columnEnd + numRows, referenceView.getRight()
-						+ horizontalSpacing);
+				fillRight(columnEnd + numRows, referenceView.getRight() + horizontalSpacing);
 				adjustViewsLeftOrRight();
 			}
 
@@ -2669,18 +2369,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * Layout during a scroll that results from tracking motion events.
 		 * Places the mMotionPosition view at the offset specified by
 		 * mMotionViewLeft, and then build surrounding views from there.
-		 * 
-		 * @param position
-		 *            the position at which to start filling
-		 * @param left
-		 *            the left of the view at that position
+		 *
+		 * @param position the position at which to start filling
+		 * @param left     the left of the view at that position
 		 * @return The selected view, or null if the selected view is outside
 		 *         the visible area.
 		 */
-		private View fillSpecific(int position, int left) {
+		private View fillSpecific (int position, int left) {
 			if (DEBUG)
-				Log.i(TAG, "fillSpecific() position: " + position + " left: "
-						+ left + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillSpecific() position: " + position + " left: " + left + " mFirstPosition: " + mFirstPosition);
 			final int numRows = mNumRows;
 
 			int motionColumnStart;
@@ -2693,13 +2390,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				// TODO don't understand what this is doing....
 				final int invertedSelection = mItemCount - 1 - position;
 
-				motionColumnEnd = mItemCount - 1
-						- (invertedSelection - (invertedSelection % numRows));
+				motionColumnEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numRows));
 				motionColumnStart = Math.max(0, motionColumnEnd - numRows + 1);
 			}
 
-			final View temp = makeColumn(mStackFromBottom ? motionColumnEnd
-					: motionColumnStart, left, true);
+			final View temp = makeColumn(mStackFromBottom ? motionColumnEnd : motionColumnStart, left, true);
 
 			// Possibly changed again in fillUp if we add rows above this one.
 			mFirstPosition = motionColumnStart;
@@ -2716,22 +2411,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			View rightOf;
 
 			if (!mStackFromBottom) {
-				leftOf = fillLeft(motionColumnStart - numRows,
-						referenceView.getLeft() - horizontalSpacing);
+				leftOf = fillLeft(motionColumnStart - numRows, referenceView.getLeft() - horizontalSpacing);
 				adjustViewsLeftOrRight();
-				rightOf = fillRight(motionColumnStart + numRows,
-						referenceView.getRight() + horizontalSpacing);
+				rightOf = fillRight(motionColumnStart + numRows, referenceView.getRight() + horizontalSpacing);
 				// Check if we have dragged the bottom of the grid too high
 				final int childCount = getChildCount();
 				if (childCount > 0) {
 					correctTooLeft(numRows, horizontalSpacing, childCount);
 				}
 			} else {
-				rightOf = fillRight(motionColumnEnd + numRows,
-						referenceView.getRight() + horizontalSpacing);
+				rightOf = fillRight(motionColumnEnd + numRows, referenceView.getRight() + horizontalSpacing);
 				adjustViewsLeftOrRight();
-				leftOf = fillLeft(motionColumnStart - 1,
-						referenceView.getLeft() - horizontalSpacing);
+				leftOf = fillLeft(motionColumnStart - 1, referenceView.getLeft() - horizontalSpacing);
 				// Check if we have dragged the right of the grid too high
 				final int childCount = getChildCount();
 				if (childCount > 0) {
@@ -2748,12 +2439,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void correctTooLeft(int numRows, int horizontalSpacing,
-				int childCount) {
+		private void correctTooLeft (int numRows, int horizontalSpacing, int childCount) {
 			if (DEBUG)
-				Log.i(TAG, "correctTooLeft() numRows: " + numRows
-						+ " horizontalSpacing: " + horizontalSpacing
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "correctTooLeft() numRows: " + numRows + " horizontalSpacing: " + horizontalSpacing + " mFirstPosition: " + mFirstPosition);
 			// First see if the last item is visible
 			final int lastPosition = mFirstPosition + childCount - 1;
 			if (lastPosition == mItemCount - 1 && childCount > 0) {
@@ -2777,12 +2465,10 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				// columns to left of
 				// the first column or the first column is scrolled off the top
 				// of the drawable area
-				if (rightOffset > 0
-						&& (mFirstPosition > 0 || firstLeft < mListPadding.left)) {
+				if (rightOffset > 0 && (mFirstPosition > 0 || firstLeft < mListPadding.left)) {
 					if (mFirstPosition == 0) {
 						// Don't pull the left too far right
-						rightOffset = Math.min(rightOffset, mListPadding.left
-								- firstLeft);
+						rightOffset = Math.min(rightOffset, mListPadding.left - firstLeft);
 					}
 
 					// Move everything right
@@ -2791,9 +2477,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 						// Fill the gap that was opened above mFirstPosition
 						// with more columns, if
 						// possible
-						fillLeft(mFirstPosition
-								- (mStackFromBottom ? 1 : numRows),
-								firstChild.getLeft() - horizontalSpacing);
+						fillLeft(mFirstPosition - (mStackFromBottom ? 1 : numRows), firstChild.getLeft() - horizontalSpacing);
 						// Close up the remaining gap
 						adjustViewsLeftOrRight();
 					}
@@ -2801,12 +2485,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void correctTooRight(int numRows, int horizontalSpacing,
-				int childCount) {
+		private void correctTooRight (int numRows, int horizontalSpacing, int childCount) {
 			if (DEBUG)
-				Log.i(TAG, "correctTooRight() numRows: " + numRows
-						+ " horizontalSpacing: " + horizontalSpacing
-						+ " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "correctTooRight() numRows: " + numRows + " horizontalSpacing: " + horizontalSpacing + " mFirstPosition: " + mFirstPosition);
 			if (mFirstPosition == 0 && childCount > 0) {
 				// Get the first child ...
 				final View firstChild = getChildAt(0);
@@ -2832,8 +2513,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				// columns to right of the
 				// last column or the last column is scrolled off the right of
 				// the drawable area
-				if (leftOffset > 0
-						&& (lastPosition < mItemCount - 1 || lastRight > end)) {
+				if (leftOffset > 0 && (lastPosition < mItemCount - 1 || lastRight > end)) {
 					if (lastPosition == mItemCount - 1) {
 						// Don't pull the right too far left
 						leftOffset = Math.min(leftOffset, lastRight - end);
@@ -2845,9 +2525,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 						// Fill the gap that was opened to right of the last
 						// position with
 						// more columns, if possible
-						fillRight(lastPosition
-								+ (!mStackFromBottom ? 1 : numRows),
-								lastChild.getRight() + horizontalSpacing);
+						fillRight(lastPosition + (!mStackFromBottom ? 1 : numRows), lastChild.getRight() + horizontalSpacing);
 						// Close up the remaining gap
 						adjustViewsLeftOrRight();
 					}
@@ -2862,21 +2540,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * selection is moving. The selection will then be pinned to the visible
 		 * part of the screen, excluding the edges that are faded. The grid is
 		 * then filled leftwards and rightwards from there.
-		 * 
-		 * @param delta
-		 *            Which way we are moving
-		 * @param childrenLeft
-		 *            Where to start drawing children
-		 * @param childrenRight
-		 *            Last pixel where children can be drawn
+		 *
+		 * @param delta         Which way we are moving
+		 * @param childrenLeft  Where to start drawing children
+		 * @param childrenRight Last pixel where children can be drawn
 		 * @return The view that currently has selection
 		 */
-		private View moveSelection(int delta, int childrenLeft,
-				int childrenRight) {
+		private View moveSelection (int delta, int childrenLeft, int childrenRight) {
 			if (DEBUG)
-				Log.i(TAG, "moveSelection() delta: " + delta
-						+ " childrenLeft: " + childrenLeft + " childrenRight: "
-						+ childrenRight + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "moveSelection() delta: " + delta + " childrenLeft: " + childrenLeft + " childrenRight: " + childrenRight + " mFirstPosition: " + mFirstPosition);
 			final int fadingEdgeLength = getHorizontalFadingEdgeLength();
 			final int selectedPosition = mSelectedPosition;
 			final int numRows = mNumRows;
@@ -2887,29 +2559,24 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			int columnEnd = -1;
 
 			if (!mStackFromBottom) {
-				oldColumnStart = (selectedPosition - delta)
-						- ((selectedPosition - delta) % numRows);
+				oldColumnStart = (selectedPosition - delta) - ((selectedPosition - delta) % numRows);
 
 				columnStart = selectedPosition - (selectedPosition % numRows);
 			} else {
 				int invertedSelection = mItemCount - 1 - selectedPosition;
 
-				columnEnd = mItemCount - 1
-						- (invertedSelection - (invertedSelection % numRows));
+				columnEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numRows));
 				columnStart = Math.max(0, columnEnd - numRows + 1);
 
 				invertedSelection = mItemCount - 1 - (selectedPosition - delta);
-				oldColumnStart = mItemCount - 1
-						- (invertedSelection - (invertedSelection % numRows));
+				oldColumnStart = mItemCount - 1 - (invertedSelection - (invertedSelection % numRows));
 				oldColumnStart = Math.max(0, oldColumnStart - numRows + 1);
 			}
 
 			final int rowDelta = columnStart - oldColumnStart;
 
-			final int leftSelectionPixel = getLeftSelectionPixel(childrenLeft,
-					fadingEdgeLength, columnStart);
-			final int rightSelectionPixel = getRightSelectionPixel(
-					childrenRight, fadingEdgeLength, numRows, columnStart);
+			final int leftSelectionPixel = getLeftSelectionPixel(childrenLeft, fadingEdgeLength, columnStart);
+			final int rightSelectionPixel = getRightSelectionPixel(childrenRight, fadingEdgeLength, numRows, columnStart);
 
 			// Possibly changed again in fillLeft if we add rows above this one.
 			mFirstPosition = columnStart;
@@ -2922,62 +2589,49 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				 * Case 1: Scrolling right.
 				 */
 
-				final int oldRight = mReferenceViewInSelectedRow == null ? 0
-						: mReferenceViewInSelectedRow.getRight();
+				final int oldRight = mReferenceViewInSelectedRow == null ? 0 : mReferenceViewInSelectedRow.getRight();
 
-				sel = makeColumn(mStackFromBottom ? columnEnd : columnStart,
-						oldRight + horizontalSpacing, true);
+				sel = makeColumn(mStackFromBottom ? columnEnd : columnStart, oldRight + horizontalSpacing, true);
 				referenceView = mReferenceView;
 
-				adjustForRightFadingEdge(referenceView, leftSelectionPixel,
-						rightSelectionPixel);
+				adjustForRightFadingEdge(referenceView, leftSelectionPixel, rightSelectionPixel);
 			} else if (rowDelta < 0) {
 				/*
 				 * Case 2: Scrolling left.
 				 */
-				final int oldTop = mReferenceViewInSelectedRow == null ? 0
-						: mReferenceViewInSelectedRow.getLeft();
+				final int oldTop = mReferenceViewInSelectedRow == null ? 0 : mReferenceViewInSelectedRow.getLeft();
 
-				sel = makeColumn(mStackFromBottom ? columnEnd : columnStart,
-						oldTop - horizontalSpacing, false);
+				sel = makeColumn(mStackFromBottom ? columnEnd : columnStart, oldTop - horizontalSpacing, false);
 				referenceView = mReferenceView;
 
-				adjustForLeftFadingEdge(referenceView, leftSelectionPixel,
-						rightSelectionPixel);
+				adjustForLeftFadingEdge(referenceView, leftSelectionPixel, rightSelectionPixel);
 			} else {
 				/*
 				 * Keep selection where it was
 				 */
-				final int oldTop = mReferenceViewInSelectedRow == null ? 0
-						: mReferenceViewInSelectedRow.getLeft();
+				final int oldTop = mReferenceViewInSelectedRow == null ? 0 : mReferenceViewInSelectedRow.getLeft();
 
-				sel = makeColumn(mStackFromBottom ? columnEnd : columnStart,
-						oldTop, true);
+				sel = makeColumn(mStackFromBottom ? columnEnd : columnStart, oldTop, true);
 				referenceView = mReferenceView;
 			}
 
 			if (!mStackFromBottom) {
-				fillLeft(columnStart - numRows, referenceView.getLeft()
-						- horizontalSpacing);
+				fillLeft(columnStart - numRows, referenceView.getLeft() - horizontalSpacing);
 				adjustViewsLeftOrRight();
-				fillRight(columnStart + numRows, referenceView.getRight()
-						+ horizontalSpacing);
+				fillRight(columnStart + numRows, referenceView.getRight() + horizontalSpacing);
 			} else {
-				fillRight(columnStart + numRows, referenceView.getRight()
-						+ horizontalSpacing);
+				fillRight(columnStart + numRows, referenceView.getRight() + horizontalSpacing);
 				adjustViewsLeftOrRight();
-				fillLeft(columnStart - 1, referenceView.getLeft()
-						- horizontalSpacing);
+				fillLeft(columnStart - 1, referenceView.getLeft() - horizontalSpacing);
 			}
 
 			return sel;
 		}
 
 		@Override
-		protected void layoutChildren() {
+		protected void layoutChildren () {
 			final int childrenLeft = mListPadding.left;
-			final int childrenRight = getRight() - getLeft()
-					- mListPadding.right;
+			final int childrenRight = getRight() - getLeft() - mListPadding.right;
 
 			int childCount = getChildCount();
 			int index;
@@ -2990,31 +2644,31 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 			// Remember stuff we will need down below
 			switch (mLayoutMode) {
-			case LAYOUT_SET_SELECTION:
-				index = mNextSelectedPosition - mFirstPosition;
-				if (index >= 0 && index < childCount) {
-					newSel = getChildAt(index);
-				}
-				break;
-			case LAYOUT_FORCE_TOP:
-			case LAYOUT_FORCE_BOTTOM:
-			case LAYOUT_SPECIFIC:
-			case LAYOUT_SYNC:
-				break;
-			case LAYOUT_MOVE_SELECTION:
-				if (mNextSelectedPosition >= 0) {
-					delta = mNextSelectedPosition - mSelectedPosition;
-				}
-				break;
-			default:
-				// Remember the previously selected view
-				index = mSelectedPosition - mFirstPosition;
-				if (index >= 0 && index < childCount) {
-					oldSel = getChildAt(index);
-				}
+				case LAYOUT_SET_SELECTION:
+					index = mNextSelectedPosition - mFirstPosition;
+					if (index >= 0 && index < childCount) {
+						newSel = getChildAt(index);
+					}
+					break;
+				case LAYOUT_FORCE_TOP:
+				case LAYOUT_FORCE_BOTTOM:
+				case LAYOUT_SPECIFIC:
+				case LAYOUT_SYNC:
+					break;
+				case LAYOUT_MOVE_SELECTION:
+					if (mNextSelectedPosition >= 0) {
+						delta = mNextSelectedPosition - mSelectedPosition;
+					}
+					break;
+				default:
+					// Remember the previously selected view
+					index = mSelectedPosition - mFirstPosition;
+					if (index >= 0 && index < childCount) {
+						oldSel = getChildAt(index);
+					}
 
-				// Remember the previous first child
-				oldFirst = getChildAt(0);
+					// Remember the previous first child
+					oldFirst = getChildAt(0);
 			}
 
 			boolean dataChanged = mDataChanged;
@@ -3050,62 +2704,52 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			detachAllViewsFromParent();
 
 			switch (mLayoutMode) {
-			case LAYOUT_SET_SELECTION:
-				if (newSel != null) {
-					sel = fillFromSelection(newSel.getLeft(), childrenLeft,
-							childrenRight);
-				} else {
-					sel = fillSelection(childrenLeft, childrenRight);
-				}
-				break;
-			case LAYOUT_FORCE_TOP:
-				mFirstPosition = 0;
-				sel = fillFromTop(childrenLeft);
-				adjustViewsLeftOrRight();
-				break;
-			case LAYOUT_FORCE_BOTTOM:
-				sel = fillRight(mItemCount - 1, childrenRight);
-				adjustViewsLeftOrRight();
-				break;
-			case LAYOUT_SPECIFIC:
-				sel = fillSpecific(mSelectedPosition, mSpecificTop);
-				break;
-			case LAYOUT_SYNC:
-				sel = fillSpecific(mSyncPosition, mSpecificTop);
-				break;
-			case LAYOUT_MOVE_SELECTION:
-				// Move the selection relative to its old position
-				sel = moveSelection(delta, childrenLeft, childrenRight);
-				break;
-			default:
-				if (childCount == 0) {
-					if (!mStackFromBottom) {
-						setSelectedPositionInt(mAdapter == null
-								|| isInTouchMode() ? INVALID_POSITION : 0);
-						sel = fillFromTop(childrenLeft);
+				case LAYOUT_SET_SELECTION:
+					if (newSel != null) {
+						sel = fillFromSelection(newSel.getLeft(), childrenLeft, childrenRight);
 					} else {
-						final int last = mItemCount - 1;
-						setSelectedPositionInt(mAdapter == null
-								|| isInTouchMode() ? INVALID_POSITION : last);
-						sel = fillFromBottom(last, childrenRight);
+						sel = fillSelection(childrenLeft, childrenRight);
 					}
-				} else {
-					if (mSelectedPosition >= 0
-							&& mSelectedPosition < mItemCount) {
-						sel = fillSpecific(
-								mSelectedPosition,
-								oldSel == null ? childrenLeft : oldSel
-										.getLeft());
-					} else if (mFirstPosition < mItemCount) {
-						sel = fillSpecific(
-								mFirstPosition,
-								oldFirst == null ? childrenLeft : oldFirst
-										.getLeft());
+					break;
+				case LAYOUT_FORCE_TOP:
+					mFirstPosition = 0;
+					sel = fillFromTop(childrenLeft);
+					adjustViewsLeftOrRight();
+					break;
+				case LAYOUT_FORCE_BOTTOM:
+					sel = fillRight(mItemCount - 1, childrenRight);
+					adjustViewsLeftOrRight();
+					break;
+				case LAYOUT_SPECIFIC:
+					sel = fillSpecific(mSelectedPosition, mSpecificTop);
+					break;
+				case LAYOUT_SYNC:
+					sel = fillSpecific(mSyncPosition, mSpecificTop);
+					break;
+				case LAYOUT_MOVE_SELECTION:
+					// Move the selection relative to its old position
+					sel = moveSelection(delta, childrenLeft, childrenRight);
+					break;
+				default:
+					if (childCount == 0) {
+						if (!mStackFromBottom) {
+							setSelectedPositionInt(mAdapter == null || isInTouchMode() ? INVALID_POSITION : 0);
+							sel = fillFromTop(childrenLeft);
+						} else {
+							final int last = mItemCount - 1;
+							setSelectedPositionInt(mAdapter == null || isInTouchMode() ? INVALID_POSITION : last);
+							sel = fillFromBottom(last, childrenRight);
+						}
 					} else {
-						sel = fillSpecific(0, childrenLeft);
+						if (mSelectedPosition >= 0 && mSelectedPosition < mItemCount) {
+							sel = fillSpecific(mSelectedPosition, oldSel == null ? childrenLeft : oldSel.getLeft());
+						} else if (mFirstPosition < mItemCount) {
+							sel = fillSpecific(mFirstPosition, oldFirst == null ? childrenLeft : oldFirst.getLeft());
+						} else {
+							sel = fillSpecific(0, childrenLeft);
+						}
 					}
-				}
-				break;
+					break;
 			}
 
 			// Flush any cached views that did not get reused above
@@ -3114,8 +2758,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			if (sel != null) {
 				positionSelector(sel);
 				mSelectedTop = sel.getLeft();
-			} else if (mTouchMode > TOUCH_MODE_DOWN
-					&& mTouchMode < TOUCH_MODE_SCROLL) {
+			} else if (mTouchMode > TOUCH_MODE_DOWN && mTouchMode < TOUCH_MODE_SCROLL) {
 				View child = getChildAt(mMotionPosition - mFirstPosition);
 				if (child != null)
 					positionSelector(child);
@@ -3139,7 +2782,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		}
 
 		@Override
-		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec) {
 			int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 			int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 			int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -3148,16 +2791,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				Log.i(TAG, "horizontal onMeasure heightMode: " + heightMode);
 			if (heightMode == MeasureSpec.UNSPECIFIED) {
 				if (mRowHeight > 0) {
-					heightSize = mRowHeight + mListPadding.top
-							+ mListPadding.bottom;
+					heightSize = mRowHeight + mListPadding.top + mListPadding.bottom;
 				} else {
 					heightSize = mListPadding.top + mListPadding.bottom;
 				}
 				heightSize += getHorizontalScrollbarHeight();
 			}
 
-			int childHeight = heightSize - mListPadding.top
-					- mListPadding.bottom;
+			int childHeight = heightSize - mListPadding.top - mListPadding.bottom;
 			determineRows(childHeight);
 
 			int childWidth = 0;
@@ -3167,23 +2808,16 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			if (count > 0) {
 				final View child = obtainView(0, mIsScrap);
 
-				TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child
-						.getLayoutParams();
+				TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child.getLayoutParams();
 				if (p == null) {
-					p = new TwoWayAbsListView.LayoutParams(
-							ViewGroup.LayoutParams.WRAP_CONTENT,
-							ViewGroup.LayoutParams.FILL_PARENT, 0);
+					p = new TwoWayAbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT, 0);
 					child.setLayoutParams(p);
 				}
 				p.viewType = mAdapter.getItemViewType(0);
 				p.forceAdd = true;
 
-				int childHeightSpec = getChildMeasureSpec(
-						MeasureSpec.makeMeasureSpec(mRowHeight,
-								MeasureSpec.UNSPECIFIED), 0, p.height);
-				int childWidthSpec = getChildMeasureSpec(
-						MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY), 0,
-						p.width);
+				int childHeightSpec = getChildMeasureSpec(MeasureSpec.makeMeasureSpec(mRowHeight, MeasureSpec.UNSPECIFIED), 0, p.height);
+				int childWidthSpec = getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY), 0, p.width);
 				child.measure(childWidthSpec, childHeightSpec);
 
 				childWidth = child.getMeasuredWidth();
@@ -3194,8 +2828,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 
 			if (widthMode == MeasureSpec.UNSPECIFIED) {
-				widthSize = mListPadding.left + mListPadding.right + childWidth
-						+ getHorizontalFadingEdgeLength() * 2;
+				widthSize = mListPadding.left + mListPadding.right + childWidth + getHorizontalFadingEdgeLength() * 2;
 			}
 
 			if (widthMode == MeasureSpec.AT_MOST) {
@@ -3218,11 +2851,10 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			setMeasuredDimension(widthSize, heightSize);
 			mWidthMeasureSpec = widthMeasureSpec;
 			if (DEBUG)
-				Log.i(TAG, "Horizontal onMeasure widthSize: " + widthSize
-						+ " heightSize: " + heightSize);
+				Log.i(TAG, "Horizontal onMeasure widthSize: " + widthSize + " heightSize: " + heightSize);
 		}
 
-		private void determineRows(int availableSpace) {
+		private void determineRows (int availableSpace) {
 			final int requestedVerticalSpacing = mRequestedVerticalSpacing;
 			final int stretchMode = mStretchMode;
 			final int requestedRowHeight = mRequestedRowHeight;
@@ -3231,8 +2863,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			if (mRequestedNumRows == AUTO_FIT) {
 				if (requestedRowHeight > 0) {
 					// Client told us to pick the number of rows
-					mNumRows = (availableSpace + mRequestedVerticalSpacing)
-							/ (requestedRowHeight + mRequestedVerticalSpacing);
+					mNumRows = (availableSpace + mRequestedVerticalSpacing) / (requestedRowHeight + mRequestedVerticalSpacing);
 				} else {
 					// Just make up a number if we don't have enough info
 					mNumRows = 2;
@@ -3247,61 +2878,49 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 
 			switch (stretchMode) {
-			case NO_STRETCH:
-				// Nobody stretches
-				mRowHeight = mRequestedRowHeight;
-				mVerticalSpacing = mRequestedVerticalSpacing;
-				break;
-
-			default:
-				int spaceLeftOver = 0;
-				switch (stretchMode) {
-				case STRETCH_COLUMN_WIDTH:
-					spaceLeftOver = availableSpace
-							- (mNumRows * requestedRowHeight)
-							- ((mNumRows - 1) * requestedVerticalSpacing);
-					// Stretch the rows
-					mRowHeight = requestedRowHeight + spaceLeftOver / mNumRows;
-					mVerticalSpacing = requestedVerticalSpacing;
+				case NO_STRETCH:
+					// Nobody stretches
+					mRowHeight = mRequestedRowHeight;
+					mVerticalSpacing = mRequestedVerticalSpacing;
 					break;
 
-				case STRETCH_SPACING:
-					spaceLeftOver = availableSpace
-							- (mNumRows * requestedRowHeight)
-							- ((mNumRows - 1) * requestedVerticalSpacing);
-					// Stretch the spacing between rows
-					mRowHeight = requestedRowHeight;
-					if (mNumRows > 1) {
-						mVerticalSpacing = requestedVerticalSpacing
-								+ spaceLeftOver / (mNumRows - 1);
-					} else {
-						mVerticalSpacing = requestedVerticalSpacing
-								+ spaceLeftOver;
+				default:
+					int spaceLeftOver = 0;
+					switch (stretchMode) {
+						case STRETCH_COLUMN_WIDTH:
+							spaceLeftOver = availableSpace - (mNumRows * requestedRowHeight) - ((mNumRows - 1) * requestedVerticalSpacing);
+							// Stretch the rows
+							mRowHeight = requestedRowHeight + spaceLeftOver / mNumRows;
+							mVerticalSpacing = requestedVerticalSpacing;
+							break;
+
+						case STRETCH_SPACING:
+							spaceLeftOver = availableSpace - (mNumRows * requestedRowHeight) - ((mNumRows - 1) * requestedVerticalSpacing);
+							// Stretch the spacing between rows
+							mRowHeight = requestedRowHeight;
+							if (mNumRows > 1) {
+								mVerticalSpacing = requestedVerticalSpacing + spaceLeftOver / (mNumRows - 1);
+							} else {
+								mVerticalSpacing = requestedVerticalSpacing + spaceLeftOver;
+							}
+							break;
+
+						case STRETCH_SPACING_UNIFORM:
+							// Stretch the spacing between rows
+							spaceLeftOver = availableSpace - (mNumRows * requestedRowHeight) - ((mNumRows + 1) * requestedVerticalSpacing);
+							mRowHeight = requestedRowHeight;
+							if (mNumRows > 1) {
+								mVerticalSpacing = requestedVerticalSpacing + spaceLeftOver / (mNumRows + 1);
+							} else {
+								mVerticalSpacing = requestedVerticalSpacing + spaceLeftOver;
+							}
+							break;
 					}
-					break;
 
-				case STRETCH_SPACING_UNIFORM:
-					// Stretch the spacing between rows
-					spaceLeftOver = availableSpace
-							- (mNumRows * requestedRowHeight)
-							- ((mNumRows + 1) * requestedVerticalSpacing);
-					mRowHeight = requestedRowHeight;
-					if (mNumRows > 1) {
-						mVerticalSpacing = requestedVerticalSpacing
-								+ spaceLeftOver / (mNumRows + 1);
-					} else {
-						mVerticalSpacing = requestedVerticalSpacing
-								+ spaceLeftOver;
-					}
 					break;
-				}
-
-				break;
 			}
 			if (DEBUG)
-				Log.i(TAG, "determineRows() mRowHeight: " + mRowHeight
-						+ " mVerticalSpacing: " + mVerticalSpacing
-						+ " mStretchMode: " + mStretchMode);
+				Log.i(TAG, "determineRows() mRowHeight: " + mRowHeight + " mVerticalSpacing: " + mVerticalSpacing + " mStretchMode: " + mStretchMode);
 		}
 
 		/**
@@ -3309,21 +2928,15 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * location. The selection may be moved so that it does not intersect
 		 * the faded edges. The grid is then filled upwards and downwards from
 		 * there.
-		 * 
-		 * @param selectedLeft
-		 *            Where the selected item should be
-		 * @param childrenLeft
-		 *            Where to start drawing children
-		 * @param childrenRight
-		 *            Last pixel where children can be drawn
+		 *
+		 * @param selectedLeft  Where the selected item should be
+		 * @param childrenLeft  Where to start drawing children
+		 * @param childrenRight Last pixel where children can be drawn
 		 * @return The view that currently has selection
 		 */
-		private View fillFromSelection(int selectedLeft, int childrenLeft,
-				int childrenRight) {
+		private View fillFromSelection (int selectedLeft, int childrenLeft, int childrenRight) {
 			if (DEBUG)
-				Log.i(TAG, "fillFromSelection() selectedLeft: " + selectedLeft
-						+ " childrenLeft: " + childrenLeft + " childrenRight: "
-						+ childrenRight + " mFirstPosition: " + mFirstPosition);
+				Log.i(TAG, "fillFromSelection() selectedLeft: " + selectedLeft + " childrenLeft: " + childrenLeft + " childrenRight: " + childrenRight + " mFirstPosition: " + mFirstPosition);
 			final int fadingEdgeLength = getHorizontalFadingEdgeLength();
 			final int selectedPosition = mSelectedPosition;
 			final int numRows = mNumRows;
@@ -3337,42 +2950,32 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			} else {
 				int invertedSelection = mItemCount - 1 - selectedPosition;
 
-				columnEnd = mItemCount - 1
-						- (invertedSelection - (invertedSelection % numRows));
+				columnEnd = mItemCount - 1 - (invertedSelection - (invertedSelection % numRows));
 				columnStart = Math.max(0, columnEnd - numRows + 1);
 			}
 
 			View sel;
 			View referenceView;
 
-			int leftSelectionPixel = getLeftSelectionPixel(childrenLeft,
-					fadingEdgeLength, columnStart);
-			int rightSelectionPixel = getRightSelectionPixel(childrenRight,
-					fadingEdgeLength, numRows, columnStart);
+			int leftSelectionPixel = getLeftSelectionPixel(childrenLeft, fadingEdgeLength, columnStart);
+			int rightSelectionPixel = getRightSelectionPixel(childrenRight, fadingEdgeLength, numRows, columnStart);
 
-			sel = makeColumn(mStackFromBottom ? columnEnd : columnStart,
-					selectedLeft, true);
+			sel = makeColumn(mStackFromBottom ? columnEnd : columnStart, selectedLeft, true);
 			// Possibly changed again in fillLeft if we add rows above this one.
 			mFirstPosition = columnStart;
 
 			referenceView = mReferenceView;
-			adjustForLeftFadingEdge(referenceView, leftSelectionPixel,
-					rightSelectionPixel);
-			adjustForRightFadingEdge(referenceView, leftSelectionPixel,
-					rightSelectionPixel);
+			adjustForLeftFadingEdge(referenceView, leftSelectionPixel, rightSelectionPixel);
+			adjustForRightFadingEdge(referenceView, leftSelectionPixel, rightSelectionPixel);
 
 			if (!mStackFromBottom) {
-				fillLeft(columnStart - numRows, referenceView.getLeft()
-						- horizontalSpacing);
+				fillLeft(columnStart - numRows, referenceView.getLeft() - horizontalSpacing);
 				adjustViewsLeftOrRight();
-				fillRight(columnStart + numRows, referenceView.getRight()
-						+ horizontalSpacing);
+				fillRight(columnStart + numRows, referenceView.getRight() + horizontalSpacing);
 			} else {
-				fillRight(columnEnd + numRows, referenceView.getRight()
-						+ horizontalSpacing);
+				fillRight(columnEnd + numRows, referenceView.getRight() + horizontalSpacing);
 				adjustViewsLeftOrRight();
-				fillLeft(columnStart - 1, referenceView.getLeft()
-						- horizontalSpacing);
+				fillLeft(columnStart - 1, referenceView.getLeft() - horizontalSpacing);
 			}
 
 			return sel;
@@ -3380,19 +2983,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Calculate the right-most pixel we can draw the selection into
-		 * 
-		 * @param childrenRight
-		 *            Right pixel were children can be drawn
-		 * @param fadingEdgeLength
-		 *            Length of the fading edge in pixels, if present
-		 * @param numColumns
-		 *            Number of columns in the grid
-		 * @param rowStart
-		 *            The start of the row that will contain the selection
+		 *
+		 * @param childrenRight    Right pixel were children can be drawn
+		 * @param fadingEdgeLength Length of the fading edge in pixels, if present
+		 * @param numColumns       Number of columns in the grid
+		 * @param rowStart         The start of the row that will contain the selection
 		 * @return The right-most pixel we can draw the selection into
 		 */
-		private int getRightSelectionPixel(int childrenRight,
-				int fadingEdgeLength, int numColumns, int rowStart) {
+		private int getRightSelectionPixel (int childrenRight, int fadingEdgeLength, int numColumns, int rowStart) {
 			// Last pixel we can draw the selection into
 			int rightSelectionPixel = childrenRight;
 			if (rowStart + numColumns - 1 < mItemCount - 1) {
@@ -3403,17 +3001,13 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Calculate the left-most pixel we can draw the selection into
-		 * 
-		 * @param childrenLeft
-		 *            Left pixel were children can be drawn
-		 * @param fadingEdgeLength
-		 *            Length of the fading edge in pixels, if present
-		 * @param rowStart
-		 *            The start of the row that will contain the selection
+		 *
+		 * @param childrenLeft     Left pixel were children can be drawn
+		 * @param fadingEdgeLength Length of the fading edge in pixels, if present
+		 * @param rowStart         The start of the row that will contain the selection
 		 * @return The left-most pixel we can draw the selection into
 		 */
-		private int getLeftSelectionPixel(int childrenLeft,
-				int fadingEdgeLength, int rowStart) {
+		private int getLeftSelectionPixel (int childrenLeft, int fadingEdgeLength, int rowStart) {
 			// first pixel we can draw the selection into
 			int leftSelectionPixel = childrenLeft;
 			if (rowStart > 0) {
@@ -3425,16 +3019,12 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Move all views left so the selected row does not interesect the right
 		 * fading edge (if necessary).
-		 * 
-		 * @param childInSelectedRow
-		 *            A child in the row that contains the selection
-		 * @param leftSelectionPixel
-		 *            The leftmost pixel we can draw the selection into
-		 * @param rightSelectionPixel
-		 *            The rightmost pixel we can draw the selection into
+		 *
+		 * @param childInSelectedRow  A child in the row that contains the selection
+		 * @param leftSelectionPixel  The leftmost pixel we can draw the selection into
+		 * @param rightSelectionPixel The rightmost pixel we can draw the selection into
 		 */
-		private void adjustForRightFadingEdge(View childInSelectedRow,
-				int leftSelectionPixel, int rightSelectionPixel) {
+		private void adjustForRightFadingEdge (View childInSelectedRow, int leftSelectionPixel, int rightSelectionPixel) {
 			// Some of the newly selected item extends below the bottom of the
 			// list
 			if (childInSelectedRow.getRight() > rightSelectionPixel) {
@@ -3442,13 +3032,11 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				// Find space available to the left the selection into which we
 				// can
 				// scroll upwards
-				int spaceToLeft = childInSelectedRow.getLeft()
-						- leftSelectionPixel;
+				int spaceToLeft = childInSelectedRow.getLeft() - leftSelectionPixel;
 
 				// Find space required to bring the right of the selected item
 				// fully into view
-				int spaceToRight = childInSelectedRow.getRight()
-						- rightSelectionPixel;
+				int spaceToRight = childInSelectedRow.getRight() - rightSelectionPixel;
 				int offset = Math.min(spaceToLeft, spaceToRight);
 
 				// Now offset the selected item to get it into view
@@ -3459,27 +3047,21 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Move all views right so the selected row does not interesect the left
 		 * fading edge (if necessary).
-		 * 
-		 * @param childInSelectedRow
-		 *            A child in the row that contains the selection
-		 * @param leftSelectionPixel
-		 *            The leftmost pixel we can draw the selection into
-		 * @param rightSelectionPixel
-		 *            The rightmost pixel we can draw the selection into
+		 *
+		 * @param childInSelectedRow  A child in the row that contains the selection
+		 * @param leftSelectionPixel  The leftmost pixel we can draw the selection into
+		 * @param rightSelectionPixel The rightmost pixel we can draw the selection into
 		 */
-		private void adjustForLeftFadingEdge(View childInSelectedRow,
-				int leftSelectionPixel, int rightSelectionPixel) {
+		private void adjustForLeftFadingEdge (View childInSelectedRow, int leftSelectionPixel, int rightSelectionPixel) {
 			// Some of the newly selected item extends above the top of the list
 			if (childInSelectedRow.getLeft() < leftSelectionPixel) {
 				// Find space required to bring the top of the selected item
 				// fully into view
-				int spaceToLeft = leftSelectionPixel
-						- childInSelectedRow.getLeft();
+				int spaceToLeft = leftSelectionPixel - childInSelectedRow.getLeft();
 
 				// Find space available below the selection into which we can
 				// scroll downwards
-				int spaceToRight = rightSelectionPixel
-						- childInSelectedRow.getRight();
+				int spaceToRight = rightSelectionPixel - childInSelectedRow.getRight();
 				int offset = Math.min(spaceToLeft, spaceToRight);
 
 				// Now offset the selected item to get it into view
@@ -3491,7 +3073,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		 * Make sure views are touching the top or bottom edge, as appropriate
 		 * for our gravity
 		 */
-		private void adjustViewsLeftOrRight() {
+		private void adjustViewsLeftOrRight () {
 			final int childCount = getChildCount();
 
 			if (childCount > 0) {
@@ -3519,8 +3101,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 					// we are too left, slide all views right to align with
 					// right
 					child = getChildAt(childCount - 1);
-					delta = child.getRight()
-							- (getWidth() - mListPadding.right);
+					delta = child.getRight() - (getWidth() - mListPadding.right);
 
 					if (mFirstPosition + childCount < mItemCount) {
 						// It's OK to have some space to right of the last item
@@ -3545,50 +3126,34 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Add a view as a child and make sure it is measured (if necessary) and
 		 * positioned properly.
-		 * 
-		 * @param child
-		 *            The view to add
-		 * @param position
-		 *            The position of the view
-		 * @param x
-		 *            The x position relative to which this view will be
-		 *            positioned
-		 * @param flow
-		 *            if true, align left edge to x. If false, align right edge
-		 *            to x.
-		 * @param childrenTop
-		 *            Top edge where children should be positioned
-		 * @param selected
-		 *            Is this position selected?
-		 * @param recycled
-		 *            Has this view been pulled from the recycle bin? If so it
-		 *            does not need to be remeasured.
-		 * @param where
-		 *            Where to add the item in the list
-		 * 
+		 *
+		 * @param child       The view to add
+		 * @param position    The position of the view
+		 * @param x           The x position relative to which this view will be
+		 *                    positioned
+		 * @param flow        if true, align left edge to x. If false, align right edge
+		 *                    to x.
+		 * @param childrenTop Top edge where children should be positioned
+		 * @param selected    Is this position selected?
+		 * @param recycled    Has this view been pulled from the recycle bin? If so it
+		 *                    does not need to be remeasured.
+		 * @param where       Where to add the item in the list
 		 */
-		private void setupChild(View child, int position, int x, boolean flow,
-				int childrenTop, boolean selected, boolean recycled, int where) {
+		private void setupChild (View child, int position, int x, boolean flow, int childrenTop, boolean selected, boolean recycled, int where) {
 			boolean isSelected = selected && shouldShowSelector();
-			final boolean updateChildSelected = isSelected != child
-					.isSelected();
+			final boolean updateChildSelected = isSelected != child.isSelected();
 			final int mode = mTouchMode;
-			final boolean isPressed = mode > TOUCH_MODE_DOWN
-					&& mode < TOUCH_MODE_SCROLL && mMotionPosition == position;
+			final boolean isPressed = mode > TOUCH_MODE_DOWN && mode < TOUCH_MODE_SCROLL && mMotionPosition == position;
 			final boolean updateChildPressed = isPressed != child.isPressed();
 
-			boolean needToMeasure = !recycled || updateChildSelected
-					|| child.isLayoutRequested();
+			boolean needToMeasure = !recycled || updateChildSelected || child.isLayoutRequested();
 
 			// Respect layout params that are already in the view. Otherwise
 			// make
 			// some up...
-			TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child
-					.getLayoutParams();
+			TwoWayAbsListView.LayoutParams p = (TwoWayAbsListView.LayoutParams) child.getLayoutParams();
 			if (p == null) {
-				p = new TwoWayAbsListView.LayoutParams(
-						ViewGroup.LayoutParams.WRAP_CONTENT,
-						ViewGroup.LayoutParams.FILL_PARENT, 0);
+				p = new TwoWayAbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT, 0);
 			}
 			p.viewType = mAdapter.getItemViewType(position);
 
@@ -3611,13 +3176,9 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 
 			if (needToMeasure) {
-				int childWidthSpec = ViewGroup
-						.getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0,
-								MeasureSpec.UNSPECIFIED), 0, p.width);
+				int childWidthSpec = ViewGroup.getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), 0, p.width);
 
-				int childHeightSpec = ViewGroup.getChildMeasureSpec(MeasureSpec
-						.makeMeasureSpec(mRowHeight, MeasureSpec.EXACTLY), 0,
-						p.height);
+				int childHeightSpec = ViewGroup.getChildMeasureSpec(MeasureSpec.makeMeasureSpec(mRowHeight, MeasureSpec.EXACTLY), 0, p.height);
 				child.measure(childWidthSpec, childHeightSpec);
 			} else {
 				cleanupLayoutState(child);
@@ -3630,18 +3191,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			int childTop;
 
 			switch (mGravity & Gravity.VERTICAL_GRAVITY_MASK) {
-			case Gravity.TOP:
-				childTop = childrenTop;
-				break;
-			case Gravity.CENTER_HORIZONTAL:
-				childTop = childrenTop + ((mRowHeight - h) / 2);
-				break;
-			case Gravity.RIGHT:
-				childTop = childrenTop + mRowHeight - h;
-				break;
-			default:
-				childTop = childrenTop;
-				break;
+				case Gravity.TOP:
+					childTop = childrenTop;
+					break;
+				case Gravity.CENTER_HORIZONTAL:
+					childTop = childrenTop + ((mRowHeight - h) / 2);
+					break;
+				case Gravity.RIGHT:
+					childTop = childrenTop + mRowHeight - h;
+					break;
+				default:
+					childTop = childrenTop;
+					break;
 			}
 
 			if (needToMeasure) {
@@ -3658,7 +3219,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void pinToLeft(int childrenLeft) {
+		private void pinToLeft (int childrenLeft) {
 			if (mFirstPosition == 0) {
 				final int left = getChildAt(0).getLeft();
 				final int offset = childrenLeft - left;
@@ -3668,7 +3229,7 @@ public class TwoWayGridView extends TwoWayAbsListView {
 			}
 		}
 
-		private void pinToRight(int childrenRight) {
+		private void pinToRight (int childrenRight) {
 			final int count = getChildCount();
 			if (mFirstPosition + count == mItemCount) {
 				final int right = getChildAt(count - 1).getRight();
@@ -3681,21 +3242,18 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Makes the item at the supplied position selected.
-		 * 
-		 * @param position
-		 *            the position of the new selection
+		 *
+		 * @param position the position of the new selection
 		 */
 		@Override
-		protected void setSelectionInt(int position) {
+		protected void setSelectionInt (int position) {
 			int previousSelectedPosition = mNextSelectedPosition;
 
 			setNextSelectedPositionInt(position);
 			TwoWayGridView.this.layoutChildren();
 
-			final int next = mStackFromBottom ? mItemCount - 1
-					- mNextSelectedPosition : mNextSelectedPosition;
-			final int previous = mStackFromBottom ? mItemCount - 1
-					- previousSelectedPosition : previousSelectedPosition;
+			final int next = mStackFromBottom ? mItemCount - 1 - mNextSelectedPosition : mNextSelectedPosition;
+			final int previous = mStackFromBottom ? mItemCount - 1 - previousSelectedPosition : previousSelectedPosition;
 
 			final int nextColumn = next / mNumRows;
 			final int previousColumn = previous / mNumRows;
@@ -3708,15 +3266,13 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 		/**
 		 * Scrolls to the next or previous item, horizontally or vertically.
-		 * 
-		 * @param direction
-		 *            either {@link View#FOCUS_LEFT}, {@link View#FOCUS_RIGHT},
-		 *            {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}
-		 * 
+		 *
+		 * @param direction either {@link View#FOCUS_LEFT}, {@link View#FOCUS_RIGHT},
+		 *                  {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN}
 		 * @return whether selection was moved
 		 */
 		@Override
-		protected boolean arrowScroll(int direction) {
+		protected boolean arrowScroll (int direction) {
 			final int selectedPosition = mSelectedPosition;
 			final int numRows = mNumRows;
 
@@ -3727,51 +3283,46 @@ public class TwoWayGridView extends TwoWayAbsListView {
 
 			if (!mStackFromBottom) {
 				startOfColumnPos = (selectedPosition / numRows) * numRows;
-				endOfColumnPos = Math.min(startOfColumnPos + numRows - 1,
-						mItemCount - 1);
+				endOfColumnPos = Math.min(startOfColumnPos + numRows - 1, mItemCount - 1);
 			} else {
 				final int invertedSelection = mItemCount - 1 - selectedPosition;
-				endOfColumnPos = mItemCount - 1 - (invertedSelection / numRows)
-						* numRows;
+				endOfColumnPos = mItemCount - 1 - (invertedSelection / numRows) * numRows;
 				startOfColumnPos = Math.max(0, endOfColumnPos - numRows + 1);
 			}
 
 			switch (direction) {
-			case FOCUS_LEFT:
-				if (startOfColumnPos > 0) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.max(0, selectedPosition - numRows));
-					moved = true;
-				}
-				break;
-			case FOCUS_RIGHT:
-				if (startOfColumnPos < mItemCount - 1) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.min(selectedPosition + numRows,
-							mItemCount - 1));
-					moved = true;
-				}
-				break;
-			case FOCUS_UP:
-				if (selectedPosition > startOfColumnPos) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.max(0, selectedPosition - 1));
-					moved = true;
-				}
-				break;
-			case FOCUS_DOWN:
-				if (selectedPosition < endOfColumnPos) {
-					mLayoutMode = LAYOUT_MOVE_SELECTION;
-					setSelectionInt(Math.min(selectedPosition + 1,
-							mItemCount - 1));
-					moved = true;
-				}
-				break;
+				case FOCUS_LEFT:
+					if (startOfColumnPos > 0) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.max(0, selectedPosition - numRows));
+						moved = true;
+					}
+					break;
+				case FOCUS_RIGHT:
+					if (startOfColumnPos < mItemCount - 1) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.min(selectedPosition + numRows, mItemCount - 1));
+						moved = true;
+					}
+					break;
+				case FOCUS_UP:
+					if (selectedPosition > startOfColumnPos) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.max(0, selectedPosition - 1));
+						moved = true;
+					}
+					break;
+				case FOCUS_DOWN:
+					if (selectedPosition < endOfColumnPos) {
+						mLayoutMode = LAYOUT_MOVE_SELECTION;
+						setSelectionInt(Math.min(selectedPosition + 1, mItemCount - 1));
+						moved = true;
+					}
+					break;
 			}
 
 			if (moved) {
-				playSoundEffect(SoundEffectConstants
-						.getContantForFocusDirection(direction));
+				playSoundEffect(SoundEffectConstants.getContantForFocusDirection(direction));
 				invokeOnItemScrollListener();
 			}
 
@@ -3785,16 +3336,14 @@ public class TwoWayGridView extends TwoWayAbsListView {
 		/**
 		 * Is childIndex a candidate for next focus given the direction the
 		 * focus change is coming from?
-		 * 
-		 * @param childIndex
-		 *            The index to check.
-		 * @param direction
-		 *            The direction, one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT,
-		 *            FOCUS_RIGHT}
+		 *
+		 * @param childIndex The index to check.
+		 * @param direction  The direction, one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT,
+		 *                   FOCUS_RIGHT}
 		 * @return Whether childIndex is a candidate.
 		 */
 		@Override
-		protected boolean isCandidateSelection(int childIndex, int direction) {
+		protected boolean isCandidateSelection (int childIndex, int direction) {
 			final int count = getChildCount();
 			final int invertedIndex = count - 1 - childIndex;
 			final int numRows = mNumRows;
@@ -3806,35 +3355,32 @@ public class TwoWayGridView extends TwoWayAbsListView {
 				columnStart = childIndex - (childIndex % numRows);
 				columnEnd = Math.max(columnStart + numRows - 1, count);
 			} else {
-				columnEnd = count - 1
-						- (invertedIndex - (invertedIndex % numRows));
+				columnEnd = count - 1 - (invertedIndex - (invertedIndex % numRows));
 				columnStart = Math.max(0, columnEnd - numRows + 1);
 			}
 
 			switch (direction) {
-			case View.FOCUS_RIGHT:
-				// coming from left, selection is only valid if it is on left
-				// edge
-				return childIndex == columnStart;
-			case View.FOCUS_DOWN:
-				// coming from top; only valid if in top row
-				return columnStart == 0;
-			case View.FOCUS_LEFT:
-				// coming from right, must be on right edge
-				return childIndex == columnStart;
-			case View.FOCUS_UP:
-				// coming from bottom, need to be in last row
-				return columnStart == count - 1;
-			case View.FOCUS_FORWARD:
-				// coming from top-left, need to be first in top row
-				return childIndex == columnStart && columnStart == 0;
-			case View.FOCUS_BACKWARD:
-				// coming from bottom-right, need to be last in bottom row
-				return childIndex == columnEnd && columnEnd == count - 1;
-			default:
-				throw new IllegalArgumentException("direction must be one of "
-						+ "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
-						+ "FOCUS_FORWARD, FOCUS_BACKWARD}.");
+				case View.FOCUS_RIGHT:
+					// coming from left, selection is only valid if it is on left
+					// edge
+					return childIndex == columnStart;
+				case View.FOCUS_DOWN:
+					// coming from top; only valid if in top row
+					return columnStart == 0;
+				case View.FOCUS_LEFT:
+					// coming from right, must be on right edge
+					return childIndex == columnStart;
+				case View.FOCUS_UP:
+					// coming from bottom, need to be in last row
+					return columnStart == count - 1;
+				case View.FOCUS_FORWARD:
+					// coming from top-left, need to be first in top row
+					return childIndex == columnStart && columnStart == 0;
+				case View.FOCUS_BACKWARD:
+					// coming from bottom-right, need to be last in bottom row
+					return childIndex == columnEnd && columnEnd == count - 1;
+				default:
+					throw new IllegalArgumentException("direction must be one of " + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, " + "FOCUS_FORWARD, FOCUS_BACKWARD}.");
 
 			}
 		}
