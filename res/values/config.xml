@@ -3,7 +3,7 @@
 
     <!-- Customize The URL for the JSON Manifest -->
     <string name="config_wallpaper_manifest_url">
-        http://designrifts.com/wallpapers/pro_wallpaper_manifest.json
+        https://raw.github.com/Bencodes/Wallpaper-Manager/master/assets/demo-manifest.json
     </string>
 
     <!-- Configure The External Storage Directory. Don't include sdcard in the path -->
